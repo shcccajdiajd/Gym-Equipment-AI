@@ -23,6 +23,7 @@
 - Replaced the deprecated Vitest workspace file with a root [vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.config.ts) that uses `test.projects`.
 - Prepared the local WeChat Developer Tools integration environment with a synced catalog and a verified mock API startup flow.
 - Added a frontend-only demo mode on the home page so WeChat Developer Tools can preview recognized, low-confidence, and unsupported result flows without live recognition.
+- Added a dedicated mini program runtime TypeScript build that emits the `app.js` and `pages/**/index.js` files required by WeChat Developer Tools.
 
 ## Modified Files
 
@@ -60,33 +61,43 @@
 - [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
 - [apps/miniprogram/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/package.json)
 - [apps/miniprogram/tsconfig.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tsconfig.json)
+- [apps/miniprogram/tsconfig.runtime.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tsconfig.runtime.json)
 - [apps/miniprogram/vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/vitest.config.ts)
 - [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json)
 - [apps/miniprogram/tests/result-view-model.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tests/result-view-model.test.ts)
 - [apps/miniprogram/miniprogram/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.ts)
 - [apps/miniprogram/miniprogram/app.d.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.d.ts)
+- [apps/miniprogram/miniprogram/app.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.js)
 - [apps/miniprogram/miniprogram/app.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.json)
 - [apps/miniprogram/miniprogram/app.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.wxss)
 - [apps/miniprogram/miniprogram/utils/api.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/api.ts)
+- [apps/miniprogram/miniprogram/utils/api.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/api.js)
 - [apps/miniprogram/miniprogram/pages/home/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.ts)
+- [apps/miniprogram/miniprogram/pages/home/index.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.js)
 - [apps/miniprogram/miniprogram/pages/home/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.wxml)
 - [apps/miniprogram/miniprogram/pages/home/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.wxss)
 - [apps/miniprogram/miniprogram/pages/home/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.json)
 - [apps/miniprogram/miniprogram/pages/capture/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.ts)
+- [apps/miniprogram/miniprogram/pages/capture/index.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.js)
 - [apps/miniprogram/miniprogram/pages/capture/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.wxml)
 - [apps/miniprogram/miniprogram/pages/capture/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.wxss)
 - [apps/miniprogram/miniprogram/pages/capture/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.json)
 - [apps/miniprogram/miniprogram/pages/result/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.ts)
+- [apps/miniprogram/miniprogram/pages/result/index.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.js)
 - [apps/miniprogram/miniprogram/pages/result/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.wxml)
 - [apps/miniprogram/miniprogram/pages/result/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.wxss)
 - [apps/miniprogram/miniprogram/pages/result/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.json)
 - [apps/miniprogram/miniprogram/pages/equipment-list/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.ts)
+- [apps/miniprogram/miniprogram/pages/equipment-list/index.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.js)
 - [apps/miniprogram/miniprogram/pages/equipment-list/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.wxml)
 - [apps/miniprogram/miniprogram/pages/equipment-list/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.wxss)
 - [apps/miniprogram/miniprogram/pages/equipment-list/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.json)
 - [apps/miniprogram/miniprogram/data/catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/data/catalog.ts)
+- [apps/miniprogram/miniprogram/data/catalog.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/data/catalog.js)
 - [apps/miniprogram/miniprogram/utils/history.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/history.ts)
+- [apps/miniprogram/miniprogram/utils/history.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/history.js)
 - [apps/miniprogram/miniprogram/utils/result-view-model.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/result-view-model.ts)
+- [apps/miniprogram/miniprogram/utils/result-view-model.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/result-view-model.js)
 - [scripts/sync-catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts)
 - [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md)
 - [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md)
@@ -106,6 +117,7 @@
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
 - The mock API has been verified through a live local POST on `http://127.0.0.1:3001/api/recognitions`, returning a recognized `高位下拉` payload for a mock `back` fixture.
+- The mini program runtime build now emits the `js` entry files WeChat Developer Tools expects, so the previous `pages/home/index.js not found` startup failure has been addressed.
 - The mini program has not yet been manually opened in WeChat DevTools in this environment, so camera, clipboard, and page rendering still need human smoke testing.
 
 ## Current Problems

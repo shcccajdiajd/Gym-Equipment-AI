@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ES2019",
+    "lib": ["ES2019"],
+    "rootDir": "miniprogram",
+    "declaration": false,
+    "sourceMap": false,
+    "types": []
+  },
+  "files": ["miniprogram/app.d.ts"],
+  "include": ["miniprogram/**/*.ts", "miniprogram/*.d.ts", "miniprogram/**/*.d.ts"],
+  "exclude": ["tests/**/*.ts"]
+}

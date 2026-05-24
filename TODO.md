@@ -82,6 +82,7 @@ Acceptance:
 - Camera capture, album import, clipboard copy, and equipment-list navigation all work in the actual mini program runtime.
 - The running mock API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
 - The home-page demo buttons successfully preview all three result states in WeChat Developer Tools.
+- The project loads in WeChat Developer Tools without the previous `pages/home/index.js` missing-file startup error.
 
 - [ ] Verify the live OpenAI recognition path with a real API key.
 Acceptance:
