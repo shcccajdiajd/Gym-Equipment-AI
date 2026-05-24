@@ -37,6 +37,7 @@ corepack pnpm --filter @gym-equipment-ai/api dev
 
 - `mock`: deterministic local development provider for fast UI testing
 - `openai`: image recognition through the OpenAI Responses API
+- `ollama`: free local vision inference through an Ollama-served model such as `qwen2.5vl:3b`
 
 ## Useful Commands
 
@@ -45,6 +46,22 @@ corepack pnpm test
 corepack pnpm typecheck
 corepack pnpm --filter @gym-equipment-ai/miniprogram test
 corepack pnpm --filter @gym-equipment-ai/api test
+```
+
+## Local Ollama Setup
+
+If you want a free local recognizer instead of a paid API:
+
+```bash
+ollama pull qwen2.5vl:3b
+```
+
+Then configure [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env):
+
+```env
+RECOGNIZER_PROVIDER=ollama
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+OLLAMA_MODEL=qwen2.5vl:3b
 ```
 
 In this Codex sandbox, `tsx` CLI IPC is restricted, so the working fallback for catalog sync is:

@@ -89,6 +89,12 @@ Acceptance:
 - `services/api/.env` is populated with `RECOGNIZER_PROVIDER=openai` and a valid `OPENAI_API_KEY`.
 - At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
 
+- [ ] Verify the live Ollama recognition path with a local model.
+Acceptance:
+- `ollama pull qwen2.5vl:3b` has completed on the local machine.
+- `services/api/.env` is populated with `RECOGNIZER_PROVIDER=ollama`, `OLLAMA_BASE_URL`, and `OLLAMA_MODEL`.
+- At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
+
 - [ ] Replace `touristappid` and prepare the first real upload package.
 Acceptance:
 - [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json) uses the real AppID.

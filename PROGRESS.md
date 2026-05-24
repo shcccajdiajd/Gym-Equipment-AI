@@ -24,6 +24,7 @@
 - Prepared the local WeChat Developer Tools integration environment with a synced catalog and a verified mock API startup flow.
 - Added a frontend-only demo mode on the home page so WeChat Developer Tools can preview recognized, low-confidence, and unsupported result flows without live recognition.
 - Added a dedicated mini program runtime TypeScript build that emits the `app.js` and `pages/**/index.js` files required by WeChat Developer Tools.
+- Added an `ollama` recognition provider so the API can use a free local vision model such as `qwen2.5vl:3b`.
 
 ## Modified Files
 
@@ -56,9 +57,11 @@
 - [services/api/src/lib/catalog-service.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/catalog-service.ts)
 - [services/api/src/lib/recognizers/types.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/types.ts)
 - [services/api/src/lib/recognizers/mock.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/mock.ts)
+- [services/api/src/lib/recognizers/ollama.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/ollama.ts)
 - [services/api/src/lib/recognizers/openai.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/openai.ts)
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
 - [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
+- [services/api/src/lib/recognizers/ollama.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/ollama.test.ts)
 - [apps/miniprogram/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/package.json)
 - [apps/miniprogram/tsconfig.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tsconfig.json)
 - [apps/miniprogram/tsconfig.runtime.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tsconfig.runtime.json)
@@ -110,20 +113,23 @@
 - `services/api` TypeScript check passes.
 - `services/api` route tests pass with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts`
+- `services/api` Ollama recognizer tests pass and verify structured local vision requests plus error handling.
 - `packages/shared` TypeScript check passes.
 - `apps/miniprogram` TypeScript check passes.
-- Root `vitest run` passes across shared, API, and mini program tests with `14` passing tests.
+- Root `vitest run` passes across shared, API, and mini program tests with `17` passing tests.
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
 - The mock API has been verified through a live local POST on `http://127.0.0.1:3001/api/recognitions`, returning a recognized `高位下拉` payload for a mock `back` fixture.
 - The mini program runtime build now emits the `js` entry files WeChat Developer Tools expects, so the previous `pages/home/index.js not found` startup failure has been addressed.
+- The API can now be configured to use either `mock`, `ollama`, or `openai` recognition providers.
 - The mini program has not yet been manually opened in WeChat DevTools in this environment, so camera, clipboard, and page rendering still need human smoke testing.
 
 ## Current Problems
 
 - The mini program has not yet been manually smoke-tested in WeChat DevTools, so runtime behavior is verified by typecheck and Vitest only.
 - The assistant could not auto-detect a local `微信开发者工具.app`, so opening the GUI and completing the smoke test still requires your machine-side interaction.
+- Live Ollama recognition has not been verified yet because no local `ollama` server/model was exercised in this environment.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - Local helper tooling was downloaded into ignored workspace paths only to unblock verification in this environment.

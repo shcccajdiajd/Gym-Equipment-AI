@@ -13,9 +13,12 @@ function createRecognizer(result: Awaited<ReturnType<Recognizer['recognize']>>):
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   delete process.env.RECOGNIZER_PROVIDER;
   delete process.env.OPENAI_API_KEY;
   delete process.env.OPENAI_MODEL;
+  delete process.env.OLLAMA_BASE_URL;
+  delete process.env.OLLAMA_MODEL;
 });
 
 describe('POST /api/recognitions', () => {
@@ -57,6 +60,46 @@ describe('POST /api/recognitions', () => {
     expect(() => buildAppWithEnv()).toThrow(
       'OPENAI_API_KEY is required when RECOGNIZER_PROVIDER=openai'
     );
+  });
+
+  it('uses the ollama provider when configured', async () => {
+    process.env.RECOGNIZER_PROVIDER = 'ollama';
+    process.env.OLLAMA_BASE_URL = 'http://127.0.0.1:11434';
+    process.env.OLLAMA_MODEL = 'qwen2.5vl:3b';
+
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        response: JSON.stringify({
+          topMatchId: 'lat-pulldown',
+          confidence: 0.87,
+          alternatives: ['seated-row']
+        })
+      })
+    }));
+
+    vi.stubGlobal('fetch', fetchMock);
+    vi.resetModules();
+    const { buildApp: buildAppWithEnv } = await import('../app.js');
+    const app = buildAppWithEnv();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('back-fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      status: 'recognized',
+      equipment: {
+        id: 'lat-pulldown'
+      }
+    });
+    expect(fetchMock).toHaveBeenCalledOnce();
   });
 
   it('returns a recognized equipment card payload', async () => {

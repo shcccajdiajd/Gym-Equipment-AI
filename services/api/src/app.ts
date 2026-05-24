@@ -2,6 +2,7 @@ import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import { env } from './env.js';
 import { mockRecognizer } from './lib/recognizers/mock.js';
+import { createOllamaRecognizer } from './lib/recognizers/ollama.js';
 import { createOpenAiRecognizer } from './lib/recognizers/openai.js';
 import type { Recognizer } from './lib/recognizers/types.js';
 import { registerRecognitionRoutes } from './routes/recognitions.js';
@@ -15,6 +16,13 @@ function defaultRecognizer(): Recognizer {
     return createOpenAiRecognizer({
       apiKey: env.OPENAI_API_KEY,
       model: env.OPENAI_MODEL
+    });
+  }
+
+  if (env.RECOGNIZER_PROVIDER === 'ollama') {
+    return createOllamaRecognizer({
+      baseUrl: env.OLLAMA_BASE_URL,
+      model: env.OLLAMA_MODEL
     });
   }
 
