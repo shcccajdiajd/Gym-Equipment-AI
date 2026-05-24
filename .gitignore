@@ -1,0 +1,11 @@
+node_modules
+dist
+.turbo
+.env
+.env.local
+coverage
+.npm-cache
+.tools
+.tmp-api-check
+package-lock.json
+apps/miniprogram/project.private.config.json

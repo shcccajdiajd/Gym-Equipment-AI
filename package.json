@@ -1,0 +1,19 @@
+{
+  "name": "gym-equipment-ai",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev:api": "pnpm --filter @gym-equipment-ai/api dev",
+    "sync:catalog": "tsx scripts/sync-catalog.ts",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4"
+  }
+}
