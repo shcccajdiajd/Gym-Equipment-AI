@@ -15,6 +15,12 @@ declare function Page<T extends object>(options: T): T;
 declare function getApp<T = IAppOption>(): T;
 
 declare namespace WechatMiniprogram {
+  interface BaseEvent {
+    currentTarget: {
+      dataset: Record<string, string>;
+    };
+  }
+
   interface GeneralCallbackResult {
     errMsg: string;
   }
@@ -73,6 +79,11 @@ declare namespace WechatMiniprogram {
     success?: (result: RequestSuccessCallbackResult<T>) => void;
     fail?: (error: GeneralCallbackResult) => void;
   }
+
+  interface ClipboardOption {
+    data: string;
+    success?: () => void;
+  }
 }
 
 declare const wx: {
@@ -84,4 +95,7 @@ declare const wx: {
   hideLoading: () => void;
   showToast: (options: { title: string; icon: 'none' | 'success' }) => void;
   navigateTo: (options: { url: string }) => void;
+  setClipboardData: (options: WechatMiniprogram.ClipboardOption) => void;
+  getStorageSync: <T = unknown>(key: string) => T;
+  setStorageSync: (key: string, value: unknown) => void;
 };

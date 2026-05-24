@@ -14,8 +14,11 @@
 - Added API env handling for `OPENAI_API_KEY`, `OPENAI_MODEL`, and `RECOGNIZER_PROVIDER`.
 - Scaffolded the WeChat mini program workspace and app shell.
 - Added the home page, capture page, and shared mini program API utilities for camera and album import flows.
-- Added placeholder result and supported-equipment pages so the app shell registers all current routes.
 - Added the first mini program test and restored root `vitest run` by creating the `apps/miniprogram` project.
+- Added a shared-to-mini-program catalog sync script and generated the local catalog snapshot used by the app.
+- Implemented the result page for recognized, low-confidence, and unsupported states.
+- Implemented the supported-equipment list page and wired it to open specific equipment result pages.
+- Added lightweight local recognition history helpers and video-search copy formatting helpers.
 
 ## Modified Files
 
@@ -75,6 +78,10 @@
 - [apps/miniprogram/miniprogram/pages/equipment-list/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.wxml)
 - [apps/miniprogram/miniprogram/pages/equipment-list/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.wxss)
 - [apps/miniprogram/miniprogram/pages/equipment-list/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.json)
+- [apps/miniprogram/miniprogram/data/catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/data/catalog.ts)
+- [apps/miniprogram/miniprogram/utils/history.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/history.ts)
+- [apps/miniprogram/miniprogram/utils/result-view-model.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/result-view-model.ts)
+- [scripts/sync-catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts)
 
 ## Current Run State
 
@@ -84,12 +91,15 @@
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts`
 - `packages/shared` TypeScript check passes.
 - `apps/miniprogram` TypeScript check passes.
-- Root `vitest run` passes across shared, API, and mini program tests.
+- Root `vitest run` passes across shared, API, and mini program tests with `13` passing tests.
+- `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
+  - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level, but the mini program has not yet been manually opened in WeChat DevTools in this environment.
 
 ## Current Problems
 
 - [vitest.workspace.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.workspace.ts) uses the deprecated Vitest workspace-file pattern and should later be replaced with a root config using `test.projects`.
-- The result page and supported-equipment page are still placeholders; the full recognized/low-confidence/unsupported UX is the next phase.
 - The mini program has not yet been manually smoke-tested in WeChat DevTools, so runtime behavior is verified by typecheck and Vitest only.
+- Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
+- Developer-facing setup docs, manual QA instructions, and the release checklist have not been written yet.
 - Local helper tooling was downloaded into ignored workspace paths only to unblock verification in this environment.

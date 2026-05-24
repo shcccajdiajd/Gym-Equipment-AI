@@ -1,9 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
 import { buildResultNavigationUrl } from '../miniprogram/utils/api.js';
+import { buildUnsupportedState, buildVideoSearchCopy } from '../miniprogram/utils/result-view-model.js';
 
-describe('result navigation url', () => {
+describe('result view model', () => {
   it('builds a result page url from an API payload id', () => {
     expect(buildResultNavigationUrl('lat-pulldown')).toBe('/pages/result/index?id=lat-pulldown');
+  });
+
+  it('builds an unsupported fallback message', () => {
+    expect(buildUnsupportedState()).toEqual({
+      title: '这类器械暂未收录',
+      actionLabel: '查看支持识别的器械'
+    });
+  });
+
+  it('formats a copy-friendly video search string', () => {
+    expect(
+      buildVideoSearchCopy({
+        platform: 'Bilibili',
+        title: '高位下拉新手教学',
+        searchQuery: '高位下拉 正确使用 教学'
+      })
+    ).toBe('Bilibili｜高位下拉新手教学｜高位下拉 正确使用 教学');
   });
 });

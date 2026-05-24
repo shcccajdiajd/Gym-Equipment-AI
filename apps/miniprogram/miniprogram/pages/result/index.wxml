@@ -1,4 +1,66 @@
-<view class="placeholder-page">
-  <text class="placeholder-title">识别结果页开发中</text>
-  <text class="placeholder-copy">当前阶段先打通拍照和导航链路，下一阶段会补完整的结果卡片。</text>
+<view wx:if="{{unsupported}}" class="result-page">
+  <view class="hero-card">
+    <text class="result-title">{{unsupported.title}}</text>
+    <text class="summary">你可以先从已支持的固定器械里继续找，避免搜错教程。</text>
+    <button class="primary-button section-button" bindtap="goToEquipmentList">{{unsupported.actionLabel}}</button>
+  </view>
+</view>
+
+<view wx:else class="result-page">
+  <view class="hero-card">
+    <text class="zh-name">{{equipment.zhName}}</text>
+    <text class="en-name">{{equipment.enName}}</text>
+    <text class="summary">{{equipment.summary}}</text>
+  </view>
+
+  <view wx:if="{{showLowConfidence}}" class="section-card warning-card">
+    <text class="section-title">识别可能有误</text>
+    <text class="warning-copy">可以顺手对照这些相似器械：</text>
+    <block wx:for="{{similarEquipmentNames}}" wx:key="index">
+      <text class="list-line">- {{item}}</text>
+    </block>
+  </view>
+
+  <view class="section-card">
+    <text class="section-title">主要训练肌群</text>
+    <text>{{primaryMusclesText}}</text>
+  </view>
+
+  <view class="section-card">
+    <text class="section-title">怎么调节</text>
+    <text class="body-copy">{{equipment.adjustment}}</text>
+  </view>
+
+  <view class="section-card">
+    <text class="section-title">标准使用步骤</text>
+    <block wx:for="{{equipment.steps}}" wx:key="index">
+      <text class="list-line">{{index + 1}}. {{item}}</text>
+    </block>
+  </view>
+
+  <view class="section-card">
+    <text class="section-title">安全注意事项</text>
+    <block wx:for="{{equipment.safety}}" wx:key="index">
+      <text class="list-line">- {{item}}</text>
+    </block>
+  </view>
+
+  <view class="section-card">
+    <text class="section-title">常见错误</text>
+    <block wx:for="{{equipment.commonErrors}}" wx:key="index">
+      <text class="list-line">- {{item}}</text>
+    </block>
+  </view>
+
+  <view class="section-card">
+    <text class="section-title">继续看教学</text>
+    <text class="list-line">{{equipment.videoRecommendation.platform}}</text>
+    <text class="list-line">{{equipment.videoRecommendation.title}}</text>
+    <text class="list-line">{{equipment.videoRecommendation.searchQuery}}</text>
+    <button class="primary-button section-button" bindtap="copyVideoSearch">复制视频搜索词</button>
+  </view>
+
+  <view class="footer-note">
+    <text>内容仅供健身入门参考，如有伤病或特殊身体情况，请咨询专业人士。</text>
+  </view>
 </view>

@@ -1,16 +1,24 @@
-.placeholder-page {
-  padding: 48rpx 32rpx;
+.list-page {
+  padding: 24rpx;
 }
 
-.placeholder-title {
+.equipment-card {
+  margin-bottom: 18rpx;
+  padding: 24rpx;
+  background: #ffffff;
+  border-radius: 18rpx;
+}
+
+.zh-name {
   display: block;
-  font-size: 42rpx;
+  font-size: 36rpx;
   font-weight: 700;
 }
 
-.placeholder-copy {
+.en-name,
+.summary {
   display: block;
-  margin-top: 20rpx;
+  margin-top: 12rpx;
   color: #4d5f53;
   line-height: 1.6;
 }

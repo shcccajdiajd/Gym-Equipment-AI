@@ -34,14 +34,14 @@ Acceptance:
 
 ## Phase 3: Build Result And Equipment Browsing
 
-- [ ] Implement Task 5: result page, supported equipment list, and local history helpers.
+- [x] Implement Task 5: result page, supported equipment list, and local history helpers.
 Acceptance:
 - Result page supports recognized, low-confidence, and unsupported states.
 - Equipment list page can open known equipment detail pages.
 - Mini program tests/typecheck pass for this phase.
 - Local history captures recent recognitions without blocking the primary flow.
 
-- [ ] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the result/browsing phase.
+- [x] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the result/browsing phase.
 Acceptance:
 - Both files reflect the new state accurately.
 - A new commit is created after the phase is verified.
@@ -52,6 +52,7 @@ Acceptance:
 Acceptance:
 - `README.md` exists and describes setup, development, and release flow.
 - `docs/qa/manual-smoke-test.md` exists with concrete manual checks.
+- `docs/qa/release-checklist.md` exists with pre-release and post-release checks.
 - Relevant verification commands pass.
 
 - [ ] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the docs/QA phase.

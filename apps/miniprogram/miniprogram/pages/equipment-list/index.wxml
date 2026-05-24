@@ -1,4 +1,9 @@
-<view class="placeholder-page">
-  <text class="placeholder-title">支持器械列表开发中</text>
-  <text class="placeholder-copy">下一阶段会补上可浏览的器械清单与详情入口。</text>
+<view class="list-page">
+  <block wx:for="{{equipmentList}}" wx:key="id">
+    <view class="equipment-card" bindtap="openResult" data-id="{{item.id}}">
+      <text class="zh-name">{{item.zhName}}</text>
+      <text class="en-name">{{item.enName}}</text>
+      <text class="summary">{{item.summary}}</text>
+    </view>
+  </block>
 </view>

@@ -1,16 +1,65 @@
-.placeholder-page {
-  padding: 48rpx 32rpx;
+.result-page {
+  padding: 24rpx;
 }
 
-.placeholder-title {
+.hero-card,
+.section-card {
+  margin-bottom: 20rpx;
+  padding: 28rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+}
+
+.result-title,
+.zh-name {
   display: block;
-  font-size: 42rpx;
+  font-size: 46rpx;
   font-weight: 700;
 }
 
-.placeholder-copy {
+.en-name {
+  display: block;
+  margin-top: 8rpx;
+  color: #617166;
+}
+
+.summary,
+.body-copy,
+.footer-note {
   display: block;
   margin-top: 20rpx;
   color: #4d5f53;
   line-height: 1.6;
+}
+
+.section-title {
+  display: block;
+  margin-bottom: 14rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.list-line {
+  display: block;
+  margin-top: 10rpx;
+  line-height: 1.7;
+}
+
+.warning-card {
+  border: 2rpx solid #d8b24a;
+  background: #fff7df;
+}
+
+.warning-copy {
+  display: block;
+  color: #5d4a12;
+  line-height: 1.6;
+}
+
+.section-button {
+  margin-top: 24rpx;
+}
+
+.footer-note {
+  padding: 12rpx 8rpx 32rpx;
 }
