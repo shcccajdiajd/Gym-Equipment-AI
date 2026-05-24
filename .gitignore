@@ -7,5 +7,7 @@ coverage
 .npm-cache
 .tools
 .tmp-api-check
+.tmp-api-run
+services/api/.tmp-run
 package-lock.json
 apps/miniprogram/project.private.config.json

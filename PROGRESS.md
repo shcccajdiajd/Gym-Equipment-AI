@@ -21,6 +21,7 @@
 - Added lightweight local recognition history helpers and video-search copy formatting helpers.
 - Added the root README, manual smoke-test guide, and release checklist.
 - Replaced the deprecated Vitest workspace file with a root [vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.config.ts) that uses `test.projects`.
+- Prepared the local WeChat Developer Tools integration environment with a synced catalog and a verified mock API startup flow.
 
 ## Modified Files
 
@@ -100,11 +101,13 @@
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
+- The mock API has been verified through a live local POST on `http://127.0.0.1:3001/api/recognitions`, returning a recognized `高位下拉` payload for a mock `back` fixture.
 - The mini program has not yet been manually opened in WeChat DevTools in this environment, so camera, clipboard, and page rendering still need human smoke testing.
 
 ## Current Problems
 
 - The mini program has not yet been manually smoke-tested in WeChat DevTools, so runtime behavior is verified by typecheck and Vitest only.
+- The assistant could not auto-detect a local `微信开发者工具.app`, so opening the GUI and completing the smoke test still requires your machine-side interaction.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - Local helper tooling was downloaded into ignored workspace paths only to unblock verification in this environment.
