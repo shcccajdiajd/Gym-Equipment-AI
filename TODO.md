@@ -48,28 +48,45 @@ Acceptance:
 
 ## Phase 4: Finish Docs And QA Flow
 
-- [ ] Implement Task 6: root README, manual smoke test doc, and release checklist.
+- [x] Implement Task 6: root README, manual smoke test doc, and release checklist.
 Acceptance:
 - `README.md` exists and describes setup, development, and release flow.
 - `docs/qa/manual-smoke-test.md` exists with concrete manual checks.
 - `docs/qa/release-checklist.md` exists with pre-release and post-release checks.
 - Relevant verification commands pass.
 
-- [ ] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the docs/QA phase.
+- [x] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the docs/QA phase.
 Acceptance:
 - Both files reflect the final state accurately.
 - A new commit is created after the phase is verified.
 
 ## Phase 5: Final Cleanup
 
-- [ ] Revisit root Vitest configuration so it stops relying on the deprecated workspace-file pattern.
+- [x] Revisit root Vitest configuration so it stops relying on the deprecated workspace-file pattern.
 Acceptance:
 - Root/shared Vitest invocation still passes after the config migration.
 - Root test configuration no longer relies on the deprecated workspace-file pattern.
 
-- [ ] Run a final end-to-end verification sweep.
+- [x] Run a final end-to-end verification sweep.
 Acceptance:
 - Shared package typecheck passes.
 - API package typecheck passes.
 - API recognitions test suite passes.
 - Mini program package typecheck/tests pass for the implemented scope.
+
+## Next Recommended Steps
+
+- [ ] Run the manual smoke test in WeChat Developer Tools.
+Acceptance:
+- Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.
+- Camera capture, album import, clipboard copy, and equipment-list navigation all work in the actual mini program runtime.
+
+- [ ] Verify the live OpenAI recognition path with a real API key.
+Acceptance:
+- `services/api/.env` is populated with `RECOGNIZER_PROVIDER=openai` and a valid `OPENAI_API_KEY`.
+- At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
+
+- [ ] Replace `touristappid` and prepare the first real upload package.
+Acceptance:
+- [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json) uses the real AppID.
+- The release checklist in [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) is completed before submission.

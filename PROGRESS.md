@@ -19,15 +19,18 @@
 - Implemented the result page for recognized, low-confidence, and unsupported states.
 - Implemented the supported-equipment list page and wired it to open specific equipment result pages.
 - Added lightweight local recognition history helpers and video-search copy formatting helpers.
+- Added the root README, manual smoke-test guide, and release checklist.
+- Replaced the deprecated Vitest workspace file with a root [vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.config.ts) that uses `test.projects`.
 
 ## Modified Files
 
 - [docs/superpowers/specs/2026-05-24-gym-equipment-ai-design.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/superpowers/specs/2026-05-24-gym-equipment-ai-design.md)
 - [docs/superpowers/plans/2026-05-24-gym-equipment-ai-implementation-plan.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/superpowers/plans/2026-05-24-gym-equipment-ai-implementation-plan.md)
+- [README.md](/Users/shc/Documents/Codex/2026-05-24/ai/README.md)
 - [package.json](/Users/shc/Documents/Codex/2026-05-24/ai/package.json)
 - [pnpm-workspace.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/pnpm-workspace.yaml)
 - [tsconfig.base.json](/Users/shc/Documents/Codex/2026-05-24/ai/tsconfig.base.json)
-- [vitest.workspace.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.workspace.ts)
+- [vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.config.ts)
 - [.gitignore](/Users/shc/Documents/Codex/2026-05-24/ai/.gitignore)
 - [packages/shared/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/package.json)
 - [packages/shared/tsconfig.json](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/tsconfig.json)
@@ -82,6 +85,8 @@
 - [apps/miniprogram/miniprogram/utils/history.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/history.ts)
 - [apps/miniprogram/miniprogram/utils/result-view-model.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/result-view-model.ts)
 - [scripts/sync-catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts)
+- [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md)
+- [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md)
 
 ## Current Run State
 
@@ -94,12 +99,12 @@
 - Root `vitest run` passes across shared, API, and mini program tests with `13` passing tests.
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
-- The codebase is runnable at the source level, but the mini program has not yet been manually opened in WeChat DevTools in this environment.
+- The codebase is runnable at the source level and all automated checks currently pass.
+- The mini program has not yet been manually opened in WeChat DevTools in this environment, so camera, clipboard, and page rendering still need human smoke testing.
 
 ## Current Problems
 
-- [vitest.workspace.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.workspace.ts) uses the deprecated Vitest workspace-file pattern and should later be replaced with a root config using `test.projects`.
 - The mini program has not yet been manually smoke-tested in WeChat DevTools, so runtime behavior is verified by typecheck and Vitest only.
+- Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
-- Developer-facing setup docs, manual QA instructions, and the release checklist have not been written yet.
 - Local helper tooling was downloaded into ignored workspace paths only to unblock verification in this environment.
