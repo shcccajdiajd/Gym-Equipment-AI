@@ -1,0 +1,10 @@
+{
+  "miniprogramRoot": "miniprogram/",
+  "projectname": "gym-equipment-ai",
+  "appid": "touristappid",
+  "compileType": "miniprogram",
+  "setting": {
+    "es6": true,
+    "minified": false
+  }
+}

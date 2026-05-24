@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/capture/index",
+    "pages/result/index",
+    "pages/equipment-list/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "器械识别",
+    "navigationBarBackgroundColor": "#f7f5ef",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f5ef"
+  },
+  "style": "v2"
+}

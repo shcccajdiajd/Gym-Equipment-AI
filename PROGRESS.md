@@ -4,6 +4,7 @@
 
 - Defined the V1 product spec for the gym-equipment recognition mini program.
 - Wrote the implementation plan for the V1 build.
+- Initialized the git repository and recorded the first checkpoint commit `9277b71`.
 - Bootstrapped the monorepo workspace manifests and the shared equipment catalog package.
 - Added a curated 20-machine launch catalog with structured safety-first content.
 - Added checked-in `packages/shared/dist` artifacts so the shared package is immediately consumable.
@@ -11,6 +12,10 @@
 - Added deterministic mock recognizer behavior and route coverage for recognized, unsupported, low-confidence, invalid-request, and catalog-mismatch cases.
 - Integrated the OpenAI recognizer provider behind the existing `Recognizer` interface.
 - Added API env handling for `OPENAI_API_KEY`, `OPENAI_MODEL`, and `RECOGNIZER_PROVIDER`.
+- Scaffolded the WeChat mini program workspace and app shell.
+- Added the home page, capture page, and shared mini program API utilities for camera and album import flows.
+- Added placeholder result and supported-equipment pages so the app shell registers all current routes.
+- Added the first mini program test and restored root `vitest run` by creating the `apps/miniprogram` project.
 
 ## Modified Files
 
@@ -45,19 +50,46 @@
 - [services/api/src/lib/recognizers/openai.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/openai.ts)
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
 - [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
+- [apps/miniprogram/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/package.json)
+- [apps/miniprogram/tsconfig.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tsconfig.json)
+- [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json)
+- [apps/miniprogram/tests/result-view-model.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tests/result-view-model.test.ts)
+- [apps/miniprogram/miniprogram/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.ts)
+- [apps/miniprogram/miniprogram/app.d.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.d.ts)
+- [apps/miniprogram/miniprogram/app.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.json)
+- [apps/miniprogram/miniprogram/app.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.wxss)
+- [apps/miniprogram/miniprogram/utils/api.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/api.ts)
+- [apps/miniprogram/miniprogram/pages/home/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.ts)
+- [apps/miniprogram/miniprogram/pages/home/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.wxml)
+- [apps/miniprogram/miniprogram/pages/home/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.wxss)
+- [apps/miniprogram/miniprogram/pages/home/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/home/index.json)
+- [apps/miniprogram/miniprogram/pages/capture/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.ts)
+- [apps/miniprogram/miniprogram/pages/capture/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.wxml)
+- [apps/miniprogram/miniprogram/pages/capture/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.wxss)
+- [apps/miniprogram/miniprogram/pages/capture/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/capture/index.json)
+- [apps/miniprogram/miniprogram/pages/result/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.ts)
+- [apps/miniprogram/miniprogram/pages/result/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.wxml)
+- [apps/miniprogram/miniprogram/pages/result/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.wxss)
+- [apps/miniprogram/miniprogram/pages/result/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/result/index.json)
+- [apps/miniprogram/miniprogram/pages/equipment-list/index.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.ts)
+- [apps/miniprogram/miniprogram/pages/equipment-list/index.wxml](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.wxml)
+- [apps/miniprogram/miniprogram/pages/equipment-list/index.wxss](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.wxss)
+- [apps/miniprogram/miniprogram/pages/equipment-list/index.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/pages/equipment-list/index.json)
 
 ## Current Run State
 
+- The repository is now checkpointed with commits and can be continued safely from git history.
 - `services/api` TypeScript check passes.
 - `services/api` route tests pass with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts`
 - `packages/shared` TypeScript check passes.
-- Root `vitest run` currently fails before execution because [vitest.workspace.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.workspace.ts) still references a missing `apps/miniprogram` project.
+- `apps/miniprogram` TypeScript check passes.
+- Root `vitest run` passes across shared, API, and mini program tests.
+- The codebase is runnable at the source level, but the mini program has not yet been manually opened in WeChat DevTools in this environment.
 
 ## Current Problems
 
-- Root `vitest run` fails with `Workspace config file "vitest.workspace.ts" references a non-existing file or a directory: .../apps/miniprogram`.
 - [vitest.workspace.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.workspace.ts) uses the deprecated Vitest workspace-file pattern and should later be replaced with a root config using `test.projects`.
-- The mobile mini program app itself has not been scaffolded yet, so the product is not end-to-end runnable.
-- The repository has been initialized and all current changes are staged, but the first checkpoint commit still needs to be created.
+- The result page and supported-equipment page are still placeholders; the full recognized/low-confidence/unsupported UX is the next phase.
+- The mini program has not yet been manually smoke-tested in WeChat DevTools, so runtime behavior is verified by typecheck and Vitest only.
 - Local helper tooling was downloaded into ignored workspace paths only to unblock verification in this environment.

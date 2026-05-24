@@ -1,0 +1,8 @@
+<view class="camera-page">
+  <camera id="camera" class="camera" device-position="back" flash="off"></camera>
+  <view class="hint-card">
+    <text class="hint-title">拍摄建议</text>
+    <text class="hint-text">请尽量拍完整器械，避免多人遮挡，并把座椅与把手同时收入画面。</text>
+  </view>
+  <button class="primary-button capture-button" bindtap="takePhoto">拍照识别</button>
+</view>

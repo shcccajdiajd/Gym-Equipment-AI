@@ -1,0 +1,49 @@
+.page {
+  min-height: 100vh;
+  padding: 48rpx 32rpx;
+  background:
+    radial-gradient(circle at top left, rgba(31, 111, 80, 0.14), transparent 45%),
+    linear-gradient(180deg, #f7f5ef 0%, #efe9db 100%);
+}
+
+.hero {
+  margin-top: 96rpx;
+  margin-bottom: 72rpx;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  border-radius: 999rpx;
+  background: rgba(31, 111, 80, 0.12);
+  color: #1f6f50;
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+}
+
+.title {
+  display: block;
+  margin-top: 28rpx;
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1.22;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #4d5f53;
+  line-height: 1.6;
+}
+
+.action {
+  margin-top: 24rpx;
+}
+
+.ghost-link {
+  margin-top: 32rpx;
+  color: #1f6f50;
+  text-align: center;
+  font-size: 28rpx;
+}

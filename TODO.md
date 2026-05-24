@@ -14,20 +14,20 @@ Acceptance:
 - `./node_modules/.bin/tsc -p /Users/shc/Documents/Codex/2026-05-24/ai/services/api/tsconfig.json --noEmit` exits `0`.
 - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts` from `services/api` exits `0`.
 
-- [ ] Create the first checkpoint commit for the already completed spec, shared package, and API work.
+- [x] Create the first checkpoint commit for the already completed spec, shared package, and API work.
 Acceptance:
 - `git log --oneline -1` shows the checkpoint commit.
 - `PROGRESS.md` and `TODO.md` are included in that commit.
 
 ## Phase 2: Build The Mini Program Shell
 
-- [ ] Implement Task 4: native mini program shell, home page, capture page, and API client utilities.
+- [x] Implement Task 4: native mini program shell, home page, capture page, and API client utilities.
 Acceptance:
 - `apps/miniprogram` exists with app shell and the `home`/`capture` pages.
 - The mini program can navigate from home to capture.
 - TypeScript for the mini program package passes.
 
-- [ ] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the mini program shell phase.
+- [x] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the mini program shell phase.
 Acceptance:
 - Both files reflect the new state accurately.
 - A new commit is created after the phase is verified.
@@ -39,6 +39,7 @@ Acceptance:
 - Result page supports recognized, low-confidence, and unsupported states.
 - Equipment list page can open known equipment detail pages.
 - Mini program tests/typecheck pass for this phase.
+- Local history captures recent recognitions without blocking the primary flow.
 
 - [ ] Update `PROGRESS.md` and `TODO.md`, then create a git commit for the result/browsing phase.
 Acceptance:
@@ -60,9 +61,9 @@ Acceptance:
 
 ## Phase 5: Final Cleanup
 
-- [ ] Revisit root Vitest configuration so it stops referencing non-existent project directories.
+- [ ] Revisit root Vitest configuration so it stops relying on the deprecated workspace-file pattern.
 Acceptance:
-- Root/shared Vitest invocation no longer fails because of missing `apps/miniprogram`.
+- Root/shared Vitest invocation still passes after the config migration.
 - Root test configuration no longer relies on the deprecated workspace-file pattern.
 
 - [ ] Run a final end-to-end verification sweep.

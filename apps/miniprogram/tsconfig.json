@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "files": ["miniprogram/app.d.ts"],
+  "include": ["miniprogram/**/*.ts", "miniprogram/*.d.ts", "miniprogram/**/*.d.ts", "tests/**/*.ts"]
+}

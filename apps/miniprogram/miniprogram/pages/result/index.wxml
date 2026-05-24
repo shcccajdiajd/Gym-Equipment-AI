@@ -1,0 +1,4 @@
+<view class="placeholder-page">
+  <text class="placeholder-title">识别结果页开发中</text>
+  <text class="placeholder-copy">当前阶段先打通拍照和导航链路，下一阶段会补完整的结果卡片。</text>
+</view>
