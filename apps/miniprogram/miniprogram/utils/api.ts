@@ -1,5 +1,7 @@
 export type RecognitionStatus = 'recognized' | 'low_confidence' | 'unsupported';
 
+export type DemoRecognitionMode = RecognitionStatus;
+
 export type RecognitionPayload = {
   status: RecognitionStatus;
   equipment?: {
@@ -20,6 +22,18 @@ export function buildResultNavigationUrl(id: string) {
 
 export function buildFallbackNavigationUrl(status: RecognitionStatus) {
   return `/pages/result/index?status=${encodeURIComponent(status)}`;
+}
+
+export function buildDemoNavigationUrl(mode: DemoRecognitionMode) {
+  if (mode === 'unsupported') {
+    return buildFallbackNavigationUrl(mode);
+  }
+
+  if (mode === 'low_confidence') {
+    return `${buildResultNavigationUrl('lat-pulldown')}&status=low_confidence`;
+  }
+
+  return buildResultNavigationUrl('lat-pulldown');
 }
 
 export async function recognizeEquipment(

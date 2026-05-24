@@ -47,3 +47,26 @@
   text-align: center;
   font-size: 28rpx;
 }
+
+.demo-panel {
+  margin-top: 64rpx;
+  padding: 28rpx 24rpx 32rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 10rpx 36rpx rgba(31, 42, 31, 0.08);
+}
+
+.demo-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1f2a1f;
+}
+
+.demo-copy {
+  display: block;
+  margin-top: 12rpx;
+  color: #4d5f53;
+  line-height: 1.6;
+  font-size: 26rpx;
+}

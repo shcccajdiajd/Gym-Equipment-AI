@@ -1,4 +1,5 @@
 import {
+  buildDemoNavigationUrl,
   buildFallbackNavigationUrl,
   buildResultNavigationUrl,
   chooseSingleImageFromAlbum,
@@ -34,5 +35,17 @@ Page({
 
   goToEquipmentList() {
     wx.navigateTo({ url: '/pages/equipment-list/index' });
+  },
+
+  openDemoRecognized() {
+    wx.navigateTo({ url: buildDemoNavigationUrl('recognized') });
+  },
+
+  openDemoLowConfidence() {
+    wx.navigateTo({ url: buildDemoNavigationUrl('low_confidence') });
+  },
+
+  openDemoUnsupported() {
+    wx.navigateTo({ url: buildDemoNavigationUrl('unsupported') });
   }
 });

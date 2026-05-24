@@ -1,11 +1,19 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildResultNavigationUrl } from '../miniprogram/utils/api.js';
+import { buildDemoNavigationUrl, buildResultNavigationUrl } from '../miniprogram/utils/api.js';
 import { buildUnsupportedState, buildVideoSearchCopy } from '../miniprogram/utils/result-view-model.js';
 
 describe('result view model', () => {
   it('builds a result page url from an API payload id', () => {
     expect(buildResultNavigationUrl('lat-pulldown')).toBe('/pages/result/index?id=lat-pulldown');
+  });
+
+  it('builds demo urls for recognized, low confidence, and unsupported states', () => {
+    expect(buildDemoNavigationUrl('recognized')).toBe('/pages/result/index?id=lat-pulldown');
+    expect(buildDemoNavigationUrl('low_confidence')).toBe(
+      '/pages/result/index?id=lat-pulldown&status=low_confidence'
+    );
+    expect(buildDemoNavigationUrl('unsupported')).toBe('/pages/result/index?status=unsupported');
   });
 
   it('builds an unsupported fallback message', () => {

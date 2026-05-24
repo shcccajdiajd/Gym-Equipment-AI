@@ -22,6 +22,7 @@
 - Added the root README, manual smoke-test guide, and release checklist.
 - Replaced the deprecated Vitest workspace file with a root [vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/vitest.config.ts) that uses `test.projects`.
 - Prepared the local WeChat Developer Tools integration environment with a synced catalog and a verified mock API startup flow.
+- Added a frontend-only demo mode on the home page so WeChat Developer Tools can preview recognized, low-confidence, and unsupported result flows without live recognition.
 
 ## Modified Files
 
@@ -59,6 +60,7 @@
 - [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
 - [apps/miniprogram/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/package.json)
 - [apps/miniprogram/tsconfig.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tsconfig.json)
+- [apps/miniprogram/vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/vitest.config.ts)
 - [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json)
 - [apps/miniprogram/tests/result-view-model.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/tests/result-view-model.test.ts)
 - [apps/miniprogram/miniprogram/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.ts)
@@ -88,6 +90,8 @@
 - [scripts/sync-catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts)
 - [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md)
 - [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md)
+- [services/api/vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/vitest.config.ts)
+- [packages/shared/vitest.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/vitest.config.ts)
 
 ## Current Run State
 
@@ -97,7 +101,7 @@
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts`
 - `packages/shared` TypeScript check passes.
 - `apps/miniprogram` TypeScript check passes.
-- Root `vitest run` passes across shared, API, and mini program tests with `13` passing tests.
+- Root `vitest run` passes across shared, API, and mini program tests with `14` passing tests.
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.

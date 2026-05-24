@@ -8,4 +8,12 @@
   <button class="primary-button action" bindtap="goToCapture">拍照识别器械</button>
   <button class="secondary-button action" bindtap="chooseFromAlbum">从相册导入</button>
   <button class="ghost-link" bindtap="goToEquipmentList">查看支持识别的器械</button>
+
+  <view class="demo-panel">
+    <text class="demo-title">开发联调 Demo</text>
+    <text class="demo-copy">不用真实识别，也能直接预览三种核心结果状态。</text>
+    <button class="secondary-button action" bindtap="openDemoRecognized">模拟识别成功</button>
+    <button class="secondary-button action" bindtap="openDemoLowConfidence">模拟低置信度</button>
+    <button class="secondary-button action" bindtap="openDemoUnsupported">模拟暂未收录</button>
+  </view>
 </view>
