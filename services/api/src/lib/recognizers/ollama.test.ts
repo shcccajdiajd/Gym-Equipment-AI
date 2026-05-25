@@ -53,6 +53,9 @@ describe('createOllamaRecognizer', () => {
     expect(body.options.temperature).toBe(0);
     expect(body.prompt).toContain('Source: album');
     expect(body.prompt).toContain('lat-pulldown');
+    expect(body.prompt).toContain('蝴蝶机夹胸');
+    expect(body.prompt).toContain('双臂从身体两侧向胸前夹拢');
+    expect(body.prompt).toContain('水平向后拉到躯干');
     expect(body.format.type).toBe('object');
     expect(body.format.properties.topMatchId).toBeDefined();
   });

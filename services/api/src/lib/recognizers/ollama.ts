@@ -1,4 +1,5 @@
 import { getSupportedEquipmentIds } from '@gym-equipment-ai/shared';
+import { buildRecognitionPrompt } from './prompt.js';
 import { RecognitionProviderError } from './types.js';
 import type { Recognizer, RecognitionResult } from './types.js';
 
@@ -51,12 +52,7 @@ export function createOllamaRecognizer(options: {
             options: {
               temperature: 0
             },
-            prompt: [
-              'You classify Chinese gym machine photos.',
-              `Choose one id from this list only: ${supportedIds.join(', ')}.`,
-              'If the machine is not confidently one of these ids, return topMatchId as null and confidence <= 0.4.',
-              `Source: ${source}. Return JSON only.`
-            ].join(' '),
+            prompt: buildRecognitionPrompt(source),
             images: [imageBase64],
             format: recognitionSchema(supportedIds)
           })

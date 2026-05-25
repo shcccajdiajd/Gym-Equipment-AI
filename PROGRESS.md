@@ -28,6 +28,9 @@
 - Fixed the API startup path so `services/api/.env` is actually loaded when running `node --import tsx src/server.ts`.
 - Added structured recognizer logs, typed timeout handling, and `504` timeout responses for Ollama-backed recognition failures.
 - Compressed mini program images before upload, preserved `low_confidence` state in result-page navigation, and added clearer timeout/error toasts.
+- Tightened recognizer safety by adding catalog-backed visual prompt cues for confusing fixed machines such as `蝴蝶机夹胸` vs `坐姿划船`.
+- Raised the auto-confirm threshold to `0.82` so borderline matches now stay in `low_confidence` instead of jumping straight to a fully recognized result.
+- Switched the local workspace package export for `@gym-equipment-ai/shared` to `src/index.ts`, removing the hidden runtime dependency on ignored `dist` artifacts.
 
 ## Modified Files
 
@@ -61,6 +64,8 @@
 - [services/api/src/lib/catalog-service.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/catalog-service.ts)
 - [services/api/src/lib/recognizers/types.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/types.ts)
 - [services/api/src/lib/recognizers/mock.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/mock.ts)
+- [services/api/src/lib/recognizers/prompt.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/prompt.ts)
+- [services/api/src/lib/recognizers/prompt.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/prompt.test.ts)
 - [services/api/src/lib/recognizers/ollama.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/ollama.ts)
 - [services/api/src/lib/recognizers/openai.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/openai.ts)
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
@@ -118,9 +123,10 @@
 - `services/api` route tests pass with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts`
 - `services/api` Ollama recognizer tests pass and verify structured local vision requests plus error handling.
+- `services/api` prompt-builder tests pass and verify the recognizer prompt now includes human-readable names plus visual disambiguation cues for confusing machines.
 - `packages/shared` TypeScript check passes.
 - `apps/miniprogram` TypeScript check passes.
-- Root `vitest run` passes across shared, API, and mini program tests with `22` passing tests.
+- Root `vitest run` passes across shared, API, and mini program tests with `25` passing tests.
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
@@ -128,13 +134,14 @@
 - The mini program runtime build now emits the `js` entry files WeChat Developer Tools expects, so the previous `pages/home/index.js not found` startup failure has been addressed.
 - The API can now be configured to use either `mock`, `ollama`, or `openai` recognition providers.
 - The `.env` loading bug that previously made `ollama` configuration silently fall back to defaults has been addressed.
-- The mini program has not yet been manually re-tested in WeChat DevTools after the new timeout/logging/compression changes.
+- The mini program catalog snapshot has been re-synced after adding recognition hints to the shared catalog.
+- The mini program has not yet been manually re-tested in WeChat DevTools after the stronger recognizer prompt and stricter confidence threshold changes.
 
 ## Current Problems
 
 - The mini program has not yet been manually smoke-tested in WeChat DevTools, so runtime behavior is verified by typecheck and Vitest only.
 - The assistant could not auto-detect a local `微信开发者工具.app`, so opening the GUI and completing the smoke test still requires your machine-side interaction.
-- Live Ollama recognition has not been verified yet because no local `ollama` server/model was exercised in this environment.
+- The latest Ollama prompt changes for the `蝴蝶机夹胸` vs `坐姿划船` confusion have not yet been re-verified in WeChat DevTools with the same real image.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
-- Local helper tooling was downloaded into ignored workspace paths only to unblock verification in this environment.
+- `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

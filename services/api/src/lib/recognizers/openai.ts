@@ -1,5 +1,6 @@
 import { getSupportedEquipmentIds } from '@gym-equipment-ai/shared';
 import OpenAI from 'openai';
+import { buildRecognitionPrompt } from './prompt.js';
 import type { Recognizer, RecognitionResult } from './types.js';
 
 interface OpenAiRecognitionResponse {
@@ -22,11 +23,7 @@ export function createOpenAiRecognizer(options: { apiKey: string; model: string 
             content: [
               {
                 type: 'input_text',
-                text: [
-                  'You classify Chinese gym machine photos.',
-                  `Choose one id from this list only: ${supportedIds.join(', ')}.`,
-                  'If the machine is not confidently one of these ids, return topMatchId as null and confidence <= 0.4.'
-                ].join(' ')
+                text: buildRecognitionPrompt(source)
               }
             ]
           },
@@ -35,7 +32,7 @@ export function createOpenAiRecognizer(options: { apiKey: string; model: string 
             content: [
               {
                 type: 'input_text',
-                text: `Source: ${source}. Return JSON only.`
+                text: 'Return JSON only.'
               },
               {
                 type: 'input_image',

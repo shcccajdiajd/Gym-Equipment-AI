@@ -14,6 +14,10 @@ const rawCatalog: EquipmentCard[] = [
     safety: ['全程保持肩膀下沉，不要耸肩。', '不要为了重量牺牲活动幅度。'],
     commonErrors: ['座椅太低导致推举轨迹偏上。', '锁死肘关节并猛推。'],
     beginnerTip: '先从能稳定完成 10 次的轻重量开始。',
+    recognitionHints: [
+      '坐姿固定推举器械，两个把手位于胸前，从胸前向前推出。',
+      '通常有靠背和座椅，没有像拥抱一样向中间夹拢的长摆臂轨迹。'
+    ],
     videoRecommendation: {
       platform: 'Bilibili',
       title: '坐姿推胸机使用教学',
@@ -34,6 +38,10 @@ const rawCatalog: EquipmentCard[] = [
     safety: ['手肘保持微屈，不要完全伸直。', '若肩前侧不适，缩小动作幅度。'],
     commonErrors: ['借惯性猛夹。', '肩膀前顶导致胸部发力下降。'],
     beginnerTip: '把注意力放在胸部向中间夹紧，而不是手臂摆动。',
+    recognitionHints: [
+      '双臂从身体两侧向胸前夹拢，轨迹像拥抱一样，不是向后拉到躯干。',
+      '常见为座椅加靠背，胸前两侧各有一根摆臂或肘垫，主要是胸部夹胸器械。'
+    ],
     videoRecommendation: {
       platform: 'Bilibili',
       title: '蝴蝶机夹胸教学',
@@ -54,6 +62,10 @@ const rawCatalog: EquipmentCard[] = [
     safety: ['不要把横杆拉到脖子后面。', '避免身体大幅后仰借力。'],
     commonErrors: ['耸肩代偿。', '回放时完全放松导致重量砸回。'],
     beginnerTip: '先学会沉肩再拉肘，背阔肌感觉会更明显。',
+    recognitionHints: [
+      '头顶上方有横杆，从上往下拉，常配有固定大腿的腿垫。',
+      '是竖直下拉轨迹，不是水平向后拉到腹部的坐姿划船。'
+    ],
     videoRecommendation: {
       platform: 'Bilibili',
       title: '高位下拉新手教学',
@@ -74,6 +86,10 @@ const rawCatalog: EquipmentCard[] = [
     safety: ['保持腰背稳定，不要甩动。', '回程不要塌肩。'],
     commonErrors: ['只用手臂拉而不带动肘部。', '身体前后摆动过大。'],
     beginnerTip: '想象用肘部带动动作，而不是用手拽。',
+    recognitionHints: [
+      '前方有把手，动作是水平向后拉到躯干或下腹，不是向胸前夹拢。',
+      '常见有胸垫、脚踏或低位拉柄，属于背部水平拉器械。'
+    ],
     videoRecommendation: {
       platform: 'Bilibili',
       title: '坐姿划船教学',
@@ -94,6 +110,10 @@ const rawCatalog: EquipmentCard[] = [
     safety: ['下放到肩膀舒适范围即可。', '如果肩部不适，立刻减轻重量。'],
     commonErrors: ['耸肩代偿。', '腰部过度反弓。'],
     beginnerTip: '全程保持肋骨回收，别为了推高而挺腰。',
+    recognitionHints: [
+      '把手从肩膀附近向头顶上方推起，轨迹偏竖直。',
+      '主要训练肩部，不是胸前夹胸，也不是胸前平推。'
+    ],
     videoRecommendation: {
       platform: 'Bilibili',
       title: '肩推机教学',
@@ -354,6 +374,10 @@ const rawCatalog: EquipmentCard[] = [
     safety: ['上下器械时一定扶稳。', '不要突然松手让膝垫弹回。'],
     commonErrors: ['把配重逻辑理解反。', '动作底部完全塌肩。'],
     beginnerTip: '第一次用时先从辅助更大的重量开始。',
+    recognitionHints: [
+      '有站台、膝垫或踏板，用户通常跪或站在辅助垫上完成引体或双杠动作。',
+      '器械整体较高，支持向上拉或向下压，不是坐姿拉或夹胸设备。'
+    ],
     videoRecommendation: {
       platform: 'Bilibili',
       title: '辅助引体机教学',

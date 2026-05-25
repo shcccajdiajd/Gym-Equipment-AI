@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { resolveEquipmentPayload } from '../lib/catalog-service.js';
+import { RECOGNIZED_CONFIDENCE_THRESHOLD } from '../lib/recognizers/prompt.js';
 import { RecognitionProviderError } from '../lib/recognizers/types.js';
 import type { Recognizer } from '../lib/recognizers/types.js';
 
@@ -91,7 +92,8 @@ export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Reco
     }
 
     return {
-      status: result.confidence >= 0.75 ? 'recognized' : 'low_confidence',
+      status:
+        result.confidence >= RECOGNIZED_CONFIDENCE_THRESHOLD ? 'recognized' : 'low_confidence',
       equipment,
       confidence: result.confidence,
       alternatives: result.alternatives

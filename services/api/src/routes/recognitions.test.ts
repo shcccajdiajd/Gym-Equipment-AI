@@ -210,6 +210,35 @@ describe('POST /api/recognitions', () => {
     });
   });
 
+  it('keeps borderline matches in low confidence instead of auto-confirming them', async () => {
+    const app = buildApp({
+      recognizer: createRecognizer({
+        topMatchId: 'seated-row',
+        confidence: 0.8,
+        alternatives: ['pec-deck-fly']
+      })
+    });
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      status: 'low_confidence',
+      equipment: {
+        id: 'seated-row'
+      },
+      confidence: 0.8,
+      alternatives: ['pec-deck-fly']
+    });
+  });
+
   it('returns 500 when a recognizer result does not map to catalog content', async () => {
     const app = buildApp({
       recognizer: createRecognizer({

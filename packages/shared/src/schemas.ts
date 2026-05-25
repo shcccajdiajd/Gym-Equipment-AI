@@ -28,6 +28,7 @@ export const equipmentCardSchema = z.object({
   safety: z.array(z.string().min(1)).min(2),
   commonErrors: z.array(z.string().min(1)).min(2),
   beginnerTip: z.string().min(1),
+  recognitionHints: z.array(z.string().min(1)).min(2).optional(),
   videoRecommendation: videoRecommendationSchema,
   similarEquipmentIds: z.array(z.string().min(1)).min(1)
 });
