@@ -3,7 +3,7 @@
 ## Before Upload
 
 1. Confirm the mini program AppID is no longer `touristappid`.
-2. Verify `services/api/.env` uses the intended `RECOGNIZER_PROVIDER` and production-safe secrets handling.
+2. Verify `services/api/.env` uses `RECOGNIZER_PROVIDER=openai`, a real `OPENAI_API_KEY`, and production-safe secrets handling.
 3. Re-run `corepack pnpm sync:catalog` so the mini program snapshot matches the shared catalog.
 4. Run `corepack pnpm test`.
 5. Run `corepack pnpm typecheck`.

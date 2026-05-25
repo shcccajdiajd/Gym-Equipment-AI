@@ -33,6 +33,7 @@
 - Switched the local workspace package export for `@gym-equipment-ai/shared` to `src/index.ts`, removing the hidden runtime dependency on ignored `dist` artifacts.
 - Added an ambiguity fallback for `unsupported` recognition results: the API now preserves `alternatives`, and the mini program unsupported page can show tappable candidate machines instead of only a dead-end fallback.
 - Fixed the unsupported-candidate query parsing bug: encoded `%2C` separators are now decoded before splitting, so suggested machine buttons render correctly in the mini program.
+- Updated the recommended launch path from local Ollama to OpenAI vision, including `.env.example`, README setup, and manual QA guidance.
 
 ## Modified Files
 
@@ -139,6 +140,7 @@
 - The `.env` loading bug that previously made `ollama` configuration silently fall back to defaults has been addressed.
 - The mini program catalog snapshot has been re-synced after adding recognition hints to the shared catalog.
 - The mini program has not yet been manually re-tested in WeChat DevTools after the unsupported-candidate query parsing fix.
+- The repo defaults and docs now point to `RECOGNIZER_PROVIDER=openai` for launch readiness, but a real `OPENAI_API_KEY` has not been exercised in this environment.
 
 ## Current Problems
 
@@ -147,5 +149,6 @@
 - The latest Ollama prompt changes for the `蝴蝶机夹胸` vs `坐姿划船` confusion have not yet been re-verified in WeChat DevTools with the same real image.
 - The latest unsupported-result candidate flow has not yet been re-verified in WeChat DevTools after the encoded-alternatives parsing fix, so the new suggested-machine buttons are still code-verified only.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
+- The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

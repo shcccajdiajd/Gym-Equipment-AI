@@ -35,10 +35,27 @@ corepack pnpm --filter @gym-equipment-ai/api dev
 
 The API now auto-loads `services/api/.env` on startup, so you do not need to export these variables manually before running `node --import tsx src/server.ts`.
 
+### Recommended Launch Configuration
+
+For launch readiness, use the OpenAI provider instead of the local Ollama model. Update [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env) to:
+
+```env
+PORT=3001
+RECOGNIZER_PROVIDER=openai
+OPENAI_API_KEY=your_real_key_here
+OPENAI_MODEL=gpt-4.1
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+OLLAMA_MODEL=qwen2.5vl:3b
+OLLAMA_TIMEOUT_MS=120000
+LOG_LEVEL=info
+```
+
+If you want a cheaper fallback after launch, keep the same code path and change `OPENAI_MODEL` to `gpt-4.1-mini`.
+
 ## Recognition Providers
 
 - `mock`: deterministic local development provider for fast UI testing
-- `openai`: image recognition through the OpenAI Responses API
+- `openai`: recommended launch provider, using the OpenAI Responses API for vision recognition
 - `ollama`: free local vision inference through an Ollama-served model such as `qwen2.5vl:3b`
 
 ## Useful Commands
@@ -77,9 +94,10 @@ node --import tsx scripts/sync-catalog.ts
 ## Release Checklist
 
 1. Confirm the 20 launch equipment cards are complete and reviewed for safety wording.
-2. Run `corepack pnpm sync:catalog`.
-3. Run `corepack pnpm test`.
-4. Run `corepack pnpm typecheck`.
-5. Execute [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) in WeChat Developer Tools.
-6. Replace `touristappid` in [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json) with the real AppID before upload.
-7. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.
+2. Set `RECOGNIZER_PROVIDER=openai` and a real `OPENAI_API_KEY` in [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env).
+3. Run `corepack pnpm sync:catalog`.
+4. Run `corepack pnpm test`.
+5. Run `corepack pnpm typecheck`.
+6. Execute [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) in WeChat Developer Tools.
+7. Replace `touristappid` in [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json) with the real AppID before upload.
+8. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.
