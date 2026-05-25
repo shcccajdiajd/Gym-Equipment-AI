@@ -79,6 +79,7 @@ export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Reco
     if (!result.topMatchId) {
       return reply.status(200).send({
         status: 'unsupported',
+        alternatives: result.alternatives,
         message: '这类器械暂未收录，请尝试重新拍摄或查看支持列表。'
       });
     }

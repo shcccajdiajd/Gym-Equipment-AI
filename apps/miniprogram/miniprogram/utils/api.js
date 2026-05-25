@@ -20,8 +20,12 @@ function buildResultNavigationUrl(id, status = 'recognized') {
     }
     return `${baseUrl}&status=${encodeURIComponent(status)}`;
 }
-function buildFallbackNavigationUrl(status) {
-    return `/pages/result/index?status=${encodeURIComponent(status)}`;
+function buildFallbackNavigationUrl(status, alternatives = []) {
+    const baseUrl = `/pages/result/index?status=${encodeURIComponent(status)}`;
+    if (alternatives.length === 0) {
+        return baseUrl;
+    }
+    return `${baseUrl}&alternatives=${encodeURIComponent(alternatives.join(','))}`;
 }
 function buildDemoNavigationUrl(mode) {
     if (mode === 'unsupported') {

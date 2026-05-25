@@ -60,6 +60,14 @@
   margin-top: 24rpx;
 }
 
+.suggestion-block {
+  margin-top: 20rpx;
+}
+
+.suggestion-button {
+  margin-top: 16rpx;
+}
+
 .footer-note {
   padding: 12rpx 8rpx 32rpx;
 }

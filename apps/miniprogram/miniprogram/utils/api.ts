@@ -29,8 +29,13 @@ export function buildResultNavigationUrl(id: string, status: RecognitionStatus =
   return `${baseUrl}&status=${encodeURIComponent(status)}`;
 }
 
-export function buildFallbackNavigationUrl(status: RecognitionStatus) {
-  return `/pages/result/index?status=${encodeURIComponent(status)}`;
+export function buildFallbackNavigationUrl(status: RecognitionStatus, alternatives: string[] = []) {
+  const baseUrl = `/pages/result/index?status=${encodeURIComponent(status)}`;
+  if (alternatives.length === 0) {
+    return baseUrl;
+  }
+
+  return `${baseUrl}&alternatives=${encodeURIComponent(alternatives.join(','))}`;
 }
 
 export function buildDemoNavigationUrl(mode: DemoRecognitionMode) {

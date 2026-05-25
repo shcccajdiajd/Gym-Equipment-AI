@@ -162,7 +162,7 @@ describe('POST /api/recognitions', () => {
       recognizer: createRecognizer({
         topMatchId: null,
         confidence: 0.12,
-        alternatives: []
+        alternatives: ['pec-deck-fly', 'seated-chest-press']
       })
     });
 
@@ -177,7 +177,8 @@ describe('POST /api/recognitions', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.json()).toMatchObject({
-      status: 'unsupported'
+      status: 'unsupported',
+      alternatives: ['pec-deck-fly', 'seated-chest-press']
     });
   });
 

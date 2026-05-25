@@ -1,7 +1,19 @@
 <view wx:if="{{unsupported}}" class="result-page">
   <view class="hero-card">
     <text class="result-title">{{unsupported.title}}</text>
-    <text class="summary">你可以先从已支持的固定器械里继续找，避免搜错教程。</text>
+    <text class="summary">{{unsupported.summary}}</text>
+    <view wx:if="{{suggestedEquipment.length > 0}}" class="suggestion-block">
+      <text class="section-title">{{unsupported.suggestionTitle}}</text>
+      <block wx:for="{{suggestedEquipment}}" wx:key="id">
+        <button
+          class="secondary-button section-button suggestion-button"
+          data-id="{{item.id}}"
+          bindtap="chooseSuggestedEquipment"
+        >
+          {{item.zhName}}
+        </button>
+      </block>
+    </view>
     <button class="primary-button section-button" bindtap="goToEquipmentList">{{unsupported.actionLabel}}</button>
   </view>
 </view>

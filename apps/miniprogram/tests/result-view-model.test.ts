@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildDemoNavigationUrl,
+  buildFallbackNavigationUrl,
   buildRecognitionFailureMessage,
   buildResultNavigationUrl
 } from '../miniprogram/utils/api.ts';
@@ -26,9 +27,26 @@ describe('result view model', () => {
     expect(buildDemoNavigationUrl('unsupported')).toBe('/pages/result/index?status=unsupported');
   });
 
+  it('keeps unsupported candidate ids in the fallback url', () => {
+    expect(buildFallbackNavigationUrl('unsupported', ['pec-deck-fly', 'seated-chest-press'])).toBe(
+      '/pages/result/index?status=unsupported&alternatives=pec-deck-fly%2Cseated-chest-press'
+    );
+  });
+
   it('builds an unsupported fallback message', () => {
-    expect(buildUnsupportedState()).toEqual({
+    expect(buildUnsupportedState([])).toEqual({
       title: '这类器械暂未收录',
+      summary: '你可以先从已支持的固定器械里继续找，避免搜错教程。',
+      suggestionTitle: '',
+      actionLabel: '查看支持识别的器械'
+    });
+  });
+
+  it('builds an unsupported state with candidate suggestions when available', () => {
+    expect(buildUnsupportedState(['蝴蝶机夹胸', '坐姿推胸机'])).toEqual({
+      title: '暂时没法完全确定这台器械',
+      summary: '它更像下面这些已收录器械，你可以点一个最像的继续看教学。',
+      suggestionTitle: '你看到的可能是',
       actionLabel: '查看支持识别的器械'
     });
   });

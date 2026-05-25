@@ -8,6 +8,7 @@ type ResultPageData = {
   showLowConfidence: boolean;
   primaryMusclesText: string;
   similarEquipmentNames: string[];
+  suggestedEquipment: Array<{ id: string; zhName: string }>;
 };
 
 Page({
@@ -16,18 +17,38 @@ Page({
     unsupported: null,
     showLowConfidence: false,
     primaryMusclesText: '',
-    similarEquipmentNames: []
+    similarEquipmentNames: [],
+    suggestedEquipment: []
   } satisfies ResultPageData,
 
   onLoad(this: MiniProgramPageInstance<ResultPageData>, query: Record<string, string | undefined>) {
+    const suggestedEquipment = (query.alternatives ?? '')
+      .split(',')
+      .map((id) => decodeURIComponent(id).trim())
+      .filter(Boolean)
+      .reduce<Array<{ id: string; zhName: string }>>((items, id) => {
+        const equipment = getEquipmentCard(id);
+        if (equipment) {
+          items.push({ id: equipment.id, zhName: equipment.zhName });
+        }
+
+        return items;
+      }, []);
+
     if (query.status === 'unsupported') {
-      this.setData({ unsupported: buildUnsupportedState() });
+      this.setData({
+        unsupported: buildUnsupportedState(suggestedEquipment.map((item) => item.zhName)),
+        suggestedEquipment
+      });
       return;
     }
 
     const equipment = query.id ? getEquipmentCard(query.id) : null;
     if (!equipment) {
-      this.setData({ unsupported: buildUnsupportedState() });
+      this.setData({
+        unsupported: buildUnsupportedState([]),
+        suggestedEquipment: []
+      });
       return;
     }
 
@@ -46,7 +67,8 @@ Page({
       unsupported: null,
       showLowConfidence: query.status === 'low_confidence',
       primaryMusclesText: equipment.primaryMuscles.join('、'),
-      similarEquipmentNames
+      similarEquipmentNames,
+      suggestedEquipment: []
     });
   },
 
@@ -66,5 +88,17 @@ Page({
 
   goToEquipmentList() {
     wx.navigateTo({ url: '/pages/equipment-list/index' });
+  },
+
+  chooseSuggestedEquipment(
+    this: MiniProgramPageInstance<ResultPageData>,
+    event: WechatMiniprogram.BaseEvent
+  ) {
+    const equipmentId = (event.currentTarget.dataset as { id?: string }).id;
+    if (!equipmentId) {
+      return;
+    }
+
+    wx.navigateTo({ url: `/pages/result/index?id=${encodeURIComponent(equipmentId)}&status=low_confidence` });
   }
 });

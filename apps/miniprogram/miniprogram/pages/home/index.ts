@@ -28,7 +28,7 @@ Page({
       }
 
       if (result.status === 'unsupported') {
-        wx.navigateTo({ url: buildFallbackNavigationUrl(result.status) });
+        wx.navigateTo({ url: buildFallbackNavigationUrl(result.status, result.alternatives ?? []) });
         return;
       }
 

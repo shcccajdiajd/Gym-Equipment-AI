@@ -86,6 +86,7 @@ Acceptance:
 - The Ollama-backed flow no longer silently runs in `mock` mode after editing `.env`.
 - If Ollama is slow or unavailable, the UI shows a clear timeout/error toast instead of hanging without explanation.
 - Re-testing the same `蝴蝶机夹胸` reference image no longer produces a confident `坐姿划船` result; it should either identify `pec-deck-fly` correctly or fall back to `low_confidence`/`unsupported`.
+- If the recognizer still returns `unsupported`, the result page shows candidate machine buttons derived from `alternatives`, and tapping `蝴蝶机夹胸` opens its teaching card.
 
 - [ ] Verify the live OpenAI recognition path with a real API key.
 Acceptance:
@@ -99,6 +100,7 @@ Acceptance:
 - At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
 - The API terminal logs show request receipt, recognizer completion or timeout, and total duration for the test image.
 - The `ims.webp` `蝴蝶机夹胸` sample no longer returns a confidently recognized `坐姿划船` response after the catalog-prompt update and `0.82` recognition threshold change.
+- When `topMatchId` is null but alternatives are present, the API returns those alternatives and the mini program surfaces them instead of a dead-end unsupported page.
 
 - [ ] Replace `touristappid` and prepare the first real upload package.
 Acceptance:

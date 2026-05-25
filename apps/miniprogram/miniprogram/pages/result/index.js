@@ -9,16 +9,35 @@ Page({
         unsupported: null,
         showLowConfidence: false,
         primaryMusclesText: '',
-        similarEquipmentNames: []
+        similarEquipmentNames: [],
+        suggestedEquipment: []
     },
     onLoad(query) {
+        var _a;
+        const suggestedEquipment = ((_a = query.alternatives) !== null && _a !== void 0 ? _a : '')
+            .split(',')
+            .map((id) => decodeURIComponent(id).trim())
+            .filter(Boolean)
+            .reduce((items, id) => {
+            const equipment = (0, catalog_js_1.getEquipmentCard)(id);
+            if (equipment) {
+                items.push({ id: equipment.id, zhName: equipment.zhName });
+            }
+            return items;
+        }, []);
         if (query.status === 'unsupported') {
-            this.setData({ unsupported: (0, result_view_model_js_1.buildUnsupportedState)() });
+            this.setData({
+                unsupported: (0, result_view_model_js_1.buildUnsupportedState)(suggestedEquipment.map((item) => item.zhName)),
+                suggestedEquipment
+            });
             return;
         }
         const equipment = query.id ? (0, catalog_js_1.getEquipmentCard)(query.id) : null;
         if (!equipment) {
-            this.setData({ unsupported: (0, result_view_model_js_1.buildUnsupportedState)() });
+            this.setData({
+                unsupported: (0, result_view_model_js_1.buildUnsupportedState)([]),
+                suggestedEquipment: []
+            });
             return;
         }
         const similarEquipmentNames = equipment.similarEquipmentIds.reduce((names, itemId) => {
@@ -35,7 +54,8 @@ Page({
             unsupported: null,
             showLowConfidence: query.status === 'low_confidence',
             primaryMusclesText: equipment.primaryMuscles.join('、'),
-            similarEquipmentNames
+            similarEquipmentNames,
+            suggestedEquipment: []
         });
     },
     copyVideoSearch() {
@@ -53,5 +73,12 @@ Page({
     },
     goToEquipmentList() {
         wx.navigateTo({ url: '/pages/equipment-list/index' });
+    },
+    chooseSuggestedEquipment(event) {
+        const equipmentId = event.currentTarget.dataset.id;
+        if (!equipmentId) {
+            return;
+        }
+        wx.navigateTo({ url: `/pages/result/index?id=${encodeURIComponent(equipmentId)}&status=low_confidence` });
     }
 });
