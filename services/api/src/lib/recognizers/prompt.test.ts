@@ -12,6 +12,8 @@ describe('buildRecognitionPrompt', () => {
     expect(prompt).toContain('seated-row');
     expect(prompt).toContain('坐姿划船');
     expect(prompt).toContain('水平向后拉到躯干');
+    expect(prompt).toContain('"topMatchId":"one-supported-id-or-null"');
+    expect(prompt).toContain('Use catalog ids in topMatchId and alternatives');
   });
 
   it('uses a stricter confidence threshold for beginner-safe recognized results', () => {

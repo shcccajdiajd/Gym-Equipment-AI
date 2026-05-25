@@ -37,6 +37,8 @@
 - Added an `aliyun` recognizer provider using Alibaba Model Studio's OpenAI-compatible DashScope endpoint and switched the recommended launch path from OpenAI to Aliyun.
 - Hardened the Aliyun recognition path and mini program request handling so API `500` or unexpected provider responses become structured error payloads instead of leaving the mini program stuck on `识别中`.
 - Removed risky Aliyun compatible-mode request fields, added safer empty-response handling, and added regression coverage for Aliyun request construction.
+- Added Aliyun response-shape validation and catalog-name fallback mapping, so responses like `name: 蝴蝶机夹胸` can resolve to `pec-deck-fly` instead of crashing.
+- Improved unexpected API crash logging by using the Fastify/Pino `err` field so future backend screenshots include the real error message and stack.
 
 ## Modified Files
 
@@ -145,7 +147,7 @@
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.json --noEmit`
 - Root `vitest run` passes across shared, API, and mini program tests with `25` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `30` passing tests.
-- Root `vitest run` now passes across shared, API, and mini program tests with `34` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `36` passing tests.
 - The mini program runtime JavaScript has been rebuilt with:
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
@@ -161,6 +163,7 @@
 - The repo defaults and docs now point to `RECOGNIZER_PROVIDER=openai` for launch readiness, but a real `OPENAI_API_KEY` has not been exercised in this environment.
 - The repo defaults and docs now point to `RECOGNIZER_PROVIDER=aliyun` for launch readiness, but a real `ALIYUN_API_KEY` has not been exercised in this environment.
 - If Aliyun live recognition still fails, the API should now return a structured `error` or `timeout` payload and the mini program should show a toast instead of hanging on the loading state.
+- Aliyun responses that use exact catalog names instead of ids can now still produce a recognized or low-confidence result when the name maps to a supported machine.
 
 ## Current Problems
 

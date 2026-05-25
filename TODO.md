@@ -93,6 +93,12 @@ Acceptance:
 - Empty Aliyun completion content is wrapped as `invalid_response` instead of causing an unstructured crash.
 - `./node_modules/.bin/vitest run` exits `0` with the new regression tests included.
 
+- [x] Make Aliyun response parsing tolerant of exact catalog names while still validating malformed payloads.
+Acceptance:
+- If Aliyun returns an exact catalog id, Chinese name, or English name, it can be mapped to the internal equipment id.
+- A response with no recognizable match field is returned as `invalid_response` instead of a TypeError.
+- Unexpected route errors are logged through the `err` field so the terminal shows the real message/stack.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -102,6 +108,7 @@ Acceptance:
 - The running Aliyun-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
 - If Aliyun still fails, the mini program exits `识别中` and shows a readable toast rather than staying stuck.
 - The API terminal log shows either `recognition provider completed` or a structured `recognition provider failed` / `recognition request crashed unexpectedly` entry.
+- If the API logs `recognition provider failed` with `invalid_response`, the logged message identifies whether the provider returned invalid JSON or an unexpected JSON shape.
 - The home-page demo buttons successfully preview all three result states in WeChat Developer Tools.
 - The project loads in WeChat Developer Tools without the previous `pages/home/index.js` missing-file startup error.
 - The Aliyun-backed flow returns a real response instead of a transport or auth error after editing `.env`.

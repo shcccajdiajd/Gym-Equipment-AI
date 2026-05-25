@@ -45,6 +45,8 @@ export function buildRecognitionPrompt(source: 'camera' | 'album') {
     `Choose one id from this list only: ${supportedIds.join(', ')}.`,
     'If the visible machine cannot be distinguished confidently from a similar machine, return topMatchId as null and confidence <= 0.4.',
     'If the image is partial, blurry, or the machine family remains ambiguous, return null instead of guessing.',
+    'Return exactly one JSON object with this shape and no extra explanation: {"topMatchId":"one-supported-id-or-null","confidence":0.0,"alternatives":["up-to-3-supported-ids"]}.',
+    'Use catalog ids in topMatchId and alternatives, not zhName, enName, or name fields.',
     'Catalog reference:',
     buildCatalogDescriptor(),
     `Source: ${source}. Return JSON only.`

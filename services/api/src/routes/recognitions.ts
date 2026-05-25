@@ -59,7 +59,7 @@ export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Reco
       request.log.error(
         {
           durationMs: Date.now() - startedAt,
-          error
+          err: error
         },
         'recognition request crashed unexpectedly'
       );

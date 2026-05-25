@@ -79,4 +79,67 @@ describe('createAliyunRecognizer', () => {
       })
     );
   });
+
+  it('maps Chinese equipment names returned by Aliyun back to supported catalog ids', async () => {
+    createMock.mockResolvedValueOnce({
+      choices: [
+        {
+          message: {
+            content: JSON.stringify({
+              name: '蝴蝶机夹胸',
+              confidence: 0.91
+            })
+          }
+        }
+      ]
+    });
+
+    const recognizer = createAliyunRecognizer({
+      apiKey: 'test-key',
+      baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+      model: 'qwen3-vl-32b-instruct'
+    });
+
+    await expect(
+      recognizer.recognize({
+        imageBase64: 'ZmFrZS1pbWFnZS1iYXNlNjQ=',
+        source: 'album'
+      })
+    ).resolves.toEqual({
+      topMatchId: 'pec-deck-fly',
+      confidence: 0.91,
+      alternatives: []
+    });
+  });
+
+  it('wraps malformed JSON payload shapes as an invalid provider response', async () => {
+    createMock.mockResolvedValueOnce({
+      choices: [
+        {
+          message: {
+            content: JSON.stringify({
+              confidence: 0.91
+            })
+          }
+        }
+      ]
+    });
+
+    const recognizer = createAliyunRecognizer({
+      apiKey: 'test-key',
+      baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+      model: 'qwen3-vl-32b-instruct'
+    });
+
+    await expect(
+      recognizer.recognize({
+        imageBase64: 'ZmFrZS1pbWFnZS1iYXNlNjQ=',
+        source: 'album'
+      })
+    ).rejects.toEqual(
+      expect.objectContaining<Partial<RecognitionProviderError>>({
+        code: 'invalid_response'
+      })
+    );
+  });
 });
