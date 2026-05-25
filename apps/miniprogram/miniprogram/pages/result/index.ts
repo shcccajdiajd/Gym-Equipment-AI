@@ -1,5 +1,6 @@
 import { getEquipmentCard } from '../../data/catalog.js';
 import { pushHistory } from '../../utils/history.js';
+import { parseAlternativeIds } from '../../utils/api.js';
 import { buildUnsupportedState, buildVideoSearchCopy } from '../../utils/result-view-model.js';
 
 type ResultPageData = {
@@ -22,9 +23,7 @@ Page({
   } satisfies ResultPageData,
 
   onLoad(this: MiniProgramPageInstance<ResultPageData>, query: Record<string, string | undefined>) {
-    const suggestedEquipment = (query.alternatives ?? '')
-      .split(',')
-      .map((id) => decodeURIComponent(id).trim())
+    const suggestedEquipment = parseAlternativeIds(query.alternatives)
       .filter(Boolean)
       .reduce<Array<{ id: string; zhName: string }>>((items, id) => {
         const equipment = getEquipmentCard(id);

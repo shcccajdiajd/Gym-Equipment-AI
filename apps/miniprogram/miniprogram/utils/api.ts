@@ -38,6 +38,17 @@ export function buildFallbackNavigationUrl(status: RecognitionStatus, alternativ
   return `${baseUrl}&alternatives=${encodeURIComponent(alternatives.join(','))}`;
 }
 
+export function parseAlternativeIds(value: string | undefined) {
+  if (!value) {
+    return [];
+  }
+
+  return decodeURIComponent(value)
+    .split(',')
+    .map((id) => id.trim())
+    .filter(Boolean);
+}
+
 export function buildDemoNavigationUrl(mode: DemoRecognitionMode) {
   if (mode === 'unsupported') {
     return buildFallbackNavigationUrl(mode);

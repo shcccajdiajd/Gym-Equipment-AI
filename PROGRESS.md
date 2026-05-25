@@ -32,6 +32,7 @@
 - Raised the auto-confirm threshold to `0.82` so borderline matches now stay in `low_confidence` instead of jumping straight to a fully recognized result.
 - Switched the local workspace package export for `@gym-equipment-ai/shared` to `src/index.ts`, removing the hidden runtime dependency on ignored `dist` artifacts.
 - Added an ambiguity fallback for `unsupported` recognition results: the API now preserves `alternatives`, and the mini program unsupported page can show tappable candidate machines instead of only a dead-end fallback.
+- Fixed the unsupported-candidate query parsing bug: encoded `%2C` separators are now decoded before splitting, so suggested machine buttons render correctly in the mini program.
 
 ## Modified Files
 
@@ -128,7 +129,7 @@
 - `packages/shared` TypeScript check passes.
 - `apps/miniprogram` TypeScript check passes.
 - Root `vitest run` passes across shared, API, and mini program tests with `25` passing tests.
-- Root `vitest run` now passes across shared, API, and mini program tests with `27` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `28` passing tests.
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
@@ -137,14 +138,14 @@
 - The API can now be configured to use either `mock`, `ollama`, or `openai` recognition providers.
 - The `.env` loading bug that previously made `ollama` configuration silently fall back to defaults has been addressed.
 - The mini program catalog snapshot has been re-synced after adding recognition hints to the shared catalog.
-- The mini program has not yet been manually re-tested in WeChat DevTools after the new unsupported-result candidate buttons were added.
+- The mini program has not yet been manually re-tested in WeChat DevTools after the unsupported-candidate query parsing fix.
 
 ## Current Problems
 
 - The mini program has not yet been manually smoke-tested in WeChat DevTools, so runtime behavior is verified by typecheck and Vitest only.
 - The assistant could not auto-detect a local `微信开发者工具.app`, so opening the GUI and completing the smoke test still requires your machine-side interaction.
 - The latest Ollama prompt changes for the `蝴蝶机夹胸` vs `坐姿划船` confusion have not yet been re-verified in WeChat DevTools with the same real image.
-- The latest unsupported-result candidate flow has not yet been re-verified in WeChat DevTools with the same `蝴蝶机夹胸` image, so the new suggested-machine buttons are still code-verified only.
+- The latest unsupported-result candidate flow has not yet been re-verified in WeChat DevTools after the encoded-alternatives parsing fix, so the new suggested-machine buttons are still code-verified only.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

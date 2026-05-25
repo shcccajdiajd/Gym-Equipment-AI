@@ -87,6 +87,7 @@ Acceptance:
 - If Ollama is slow or unavailable, the UI shows a clear timeout/error toast instead of hanging without explanation.
 - Re-testing the same `蝴蝶机夹胸` reference image no longer produces a confident `坐姿划船` result; it should either identify `pec-deck-fly` correctly or fall back to `low_confidence`/`unsupported`.
 - If the recognizer still returns `unsupported`, the result page shows candidate machine buttons derived from `alternatives`, and tapping `蝴蝶机夹胸` opens its teaching card.
+- The same unsupported flow correctly parses encoded `alternatives` from the page URL, so candidate buttons actually render in WeChat DevTools instead of silently disappearing.
 
 - [ ] Verify the live OpenAI recognition path with a real API key.
 Acceptance:

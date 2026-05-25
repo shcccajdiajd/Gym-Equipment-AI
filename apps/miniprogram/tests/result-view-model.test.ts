@@ -4,7 +4,8 @@ import {
   buildDemoNavigationUrl,
   buildFallbackNavigationUrl,
   buildRecognitionFailureMessage,
-  buildResultNavigationUrl
+  buildResultNavigationUrl,
+  parseAlternativeIds
 } from '../miniprogram/utils/api.ts';
 import { buildUnsupportedState, buildVideoSearchCopy } from '../miniprogram/utils/result-view-model.ts';
 
@@ -31,6 +32,14 @@ describe('result view model', () => {
     expect(buildFallbackNavigationUrl('unsupported', ['pec-deck-fly', 'seated-chest-press'])).toBe(
       '/pages/result/index?status=unsupported&alternatives=pec-deck-fly%2Cseated-chest-press'
     );
+  });
+
+  it('parses encoded alternative ids from the fallback url query', () => {
+    expect(parseAlternativeIds('pec-deck-fly%2Cseated-chest-press%2Clat-pulldown')).toEqual([
+      'pec-deck-fly',
+      'seated-chest-press',
+      'lat-pulldown'
+    ]);
   });
 
   it('builds an unsupported fallback message', () => {
