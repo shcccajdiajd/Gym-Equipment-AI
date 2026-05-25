@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildResultNavigationUrl = buildResultNavigationUrl;
 exports.buildFallbackNavigationUrl = buildFallbackNavigationUrl;
+exports.parseAlternativeIds = parseAlternativeIds;
 exports.buildDemoNavigationUrl = buildDemoNavigationUrl;
 exports.buildRecognitionFailureMessage = buildRecognitionFailureMessage;
 exports.recognizeEquipment = recognizeEquipment;
@@ -26,6 +27,15 @@ function buildFallbackNavigationUrl(status, alternatives = []) {
         return baseUrl;
     }
     return `${baseUrl}&alternatives=${encodeURIComponent(alternatives.join(','))}`;
+}
+function parseAlternativeIds(value) {
+    if (!value) {
+        return [];
+    }
+    return decodeURIComponent(value)
+        .split(',')
+        .map((id) => id.trim())
+        .filter(Boolean);
 }
 function buildDemoNavigationUrl(mode) {
     if (mode === 'unsupported') {

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const catalog_js_1 = require("../../data/catalog.js");
 const history_js_1 = require("../../utils/history.js");
+const api_js_1 = require("../../utils/api.js");
 const result_view_model_js_1 = require("../../utils/result-view-model.js");
 Page({
     data: {
@@ -13,10 +14,7 @@ Page({
         suggestedEquipment: []
     },
     onLoad(query) {
-        var _a;
-        const suggestedEquipment = ((_a = query.alternatives) !== null && _a !== void 0 ? _a : '')
-            .split(',')
-            .map((id) => decodeURIComponent(id).trim())
+        const suggestedEquipment = (0, api_js_1.parseAlternativeIds)(query.alternatives)
             .filter(Boolean)
             .reduce((items, id) => {
             const equipment = (0, catalog_js_1.getEquipmentCard)(id);
