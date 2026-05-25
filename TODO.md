@@ -99,6 +99,13 @@ Acceptance:
 - A response with no recognizable match field is returned as `invalid_response` instead of a TypeError.
 - Unexpected route errors are logged through the `err` field so the terminal shows the real message/stack.
 
+- [x] Add a targeted false-positive guard for `pec-deck-fly` vs `assisted-pull-up-dip`.
+Acceptance:
+- The recognizer prompt explicitly says not to return `assisted-pull-up-dip` without a visible knee pad/platform plus dip or pull-up handles.
+- The `pec-deck-fly` catalog hints explicitly describe the seat/back pad and two chest-height swing arms case.
+- The mini program catalog snapshot is regenerated after the shared catalog change.
+- `./node_modules/.bin/vitest run` exits `0` with the new prompt guard test included.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -113,6 +120,7 @@ Acceptance:
 - The project loads in WeChat Developer Tools without the previous `pages/home/index.js` missing-file startup error.
 - The Aliyun-backed flow returns a real response instead of a transport or auth error after editing `.env`.
 - Re-testing the same `蝴蝶机夹胸` reference image no longer produces a confident `坐姿划船` result; it should either identify `pec-deck-fly` correctly or fall back to `low_confidence`/`unsupported`.
+- Re-testing the same `蝴蝶机夹胸` reference image should no longer produce a confident `assisted-pull-up-dip` result after the targeted false-positive guard.
 - If the recognizer still returns `unsupported`, the result page shows candidate machine buttons derived from `alternatives`, and tapping `蝴蝶机夹胸` opens its teaching card.
 - The same unsupported flow correctly parses encoded `alternatives` from the page URL, so candidate buttons actually render in WeChat DevTools instead of silently disappearing.
 

@@ -16,6 +16,17 @@ describe('buildRecognitionPrompt', () => {
     expect(prompt).toContain('Use catalog ids in topMatchId and alternatives');
   });
 
+  it('guards against confusing pec deck photos with assisted pull-up dip machines', () => {
+    const prompt = buildRecognitionPrompt('album');
+
+    expect(prompt).toContain('Do not return assisted-pull-up-dip unless');
+    expect(prompt).toContain('knee pad');
+    expect(prompt).toContain('dip handles');
+    expect(prompt).toContain('pull-up handles');
+    expect(prompt).toContain('pec-deck-fly is likely');
+    expect(prompt).toContain('two chest-height swing arms');
+  });
+
   it('uses a stricter confidence threshold for beginner-safe recognized results', () => {
     expect(RECOGNIZED_CONFIDENCE_THRESHOLD).toBe(0.82);
   });
