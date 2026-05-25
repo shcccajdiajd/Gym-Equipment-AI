@@ -3,12 +3,28 @@ import { z } from 'zod';
 import { resolveEquipmentPayload } from '../lib/catalog-service.js';
 import { RECOGNIZED_CONFIDENCE_THRESHOLD } from '../lib/recognizers/prompt.js';
 import { RecognitionProviderError } from '../lib/recognizers/types.js';
-import type { Recognizer } from '../lib/recognizers/types.js';
+import type { Recognizer, RecognitionResult } from '../lib/recognizers/types.js';
 
 const requestSchema = z.object({
   imageBase64: z.string().min(16),
   source: z.enum(['camera', 'album'])
 });
+
+function uniqueIds(ids: string[]) {
+  return ids.filter((id, index) => ids.indexOf(id) === index);
+}
+
+function applyRecognitionSafetyGuards(result: RecognitionResult): RecognitionResult {
+  if (result.topMatchId === 'assisted-pull-up-dip' && result.confidence < 0.95) {
+    return {
+      topMatchId: null,
+      confidence: Math.min(result.confidence, 0.4),
+      alternatives: uniqueIds(['pec-deck-fly', 'assisted-pull-up-dip', ...result.alternatives]).slice(0, 3)
+    };
+  }
+
+  return result;
+}
 
 export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Recognizer) {
   app.post('/api/recognitions', async (request, reply) => {
@@ -68,6 +84,8 @@ export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Reco
         message: '识别服务暂时不可用，请稍后重试。'
       });
     }
+
+    result = applyRecognitionSafetyGuards(result);
 
     request.log.info(
       {

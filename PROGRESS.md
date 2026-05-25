@@ -41,6 +41,8 @@
 - Improved unexpected API crash logging by using the Fastify/Pino `err` field so future backend screenshots include the real error message and stack.
 - Tightened the prompt and catalog hints for the observed high-confidence false positive where the `蝴蝶机夹胸` sample was recognized as `assisted-pull-up-dip`.
 - Synced the updated catalog hints into the mini program runtime catalog snapshot.
+- Switched the recommended Aliyun launch model from `qwen3-vl-32b-instruct` to `qwen-vl-max-latest` in code defaults, docs, and the local ignored `.env`.
+- Added a route-level safety guard that blocks medium-confidence `assisted-pull-up-dip` results and returns an `unsupported` candidate list with `pec-deck-fly` first, avoiding a confidently wrong teaching card.
 
 ## Modified Files
 
@@ -149,7 +151,7 @@
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.json --noEmit`
 - Root `vitest run` passes across shared, API, and mini program tests with `25` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `30` passing tests.
-- Root `vitest run` now passes across shared, API, and mini program tests with `37` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `38` passing tests.
 - The mini program runtime JavaScript has been rebuilt with:
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
@@ -167,6 +169,7 @@
 - If Aliyun live recognition still fails, the API should now return a structured `error` or `timeout` payload and the mini program should show a toast instead of hanging on the loading state.
 - Aliyun responses that use exact catalog names instead of ids can now still produce a recognized or low-confidence result when the name maps to a supported machine.
 - The latest screenshot confirms the Aliyun-backed request can return HTTP `200` and navigate to the result page, but the same `蝴蝶机夹胸` image still needs manual re-test after the new false-positive guard.
+- If Aliyun still returns `assisted-pull-up-dip` with confidence below `0.95`, the API now returns `unsupported` suggestions instead of a recognized assisted-pull-up result.
 
 ## Current Problems
 

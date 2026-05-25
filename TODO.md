@@ -106,6 +106,13 @@ Acceptance:
 - The mini program catalog snapshot is regenerated after the shared catalog change.
 - `./node_modules/.bin/vitest run` exits `0` with the new prompt guard test included.
 
+- [x] Add a route-level safety guard for repeated `assisted-pull-up-dip` false positives.
+Acceptance:
+- `assisted-pull-up-dip` recognitions below `0.95` confidence are converted to `unsupported` rather than a recognized teaching card.
+- `pec-deck-fly` is the first fallback suggestion for this guard.
+- The recommended Aliyun launch model is `qwen-vl-max-latest` in defaults, docs, and the local ignored `.env`.
+- `./node_modules/.bin/vitest run` exits `0` with the safety-guard regression test included.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -129,7 +136,7 @@ Acceptance:
 - `services/api/.env` is populated with `RECOGNIZER_PROVIDER=aliyun`, a valid `ALIYUN_API_KEY`, and the expected `ALIYUN_BASE_URL`.
 - At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
 - A failed live Aliyun request returns a structured `error` or `timeout` response to the mini program rather than an unhandled Fastify default body.
-- The preferred launch model is `qwen3-vl-32b-instruct`.
+- The preferred launch model is `qwen-vl-max-latest`.
 - The API successfully authenticates against `https://dashscope.aliyuncs.com/compatible-mode/v1` without an upstream 401 or model-name error.
 
 - [ ] Verify the live Ollama recognition path with a local model.

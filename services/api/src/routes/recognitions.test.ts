@@ -257,6 +257,31 @@ describe('POST /api/recognitions', () => {
     });
   });
 
+  it('guards known assisted pull-up false positives with pec deck as the first suggestion', async () => {
+    const app = buildApp({
+      recognizer: createRecognizer({
+        topMatchId: 'assisted-pull-up-dip',
+        confidence: 0.9,
+        alternatives: ['lat-pulldown', 'seated-row']
+      })
+    });
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      status: 'unsupported',
+      alternatives: ['pec-deck-fly', 'assisted-pull-up-dip', 'lat-pulldown']
+    });
+  });
+
   it('returns low confidence when a supported match is uncertain', async () => {
     const app = buildApp({
       recognizer: createRecognizer({
