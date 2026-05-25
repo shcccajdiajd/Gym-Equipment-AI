@@ -34,6 +34,7 @@
 - Added an ambiguity fallback for `unsupported` recognition results: the API now preserves `alternatives`, and the mini program unsupported page can show tappable candidate machines instead of only a dead-end fallback.
 - Fixed the unsupported-candidate query parsing bug: encoded `%2C` separators are now decoded before splitting, so suggested machine buttons render correctly in the mini program.
 - Updated the recommended launch path from local Ollama to OpenAI vision, including `.env.example`, README setup, and manual QA guidance.
+- Added an `aliyun` recognizer provider using Alibaba Model Studio's OpenAI-compatible DashScope endpoint and switched the recommended launch path from OpenAI to Aliyun.
 
 ## Modified Files
 
@@ -69,6 +70,7 @@
 - [services/api/src/lib/recognizers/mock.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/mock.ts)
 - [services/api/src/lib/recognizers/prompt.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/prompt.ts)
 - [services/api/src/lib/recognizers/prompt.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/prompt.test.ts)
+- [services/api/src/lib/recognizers/aliyun.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/aliyun.ts)
 - [services/api/src/lib/recognizers/ollama.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/ollama.ts)
 - [services/api/src/lib/recognizers/openai.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/openai.ts)
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
@@ -126,21 +128,24 @@
 - `services/api` route tests pass with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts`
 - `services/api` Ollama recognizer tests pass and verify structured local vision requests plus error handling.
+- `services/api` Aliyun provider selection tests pass and verify the Alibaba Model Studio path can be constructed through the OpenAI-compatible SDK client.
 - `services/api` prompt-builder tests pass and verify the recognizer prompt now includes human-readable names plus visual disambiguation cues for confusing machines.
 - `packages/shared` TypeScript check passes.
 - `apps/miniprogram` TypeScript check passes.
 - Root `vitest run` passes across shared, API, and mini program tests with `25` passing tests.
-- Root `vitest run` now passes across shared, API, and mini program tests with `28` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `30` passing tests.
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
 - The mock API has been verified through a live local POST on `http://127.0.0.1:3001/api/recognitions`, returning a recognized `高位下拉` payload for a mock `back` fixture.
 - The mini program runtime build now emits the `js` entry files WeChat Developer Tools expects, so the previous `pages/home/index.js not found` startup failure has been addressed.
 - The API can now be configured to use either `mock`, `ollama`, or `openai` recognition providers.
+- The API can now be configured to use `mock`, `openai`, `aliyun`, or `ollama` recognition providers.
 - The `.env` loading bug that previously made `ollama` configuration silently fall back to defaults has been addressed.
 - The mini program catalog snapshot has been re-synced after adding recognition hints to the shared catalog.
 - The mini program has not yet been manually re-tested in WeChat DevTools after the unsupported-candidate query parsing fix.
 - The repo defaults and docs now point to `RECOGNIZER_PROVIDER=openai` for launch readiness, but a real `OPENAI_API_KEY` has not been exercised in this environment.
+- The repo defaults and docs now point to `RECOGNIZER_PROVIDER=aliyun` for launch readiness, but a real `ALIYUN_API_KEY` has not been exercised in this environment.
 
 ## Current Problems
 
@@ -149,6 +154,7 @@
 - The latest Ollama prompt changes for the `蝴蝶机夹胸` vs `坐姿划船` confusion have not yet been re-verified in WeChat DevTools with the same real image.
 - The latest unsupported-result candidate flow has not yet been re-verified in WeChat DevTools after the encoded-alternatives parsing fix, so the new suggested-machine buttons are still code-verified only.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
+- Live Aliyun recognition has not been verified yet because no `ALIYUN_API_KEY` flow was exercised in this environment.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

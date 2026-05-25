@@ -18,6 +18,9 @@ afterEach(() => {
   delete process.env.RECOGNIZER_PROVIDER;
   delete process.env.OPENAI_API_KEY;
   delete process.env.OPENAI_MODEL;
+  delete process.env.ALIYUN_API_KEY;
+  delete process.env.ALIYUN_BASE_URL;
+  delete process.env.ALIYUN_MODEL;
   delete process.env.OLLAMA_BASE_URL;
   delete process.env.OLLAMA_MODEL;
 });
@@ -63,6 +66,19 @@ describe('POST /api/recognitions', () => {
     );
   });
 
+  it('throws when aliyun provider is configured without an api key', async () => {
+    process.env.RECOGNIZER_PROVIDER = 'aliyun';
+    delete process.env.ALIYUN_API_KEY;
+    delete process.env.ALIYUN_MODEL;
+
+    vi.resetModules();
+    const { buildApp: buildAppWithEnv } = await import('../app.js');
+
+    expect(() => buildAppWithEnv()).toThrow(
+      'ALIYUN_API_KEY is required when RECOGNIZER_PROVIDER=aliyun'
+    );
+  });
+
   it('uses the ollama provider when configured', async () => {
     process.env.RECOGNIZER_PROVIDER = 'ollama';
     process.env.OLLAMA_BASE_URL = 'http://127.0.0.1:11434';
@@ -101,6 +117,65 @@ describe('POST /api/recognitions', () => {
       }
     });
     expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it('uses the aliyun provider when configured', async () => {
+    process.env.RECOGNIZER_PROVIDER = 'aliyun';
+    process.env.ALIYUN_API_KEY = 'test-key';
+    process.env.ALIYUN_BASE_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    process.env.ALIYUN_MODEL = 'qwen3-vl-32b-instruct';
+
+    const createMock = vi.fn(async () => ({
+      choices: [
+        {
+          message: {
+            content: JSON.stringify({
+              topMatchId: 'pec-deck-fly',
+              confidence: 0.88,
+              alternatives: ['seated-chest-press']
+            })
+          }
+        }
+      ]
+    }));
+
+    const OpenAiMock = vi.fn(() => ({
+      chat: {
+        completions: {
+          create: createMock
+        }
+      }
+    }));
+
+    vi.doMock('openai', () => ({
+      default: OpenAiMock
+    }));
+
+    vi.resetModules();
+    const { buildApp: buildAppWithEnv } = await import('../app.js');
+    const app = buildAppWithEnv();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('chest-fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      status: 'recognized',
+      equipment: {
+        id: 'pec-deck-fly'
+      }
+    });
+    expect(OpenAiMock).toHaveBeenCalledWith({
+      apiKey: 'test-key',
+      baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+    });
+    expect(createMock).toHaveBeenCalledOnce();
   });
 
   it('returns a recognized equipment card payload', async () => {

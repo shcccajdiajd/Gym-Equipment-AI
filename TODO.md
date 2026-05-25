@@ -80,19 +80,20 @@ Acceptance:
 Acceptance:
 - Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.
 - Camera capture, album import, clipboard copy, and equipment-list navigation all work in the actual mini program runtime.
-- The running OpenAI-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
+- The running Aliyun-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
 - The home-page demo buttons successfully preview all three result states in WeChat Developer Tools.
 - The project loads in WeChat Developer Tools without the previous `pages/home/index.js` missing-file startup error.
-- The OpenAI-backed flow returns a real response instead of a transport or auth error after editing `.env`.
+- The Aliyun-backed flow returns a real response instead of a transport or auth error after editing `.env`.
 - Re-testing the same `蝴蝶机夹胸` reference image no longer produces a confident `坐姿划船` result; it should either identify `pec-deck-fly` correctly or fall back to `low_confidence`/`unsupported`.
 - If the recognizer still returns `unsupported`, the result page shows candidate machine buttons derived from `alternatives`, and tapping `蝴蝶机夹胸` opens its teaching card.
 - The same unsupported flow correctly parses encoded `alternatives` from the page URL, so candidate buttons actually render in WeChat DevTools instead of silently disappearing.
 
-- [ ] Verify the live OpenAI recognition path with a real API key.
+- [ ] Verify the live Aliyun recognition path with a real API key.
 Acceptance:
-- `services/api/.env` is populated with `RECOGNIZER_PROVIDER=openai` and a valid `OPENAI_API_KEY`.
+- `services/api/.env` is populated with `RECOGNIZER_PROVIDER=aliyun`, a valid `ALIYUN_API_KEY`, and the expected `ALIYUN_BASE_URL`.
 - At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
-- The preferred launch model is `gpt-4.1`, with `gpt-4.1-mini` only as a cost-saving fallback.
+- The preferred launch model is `qwen3-vl-32b-instruct`.
+- The API successfully authenticates against `https://dashscope.aliyuncs.com/compatible-mode/v1` without an upstream 401 or model-name error.
 
 - [ ] Verify the live Ollama recognition path with a local model.
 Acceptance:

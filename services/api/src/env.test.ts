@@ -17,13 +17,13 @@ describe('env helpers', () => {
       parseDotEnv(`
 PORT=3001
 # comment
-RECOGNIZER_PROVIDER=ollama
-OLLAMA_MODEL=qwen2.5vl:7b
+RECOGNIZER_PROVIDER=aliyun
+ALIYUN_MODEL=qwen3-vl-32b-instruct
       `)
     ).toEqual({
       PORT: '3001',
-      RECOGNIZER_PROVIDER: 'ollama',
-      OLLAMA_MODEL: 'qwen2.5vl:7b'
+      RECOGNIZER_PROVIDER: 'aliyun',
+      ALIYUN_MODEL: 'qwen3-vl-32b-instruct'
     });
   });
 
@@ -33,7 +33,7 @@ OLLAMA_MODEL=qwen2.5vl:7b
 
     await writeFile(
       envPath,
-      ['PORT=3001', 'RECOGNIZER_PROVIDER=ollama', 'OLLAMA_MODEL=qwen2.5vl:7b'].join('\n'),
+      ['PORT=3001', 'RECOGNIZER_PROVIDER=aliyun', 'ALIYUN_MODEL=qwen3-vl-32b-instruct'].join('\n'),
       'utf8'
     );
 
@@ -41,7 +41,7 @@ OLLAMA_MODEL=qwen2.5vl:7b
     loadRuntimeEnv(envPath);
 
     expect(process.env.PORT).toBe('9999');
-    expect(process.env.RECOGNIZER_PROVIDER).toBe('ollama');
-    expect(process.env.OLLAMA_MODEL).toBe('qwen2.5vl:7b');
+    expect(process.env.RECOGNIZER_PROVIDER).toBe('aliyun');
+    expect(process.env.ALIYUN_MODEL).toBe('qwen3-vl-32b-instruct');
   });
 });

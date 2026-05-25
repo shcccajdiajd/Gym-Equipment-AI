@@ -41,9 +41,12 @@ loadRuntimeEnv();
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(3001),
-  RECOGNIZER_PROVIDER: z.enum(['mock', 'openai', 'ollama']).default('mock'),
+  RECOGNIZER_PROVIDER: z.enum(['mock', 'openai', 'aliyun', 'ollama']).default('mock'),
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().default('gpt-4.1-mini'),
+  ALIYUN_API_KEY: z.string().optional(),
+  ALIYUN_BASE_URL: z.string().default('https://dashscope.aliyuncs.com/compatible-mode/v1'),
+  ALIYUN_MODEL: z.string().default('qwen3-vl-32b-instruct'),
   OLLAMA_BASE_URL: z.string().default('http://127.0.0.1:11434'),
   OLLAMA_MODEL: z.string().default('qwen2.5vl:3b'),
   OLLAMA_TIMEOUT_MS: z.coerce.number().default(120000),

@@ -37,12 +37,15 @@ The API now auto-loads `services/api/.env` on startup, so you do not need to exp
 
 ### Recommended Launch Configuration
 
-For launch readiness, use the OpenAI provider instead of the local Ollama model. Update [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env) to:
+For launch readiness, use the Alibaba Model Studio provider instead of the local Ollama model. Update [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env) to:
 
 ```env
 PORT=3001
-RECOGNIZER_PROVIDER=openai
-OPENAI_API_KEY=your_real_key_here
+RECOGNIZER_PROVIDER=aliyun
+ALIYUN_API_KEY=your_real_key_here
+ALIYUN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+ALIYUN_MODEL=qwen3-vl-32b-instruct
+OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4.1
 OLLAMA_BASE_URL=http://127.0.0.1:11434
 OLLAMA_MODEL=qwen2.5vl:3b
@@ -50,12 +53,13 @@ OLLAMA_TIMEOUT_MS=120000
 LOG_LEVEL=info
 ```
 
-If you want a cheaper fallback after launch, keep the same code path and change `OPENAI_MODEL` to `gpt-4.1-mini`.
+The current Aliyun provider uses DashScope's OpenAI-compatible endpoint, so the rest of the API contract stays the same. If you later want an international fallback, you can switch `RECOGNIZER_PROVIDER=openai` and populate `OPENAI_API_KEY`.
 
 ## Recognition Providers
 
 - `mock`: deterministic local development provider for fast UI testing
-- `openai`: recommended launch provider, using the OpenAI Responses API for vision recognition
+- `aliyun`: recommended launch provider, using Alibaba Model Studio via the OpenAI-compatible DashScope endpoint
+- `openai`: optional international fallback using the OpenAI Responses API for vision recognition
 - `ollama`: free local vision inference through an Ollama-served model such as `qwen2.5vl:3b`
 
 ## Useful Commands
@@ -94,7 +98,7 @@ node --import tsx scripts/sync-catalog.ts
 ## Release Checklist
 
 1. Confirm the 20 launch equipment cards are complete and reviewed for safety wording.
-2. Set `RECOGNIZER_PROVIDER=openai` and a real `OPENAI_API_KEY` in [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env).
+2. Set `RECOGNIZER_PROVIDER=aliyun` and a real `ALIYUN_API_KEY` in [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env).
 3. Run `corepack pnpm sync:catalog`.
 4. Run `corepack pnpm test`.
 5. Run `corepack pnpm typecheck`.

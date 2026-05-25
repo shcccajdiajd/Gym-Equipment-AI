@@ -4,8 +4,8 @@
 
 - API running on `http://127.0.0.1:3001`
 - WeChat Developer Tools opened on `apps/miniprogram`
-- `RECOGNIZER_PROVIDER=openai`
-- `OPENAI_API_KEY` populated in `services/api/.env`
+- `RECOGNIZER_PROVIDER=aliyun`
+- `ALIYUN_API_KEY` populated in `services/api/.env`
 - Catalog synced with `corepack pnpm sync:catalog`
 
 ## Checks
@@ -31,4 +31,4 @@
 ## Notes
 
 - If camera capture is not available on the current machine, complete the recognized-state checks through album import.
-- For launch validation, prioritize the OpenAI-backed path over the local Ollama path.
+- For launch validation, prioritize the Aliyun-backed path over the local Ollama path.
