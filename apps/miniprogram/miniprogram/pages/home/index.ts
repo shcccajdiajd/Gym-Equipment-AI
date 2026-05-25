@@ -1,31 +1,57 @@
 import {
   buildDemoNavigationUrl,
   buildFallbackNavigationUrl,
+  buildRecognitionFailureMessage,
   buildResultNavigationUrl,
   chooseSingleImageFromAlbum,
+  compressImageForRecognition,
   readFileAsBase64,
   recognizeEquipment
 } from '../../utils/api.js';
 
 Page({
   async chooseFromAlbum() {
+    let loadingShown = false;
+
     try {
       const tempFilePath = await chooseSingleImageFromAlbum();
       wx.showLoading({ title: '识别中' });
+      loadingShown = true;
 
-      const imageBase64 = await readFileAsBase64(tempFilePath);
+      const preparedImagePath = await compressImageForRecognition(tempFilePath);
+      const imageBase64 = await readFileAsBase64(preparedImagePath);
       const result = await recognizeEquipment(imageBase64, 'album');
 
-      if (result.equipment?.id) {
-        wx.navigateTo({ url: buildResultNavigationUrl(result.equipment.id) });
+      if (result.equipment?.id && (result.status === 'recognized' || result.status === 'low_confidence')) {
+        wx.navigateTo({ url: buildResultNavigationUrl(result.equipment.id, result.status) });
         return;
       }
 
-      wx.navigateTo({ url: buildFallbackNavigationUrl(result.status) });
-    } catch {
-      wx.showToast({ title: '导入失败，请重试', icon: 'none' });
+      if (result.status === 'unsupported') {
+        wx.navigateTo({ url: buildFallbackNavigationUrl(result.status) });
+        return;
+      }
+
+      if (result.status === 'timeout' || result.status === 'error' || result.status === 'invalid_request') {
+        wx.showToast({
+          title: buildRecognitionFailureMessage({
+            status: result.status,
+            message: result.message
+          }),
+          icon: 'none'
+        });
+      }
+    } catch (error) {
+      const errMsg =
+        error instanceof Error && error.message.includes('timeout')
+          ? '识别请求超时，请稍后重试'
+          : '导入失败，请重试';
+
+      wx.showToast({ title: errMsg, icon: 'none' });
     } finally {
-      wx.hideLoading();
+      if (loadingShown) {
+        wx.hideLoading();
+      }
     }
   },
 

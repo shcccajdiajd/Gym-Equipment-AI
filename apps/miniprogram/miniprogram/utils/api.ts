@@ -1,9 +1,11 @@
 export type RecognitionStatus = 'recognized' | 'low_confidence' | 'unsupported';
+export type RecognitionFailureStatus = 'timeout' | 'error' | 'invalid_request';
+export type RecognitionApiStatus = RecognitionStatus | RecognitionFailureStatus;
 
 export type DemoRecognitionMode = RecognitionStatus;
 
 export type RecognitionPayload = {
-  status: RecognitionStatus;
+  status: RecognitionApiStatus;
   equipment?: {
     id: string;
   };
@@ -12,12 +14,19 @@ export type RecognitionPayload = {
   message?: string;
 };
 
+const REQUEST_TIMEOUT_MS = 180000;
+
 function getApiBaseUrl() {
   return getApp<IAppOption>().globalData.apiBaseUrl;
 }
 
-export function buildResultNavigationUrl(id: string) {
-  return `/pages/result/index?id=${encodeURIComponent(id)}`;
+export function buildResultNavigationUrl(id: string, status: RecognitionStatus = 'recognized') {
+  const baseUrl = `/pages/result/index?id=${encodeURIComponent(id)}`;
+  if (status === 'recognized') {
+    return baseUrl;
+  }
+
+  return `${baseUrl}&status=${encodeURIComponent(status)}`;
 }
 
 export function buildFallbackNavigationUrl(status: RecognitionStatus) {
@@ -30,10 +39,25 @@ export function buildDemoNavigationUrl(mode: DemoRecognitionMode) {
   }
 
   if (mode === 'low_confidence') {
-    return `${buildResultNavigationUrl('lat-pulldown')}&status=low_confidence`;
+    return buildResultNavigationUrl('lat-pulldown', 'low_confidence');
   }
 
   return buildResultNavigationUrl('lat-pulldown');
+}
+
+export function buildRecognitionFailureMessage(result: {
+  status: RecognitionFailureStatus;
+  message?: string;
+}) {
+  if (result.status === 'timeout') {
+    return result.message ?? '识别服务响应超时，请稍后重试或换一张更清晰的图片。';
+  }
+
+  if (result.status === 'invalid_request') {
+    return result.message ?? '图片处理失败，请换一张更清晰的图片再试。';
+  }
+
+  return result.message ?? '识别服务暂时不可用，请稍后重试。';
 }
 
 export async function recognizeEquipment(
@@ -44,11 +68,23 @@ export async function recognizeEquipment(
     wx.request<RecognitionPayload>({
       url: `${getApiBaseUrl()}/api/recognitions`,
       method: 'POST',
+      timeout: REQUEST_TIMEOUT_MS,
       data: {
         imageBase64,
         source
       },
       success: (response) => resolve(response.data),
+      fail: reject
+    });
+  });
+}
+
+export async function compressImageForRecognition(path: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    wx.compressImage({
+      src: path,
+      quality: 72,
+      success: (result) => resolve(result.tempFilePath),
       fail: reject
     });
   });

@@ -1,6 +1,7 @@
 import { Buffer } from 'node:buffer';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildApp } from '../app.js';
+import { RecognitionProviderError } from '../lib/recognizers/types.js';
 import type { Recognizer } from '../lib/recognizers/types.js';
 
 function createRecognizer(result: Awaited<ReturnType<Recognizer['recognize']>>): Recognizer {
@@ -230,6 +231,33 @@ describe('POST /api/recognitions', () => {
     expect(response.statusCode).toBe(500);
     expect(response.json()).toMatchObject({
       status: 'error'
+    });
+  });
+
+  it('returns 504 when the recognizer times out', async () => {
+    const app = buildApp({
+      recognizer: {
+        async recognize() {
+          throw new RecognitionProviderError(
+            'timeout',
+            '识别服务响应超时，请稍后重试或换一张更清晰的图片。'
+          );
+        }
+      }
+    });
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('fixture-image').toString('base64'),
+        source: 'camera'
+      }
+    });
+
+    expect(response.statusCode).toBe(504);
+    expect(response.json()).toMatchObject({
+      status: 'timeout'
     });
   });
 });

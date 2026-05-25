@@ -33,6 +33,8 @@ corepack pnpm --filter @gym-equipment-ai/api dev
 4. Open `apps/miniprogram` in WeChat Developer Tools.
 5. Use local debug request settings or a local tunnel before testing on a real device.
 
+The API now auto-loads `services/api/.env` on startup, so you do not need to export these variables manually before running `node --import tsx src/server.ts`.
+
 ## Recognition Providers
 
 - `mock`: deterministic local development provider for fast UI testing
@@ -63,6 +65,8 @@ RECOGNIZER_PROVIDER=ollama
 OLLAMA_BASE_URL=http://127.0.0.1:11434
 OLLAMA_MODEL=qwen2.5vl:3b
 ```
+
+If the mini program previously timed out on large images, the current client now compresses images before upload and waits longer for local recognition responses.
 
 In this Codex sandbox, `tsx` CLI IPC is restricted, so the working fallback for catalog sync is:
 

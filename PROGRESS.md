@@ -25,6 +25,9 @@
 - Added a frontend-only demo mode on the home page so WeChat Developer Tools can preview recognized, low-confidence, and unsupported result flows without live recognition.
 - Added a dedicated mini program runtime TypeScript build that emits the `app.js` and `pages/**/index.js` files required by WeChat Developer Tools.
 - Added an `ollama` recognition provider so the API can use a free local vision model such as `qwen2.5vl:3b`.
+- Fixed the API startup path so `services/api/.env` is actually loaded when running `node --import tsx src/server.ts`.
+- Added structured recognizer logs, typed timeout handling, and `504` timeout responses for Ollama-backed recognition failures.
+- Compressed mini program images before upload, preserved `low_confidence` state in result-page navigation, and added clearer timeout/error toasts.
 
 ## Modified Files
 
@@ -54,6 +57,7 @@
 - [services/api/src/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/app.ts)
 - [services/api/src/server.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/server.ts)
 - [services/api/src/env.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/env.ts)
+- [services/api/src/env.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/env.test.ts)
 - [services/api/src/lib/catalog-service.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/catalog-service.ts)
 - [services/api/src/lib/recognizers/types.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/types.ts)
 - [services/api/src/lib/recognizers/mock.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/mock.ts)
@@ -116,14 +120,15 @@
 - `services/api` Ollama recognizer tests pass and verify structured local vision requests plus error handling.
 - `packages/shared` TypeScript check passes.
 - `apps/miniprogram` TypeScript check passes.
-- Root `vitest run` passes across shared, API, and mini program tests with `17` passing tests.
+- Root `vitest run` passes across shared, API, and mini program tests with `22` passing tests.
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
 - The mock API has been verified through a live local POST on `http://127.0.0.1:3001/api/recognitions`, returning a recognized `高位下拉` payload for a mock `back` fixture.
 - The mini program runtime build now emits the `js` entry files WeChat Developer Tools expects, so the previous `pages/home/index.js not found` startup failure has been addressed.
 - The API can now be configured to use either `mock`, `ollama`, or `openai` recognition providers.
-- The mini program has not yet been manually opened in WeChat DevTools in this environment, so camera, clipboard, and page rendering still need human smoke testing.
+- The `.env` loading bug that previously made `ollama` configuration silently fall back to defaults has been addressed.
+- The mini program has not yet been manually re-tested in WeChat DevTools after the new timeout/logging/compression changes.
 
 ## Current Problems
 

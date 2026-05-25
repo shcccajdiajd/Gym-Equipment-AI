@@ -75,6 +75,7 @@ declare namespace WechatMiniprogram {
   interface RequestOption<T> {
     url: string;
     method?: 'GET' | 'POST';
+    timeout?: number;
     data?: unknown;
     success?: (result: RequestSuccessCallbackResult<T>) => void;
     fail?: (error: GeneralCallbackResult) => void;
@@ -83,6 +84,19 @@ declare namespace WechatMiniprogram {
   interface ClipboardOption {
     data: string;
     success?: () => void;
+  }
+
+  interface CompressImageSuccessCallbackResult {
+    tempFilePath: string;
+  }
+
+  interface CompressImageOption {
+    src: string;
+    quality?: number;
+    compressedWidth?: number;
+    compressedHeight?: number;
+    success?: (result: CompressImageSuccessCallbackResult) => void;
+    fail?: (error: GeneralCallbackResult) => void;
   }
 }
 
@@ -96,6 +110,7 @@ declare const wx: {
   showToast: (options: { title: string; icon: 'none' | 'success' }) => void;
   navigateTo: (options: { url: string }) => void;
   setClipboardData: (options: WechatMiniprogram.ClipboardOption) => void;
+  compressImage: (options: WechatMiniprogram.CompressImageOption) => void;
   getStorageSync: <T = unknown>(key: string) => T;
   setStorageSync: (key: string, value: unknown) => void;
 };

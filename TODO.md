@@ -83,6 +83,8 @@ Acceptance:
 - The running mock API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
 - The home-page demo buttons successfully preview all three result states in WeChat Developer Tools.
 - The project loads in WeChat Developer Tools without the previous `pages/home/index.js` missing-file startup error.
+- The Ollama-backed flow no longer silently runs in `mock` mode after editing `.env`.
+- If Ollama is slow or unavailable, the UI shows a clear timeout/error toast instead of hanging without explanation.
 
 - [ ] Verify the live OpenAI recognition path with a real API key.
 Acceptance:
@@ -94,6 +96,7 @@ Acceptance:
 - `ollama pull qwen2.5vl:3b` has completed on the local machine.
 - `services/api/.env` is populated with `RECOGNIZER_PROVIDER=ollama`, `OLLAMA_BASE_URL`, and `OLLAMA_MODEL`.
 - At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
+- The API terminal logs show request receipt, recognizer completion or timeout, and total duration for the test image.
 
 - [ ] Replace `touristappid` and prepare the first real upload package.
 Acceptance:

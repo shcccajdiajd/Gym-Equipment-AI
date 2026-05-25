@@ -22,7 +22,8 @@ function defaultRecognizer(): Recognizer {
   if (env.RECOGNIZER_PROVIDER === 'ollama') {
     return createOllamaRecognizer({
       baseUrl: env.OLLAMA_BASE_URL,
-      model: env.OLLAMA_MODEL
+      model: env.OLLAMA_MODEL,
+      timeoutMs: env.OLLAMA_TIMEOUT_MS
     });
   }
 
@@ -30,7 +31,7 @@ function defaultRecognizer(): Recognizer {
 }
 
 export function buildApp(options?: { recognizer?: Recognizer }) {
-  const app = Fastify({ logger: false });
+  const app = Fastify({ logger: { level: env.LOG_LEVEL } });
 
   app.register(cors, { origin: true });
   registerRecognitionRoutes(app, options?.recognizer ?? defaultRecognizer());

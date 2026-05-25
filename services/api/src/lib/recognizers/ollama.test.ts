@@ -18,7 +18,8 @@ describe('createOllamaRecognizer', () => {
 
     const recognizer = createOllamaRecognizer({
       baseUrl: 'http://127.0.0.1:11434',
-      model: 'qwen2.5vl:3b'
+      model: 'qwen2.5vl:3b',
+      timeoutMs: 30_000
     });
 
     const result = await recognizer.recognize({
@@ -65,7 +66,8 @@ describe('createOllamaRecognizer', () => {
 
     const recognizer = createOllamaRecognizer({
       baseUrl: 'http://127.0.0.1:11434',
-      model: 'qwen2.5vl:3b'
+      model: 'qwen2.5vl:3b',
+      timeoutMs: 30_000
     });
 
     await expect(
