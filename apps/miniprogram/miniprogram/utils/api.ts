@@ -15,6 +15,14 @@ export type RecognitionPayload = {
 };
 
 const REQUEST_TIMEOUT_MS = 180000;
+const GENERIC_RECOGNITION_ERROR_MESSAGE = '识别服务暂时不可用，请稍后重试。';
+
+type RecognitionHttpResponse = {
+  statusCode: number;
+  data?: Partial<RecognitionPayload> & {
+    error?: string;
+  };
+};
 
 function getApiBaseUrl() {
   return getApp<IAppOption>().globalData.apiBaseUrl;
@@ -76,6 +84,26 @@ export function buildRecognitionFailureMessage(result: {
   return result.message ?? '识别服务暂时不可用，请稍后重试。';
 }
 
+export function normalizeRecognitionResponse(response: RecognitionHttpResponse): RecognitionPayload {
+  const data = response.data;
+
+  if (data?.status) {
+    return data as RecognitionPayload;
+  }
+
+  if (response.statusCode >= 400) {
+    return {
+      status: 'error',
+      message: data?.message ?? data?.error ?? GENERIC_RECOGNITION_ERROR_MESSAGE
+    };
+  }
+
+  return {
+    status: 'error',
+    message: GENERIC_RECOGNITION_ERROR_MESSAGE
+  };
+}
+
 export async function recognizeEquipment(
   imageBase64: string,
   source: 'camera' | 'album'
@@ -89,7 +117,7 @@ export async function recognizeEquipment(
         imageBase64,
         source
       },
-      success: (response) => resolve(response.data),
+      success: (response) => resolve(normalizeRecognitionResponse(response)),
       fail: reject
     });
   });

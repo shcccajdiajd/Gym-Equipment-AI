@@ -5,6 +5,7 @@ import {
   buildFallbackNavigationUrl,
   buildRecognitionFailureMessage,
   buildResultNavigationUrl,
+  normalizeRecognitionResponse,
   parseAlternativeIds
 } from '../miniprogram/utils/api.ts';
 import { buildUnsupportedState, buildVideoSearchCopy } from '../miniprogram/utils/result-view-model.ts';
@@ -77,5 +78,19 @@ describe('result view model', () => {
     expect(buildRecognitionFailureMessage({ status: 'error', message: '识别服务暂时不可用，请稍后重试。' })).toBe(
       '识别服务暂时不可用，请稍后重试。'
     );
+  });
+
+  it('normalizes HTTP 500 recognition responses into a toastable error payload', () => {
+    expect(
+      normalizeRecognitionResponse({
+        statusCode: 500,
+        data: {
+          message: 'Internal Server Error'
+        }
+      })
+    ).toEqual({
+      status: 'error',
+      message: 'Internal Server Error'
+    });
   });
 });

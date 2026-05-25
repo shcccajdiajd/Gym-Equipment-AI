@@ -63,7 +63,10 @@ export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Reco
         },
         'recognition request crashed unexpectedly'
       );
-      throw error;
+      return reply.status(500).send({
+        status: 'error',
+        message: '识别服务暂时不可用，请稍后重试。'
+      });
     }
 
     request.log.info(

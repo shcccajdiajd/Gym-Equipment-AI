@@ -35,11 +35,15 @@
 - Fixed the unsupported-candidate query parsing bug: encoded `%2C` separators are now decoded before splitting, so suggested machine buttons render correctly in the mini program.
 - Updated the recommended launch path from local Ollama to OpenAI vision, including `.env.example`, README setup, and manual QA guidance.
 - Added an `aliyun` recognizer provider using Alibaba Model Studio's OpenAI-compatible DashScope endpoint and switched the recommended launch path from OpenAI to Aliyun.
+- Hardened the Aliyun recognition path and mini program request handling so API `500` or unexpected provider responses become structured error payloads instead of leaving the mini program stuck on `识别中`.
+- Removed risky Aliyun compatible-mode request fields, added safer empty-response handling, and added regression coverage for Aliyun request construction.
 
 ## Modified Files
 
 - [docs/superpowers/specs/2026-05-24-gym-equipment-ai-design.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/superpowers/specs/2026-05-24-gym-equipment-ai-design.md)
 - [docs/superpowers/plans/2026-05-24-gym-equipment-ai-implementation-plan.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/superpowers/plans/2026-05-24-gym-equipment-ai-implementation-plan.md)
+- [PROGRESS.md](/Users/shc/Documents/Codex/2026-05-24/ai/PROGRESS.md)
+- [TODO.md](/Users/shc/Documents/Codex/2026-05-24/ai/TODO.md)
 - [README.md](/Users/shc/Documents/Codex/2026-05-24/ai/README.md)
 - [package.json](/Users/shc/Documents/Codex/2026-05-24/ai/package.json)
 - [pnpm-workspace.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/pnpm-workspace.yaml)
@@ -71,6 +75,7 @@
 - [services/api/src/lib/recognizers/prompt.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/prompt.ts)
 - [services/api/src/lib/recognizers/prompt.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/prompt.test.ts)
 - [services/api/src/lib/recognizers/aliyun.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/aliyun.ts)
+- [services/api/src/lib/recognizers/aliyun.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/aliyun.test.ts)
 - [services/api/src/lib/recognizers/ollama.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/ollama.ts)
 - [services/api/src/lib/recognizers/openai.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/openai.ts)
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
@@ -125,15 +130,24 @@
 
 - The repository is now checkpointed with commits and can be continued safely from git history.
 - `services/api` TypeScript check passes.
+- `services/api` TypeScript check passes with:
+  - `./node_modules/.bin/tsc -p services/api/tsconfig.json --noEmit`
 - `services/api` route tests pass with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node /Users/shc/Documents/Codex/2026-05-24/ai/node_modules/vitest/vitest.mjs run src/routes/recognitions.test.ts`
 - `services/api` Ollama recognizer tests pass and verify structured local vision requests plus error handling.
 - `services/api` Aliyun provider selection tests pass and verify the Alibaba Model Studio path can be constructed through the OpenAI-compatible SDK client.
 - `services/api` prompt-builder tests pass and verify the recognizer prompt now includes human-readable names plus visual disambiguation cues for confusing machines.
 - `packages/shared` TypeScript check passes.
+- `packages/shared` TypeScript check passes with:
+  - `./node_modules/.bin/tsc -p packages/shared/tsconfig.json --noEmit`
 - `apps/miniprogram` TypeScript check passes.
+- `apps/miniprogram` TypeScript check passes with:
+  - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.json --noEmit`
 - Root `vitest run` passes across shared, API, and mini program tests with `25` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `30` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `34` passing tests.
+- The mini program runtime JavaScript has been rebuilt with:
+  - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
   - `/Users/shc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node --import tsx /Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts`
 - The codebase is runnable at the source level and all automated checks currently pass.
@@ -146,6 +160,7 @@
 - The mini program has not yet been manually re-tested in WeChat DevTools after the unsupported-candidate query parsing fix.
 - The repo defaults and docs now point to `RECOGNIZER_PROVIDER=openai` for launch readiness, but a real `OPENAI_API_KEY` has not been exercised in this environment.
 - The repo defaults and docs now point to `RECOGNIZER_PROVIDER=aliyun` for launch readiness, but a real `ALIYUN_API_KEY` has not been exercised in this environment.
+- If Aliyun live recognition still fails, the API should now return a structured `error` or `timeout` payload and the mini program should show a toast instead of hanging on the loading state.
 
 ## Current Problems
 
@@ -155,6 +170,8 @@
 - The latest unsupported-result candidate flow has not yet been re-verified in WeChat DevTools after the encoded-alternatives parsing fix, so the new suggested-machine buttons are still code-verified only.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
 - Live Aliyun recognition has not been verified yet because no `ALIYUN_API_KEY` flow was exercised in this environment.
+- Live Aliyun recognition still needs one manual WeChat Developer Tools retest after restarting the API server; this environment has not called the real DashScope endpoint.
+- A remaining Aliyun live failure is now expected to be diagnosable from the API terminal log as an auth, model-name, quota, or upstream-response issue rather than a silent mini program hang.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

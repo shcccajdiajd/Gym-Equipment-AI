@@ -55,7 +55,7 @@ describe('POST /api/recognitions', () => {
 
   it('throws when openai provider is configured without an api key', async () => {
     process.env.RECOGNIZER_PROVIDER = 'openai';
-    delete process.env.OPENAI_API_KEY;
+    process.env.OPENAI_API_KEY = '';
     delete process.env.OPENAI_MODEL;
 
     vi.resetModules();
@@ -68,7 +68,7 @@ describe('POST /api/recognitions', () => {
 
   it('throws when aliyun provider is configured without an api key', async () => {
     process.env.RECOGNIZER_PROVIDER = 'aliyun';
-    delete process.env.ALIYUN_API_KEY;
+    process.env.ALIYUN_API_KEY = '';
     delete process.env.ALIYUN_MODEL;
 
     vi.resetModules();
@@ -363,6 +363,31 @@ describe('POST /api/recognitions', () => {
     expect(response.statusCode).toBe(504);
     expect(response.json()).toMatchObject({
       status: 'timeout'
+    });
+  });
+
+  it('returns a structured 500 payload when the recognizer crashes unexpectedly', async () => {
+    const app = buildApp({
+      recognizer: {
+        async recognize() {
+          throw new Error('unexpected provider shape');
+        }
+      }
+    });
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.json()).toMatchObject({
+      status: 'error',
+      message: '识别服务暂时不可用，请稍后重试。'
     });
   });
 });

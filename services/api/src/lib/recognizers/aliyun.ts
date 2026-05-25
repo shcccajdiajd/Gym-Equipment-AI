@@ -11,12 +11,12 @@ interface AliyunRecognitionResponse {
 }
 
 function extractJsonText(content: unknown) {
-  if (typeof content === 'string') {
+  if (typeof content === 'string' && content.trim().length > 0) {
     return content;
   }
 
   if (Array.isArray(content)) {
-    return content
+    const text = content
       .flatMap((item) => {
         if (typeof item === 'string') {
           return [item];
@@ -29,6 +29,10 @@ function extractJsonText(content: unknown) {
         return [];
       })
       .join('\n');
+
+    if (text.trim().length > 0) {
+      return text;
+    }
   }
 
   throw new RecognitionProviderError('invalid_response', 'Aliyun returned empty completion content');
@@ -46,6 +50,22 @@ function parseJsonPayload(content: string) {
       `Aliyun returned invalid JSON: ${(error as Error).message}`
     );
   }
+}
+
+function describeUpstreamError(error: unknown) {
+  const maybeError = error as {
+    message?: string;
+    status?: number;
+    code?: string;
+    type?: string;
+  };
+  const details = [
+    maybeError.status ? `status=${maybeError.status}` : '',
+    maybeError.code ? `code=${maybeError.code}` : '',
+    maybeError.type ? `type=${maybeError.type}` : ''
+  ].filter(Boolean);
+
+  return [maybeError.message ?? 'unknown error', ...details].join(' ');
 }
 
 export function createAliyunRecognizer(options: {
@@ -87,22 +107,16 @@ export function createAliyunRecognizer(options: {
               ]
             }
           ],
-          response_format: {
-            type: 'json_object'
-          },
-          temperature: 0,
-          extra_body: {
-            enable_thinking: false
-          }
+          temperature: 0
         });
       } catch (error) {
         throw new RecognitionProviderError(
           'upstream_error',
-          `Aliyun request failed: ${(error as Error).message}`
+          `Aliyun request failed: ${describeUpstreamError(error)}`
         );
       }
 
-      const parsed = parseJsonPayload(extractJsonText(completion.choices[0]?.message?.content));
+      const parsed = parseJsonPayload(extractJsonText(completion.choices?.[0]?.message?.content));
 
       const validAlternatives = parsed.alternatives.filter((item) => supportedIds.includes(item)).slice(0, 3);
       const topMatchId = parsed.topMatchId && supportedIds.includes(parsed.topMatchId) ? parsed.topMatchId : null;

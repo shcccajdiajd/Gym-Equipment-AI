@@ -74,6 +74,25 @@ Acceptance:
 - API recognitions test suite passes.
 - Mini program package typecheck/tests pass for the implemented scope.
 
+## Phase 6: Harden Live Aliyun Debugging Flow
+
+- [x] Normalize mini program recognition HTTP failures so API `500` responses become user-visible error toasts instead of leaving the loading state ambiguous.
+Acceptance:
+- `normalizeRecognitionResponse` converts non-200 responses without a known `status` into `{ status: 'error', message }`.
+- Album and camera recognition flows continue to use the same `recognizeEquipment` entry point.
+- The rebuilt mini program runtime JavaScript includes the normalization logic.
+
+- [x] Make API recognizer crashes return a structured JSON error body.
+Acceptance:
+- Unexpected recognizer exceptions return HTTP `500` with `{ status: 'error', message: '识别服务暂时不可用，请稍后重试。' }`.
+- Existing `RecognitionProviderError` timeout/upstream handling remains intact.
+
+- [x] Reduce Aliyun compatible-mode request risk and add regression coverage.
+Acceptance:
+- The Aliyun recognizer no longer sends `extra_body` or `response_format` in the compatible-mode chat request.
+- Empty Aliyun completion content is wrapped as `invalid_response` instead of causing an unstructured crash.
+- `./node_modules/.bin/vitest run` exits `0` with the new regression tests included.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -81,6 +100,8 @@ Acceptance:
 - Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.
 - Camera capture, album import, clipboard copy, and equipment-list navigation all work in the actual mini program runtime.
 - The running Aliyun-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
+- If Aliyun still fails, the mini program exits `识别中` and shows a readable toast rather than staying stuck.
+- The API terminal log shows either `recognition provider completed` or a structured `recognition provider failed` / `recognition request crashed unexpectedly` entry.
 - The home-page demo buttons successfully preview all three result states in WeChat Developer Tools.
 - The project loads in WeChat Developer Tools without the previous `pages/home/index.js` missing-file startup error.
 - The Aliyun-backed flow returns a real response instead of a transport or auth error after editing `.env`.
@@ -92,6 +113,7 @@ Acceptance:
 Acceptance:
 - `services/api/.env` is populated with `RECOGNIZER_PROVIDER=aliyun`, a valid `ALIYUN_API_KEY`, and the expected `ALIYUN_BASE_URL`.
 - At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
+- A failed live Aliyun request returns a structured `error` or `timeout` response to the mini program rather than an unhandled Fastify default body.
 - The preferred launch model is `qwen3-vl-32b-instruct`.
 - The API successfully authenticates against `https://dashscope.aliyuncs.com/compatible-mode/v1` without an upstream 401 or model-name error.
 

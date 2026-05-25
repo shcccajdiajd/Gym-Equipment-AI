@@ -5,12 +5,14 @@ exports.buildFallbackNavigationUrl = buildFallbackNavigationUrl;
 exports.parseAlternativeIds = parseAlternativeIds;
 exports.buildDemoNavigationUrl = buildDemoNavigationUrl;
 exports.buildRecognitionFailureMessage = buildRecognitionFailureMessage;
+exports.normalizeRecognitionResponse = normalizeRecognitionResponse;
 exports.recognizeEquipment = recognizeEquipment;
 exports.compressImageForRecognition = compressImageForRecognition;
 exports.readFileAsBase64 = readFileAsBase64;
 exports.chooseSingleImageFromAlbum = chooseSingleImageFromAlbum;
 exports.takeSinglePhoto = takeSinglePhoto;
 const REQUEST_TIMEOUT_MS = 180000;
+const GENERIC_RECOGNITION_ERROR_MESSAGE = '识别服务暂时不可用，请稍后重试。';
 function getApiBaseUrl() {
     return getApp().globalData.apiBaseUrl;
 }
@@ -56,6 +58,23 @@ function buildRecognitionFailureMessage(result) {
     }
     return (_c = result.message) !== null && _c !== void 0 ? _c : '识别服务暂时不可用，请稍后重试。';
 }
+function normalizeRecognitionResponse(response) {
+    var _a, _b;
+    const data = response.data;
+    if (data === null || data === void 0 ? void 0 : data.status) {
+        return data;
+    }
+    if (response.statusCode >= 400) {
+        return {
+            status: 'error',
+            message: (_b = (_a = data === null || data === void 0 ? void 0 : data.message) !== null && _a !== void 0 ? _a : data === null || data === void 0 ? void 0 : data.error) !== null && _b !== void 0 ? _b : GENERIC_RECOGNITION_ERROR_MESSAGE
+        };
+    }
+    return {
+        status: 'error',
+        message: GENERIC_RECOGNITION_ERROR_MESSAGE
+    };
+}
 async function recognizeEquipment(imageBase64, source) {
     return new Promise((resolve, reject) => {
         wx.request({
@@ -66,7 +85,7 @@ async function recognizeEquipment(imageBase64, source) {
                 imageBase64,
                 source
             },
-            success: (response) => resolve(response.data),
+            success: (response) => resolve(normalizeRecognitionResponse(response)),
             fail: reject
         });
     });
