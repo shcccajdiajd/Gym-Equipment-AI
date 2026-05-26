@@ -43,6 +43,8 @@
 - Synced the updated catalog hints into the mini program runtime catalog snapshot.
 - Switched the recommended Aliyun launch model from `qwen3-vl-32b-instruct` to `qwen-vl-max-latest` in code defaults, docs, and the local ignored `.env`.
 - Added a route-level safety guard that blocks medium-confidence `assisted-pull-up-dip` results and returns an `unsupported` candidate list with `pec-deck-fly` first, avoiding a confidently wrong teaching card.
+- Added a result-page "去 B 站搜索" action that attempts to open the Bilibili mini program search page and falls back to copying the mobile Bilibili search URL if the mini program jump fails.
+- Added reusable Bilibili platform-search utilities for the mini program and regenerated the mini program runtime JavaScript.
 
 ## Modified Files
 
@@ -126,6 +128,8 @@
 - [apps/miniprogram/miniprogram/utils/history.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/history.js)
 - [apps/miniprogram/miniprogram/utils/result-view-model.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/result-view-model.ts)
 - [apps/miniprogram/miniprogram/utils/result-view-model.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/result-view-model.js)
+- [apps/miniprogram/miniprogram/utils/platform-search.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/platform-search.ts)
+- [apps/miniprogram/miniprogram/utils/platform-search.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/platform-search.js)
 - [scripts/sync-catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts)
 - [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md)
 - [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md)
@@ -151,7 +155,7 @@
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.json --noEmit`
 - Root `vitest run` passes across shared, API, and mini program tests with `25` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `30` passing tests.
-- Root `vitest run` now passes across shared, API, and mini program tests with `38` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `39` passing tests.
 - The mini program runtime JavaScript has been rebuilt with:
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
@@ -170,6 +174,7 @@
 - Aliyun responses that use exact catalog names instead of ids can now still produce a recognized or low-confidence result when the name maps to a supported machine.
 - The latest screenshot confirms the Aliyun-backed request can return HTTP `200` and navigate to the result page, but the same `蝴蝶机夹胸` image still needs manual re-test after the new false-positive guard.
 - If Aliyun still returns `assisted-pull-up-dip` with confidence below `0.95`, the API now returns `unsupported` suggestions instead of a recognized assisted-pull-up result.
+- The result page can now attempt a Bilibili mini program search jump via AppID `wx7564fd5313d24844`; the exact search page path is still pending manual validation in WeChat Developer Tools.
 
 ## Current Problems
 
@@ -182,6 +187,7 @@
 - Live Aliyun recognition still needs one manual WeChat Developer Tools retest after restarting the API server; this environment has not called the real DashScope endpoint.
 - A remaining Aliyun live failure is now expected to be diagnosable from the API terminal log as an auth, model-name, quota, or upstream-response issue rather than a silent mini program hang.
 - The last live Aliyun result before this prompt fix returned `assisted-pull-up-dip` with `0.9` confidence for the `蝴蝶机夹胸` sample, so real-image accuracy remains the next manual verification gate.
+- The Bilibili mini program search page path (`pages/search/search?keyword=...`) is a best-effort target and still needs live validation; if it fails, the current code copies the mobile Bilibili search URL.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

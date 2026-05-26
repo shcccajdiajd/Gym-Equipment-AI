@@ -113,12 +113,20 @@ Acceptance:
 - The recommended Aliyun launch model is `qwen-vl-max-latest` in defaults, docs, and the local ignored `.env`.
 - `./node_modules/.bin/vitest run` exits `0` with the safety-guard regression test included.
 
+- [x] Add a Bilibili mini program search jump from result pages.
+Acceptance:
+- Recognized result pages show a "去 B 站搜索" action in the teaching section.
+- The action attempts `wx.navigateToMiniProgram` with the Bilibili mini program AppID and a keyword-bearing search path.
+- If the mini program jump fails, the action copies the mobile Bilibili search URL so the user still has a usable fallback.
+- `./node_modules/.bin/vitest run` exits `0` with platform-search URL/path tests included.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
 Acceptance:
 - Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.
 - Camera capture, album import, clipboard copy, and equipment-list navigation all work in the actual mini program runtime.
+- The "去 B 站搜索" button either opens the Bilibili mini program search page or copies the Bilibili mobile search URL on failure.
 - The running Aliyun-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
 - If Aliyun still fails, the mini program exits `识别中` and shows a readable toast rather than staying stuck.
 - The API terminal log shows either `recognition provider completed` or a structured `recognition provider failed` / `recognition request crashed unexpectedly` entry.

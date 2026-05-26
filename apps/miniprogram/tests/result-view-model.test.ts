@@ -9,6 +9,11 @@ import {
   parseAlternativeIds
 } from '../miniprogram/utils/api.ts';
 import { buildUnsupportedState, buildVideoSearchCopy } from '../miniprogram/utils/result-view-model.ts';
+import {
+  BILIBILI_MINI_PROGRAM_APP_ID,
+  buildBilibiliMiniProgramSearchPath,
+  buildBilibiliWebSearchUrl
+} from '../miniprogram/utils/platform-search.ts';
 
 describe('result view model', () => {
   it('builds a result page url from an API payload id', () => {
@@ -69,6 +74,16 @@ describe('result view model', () => {
         searchQuery: '高位下拉 正确使用 教学'
       })
     ).toBe('Bilibili｜高位下拉新手教学｜高位下拉 正确使用 教学');
+  });
+
+  it('builds Bilibili mini program and web search targets', () => {
+    expect(BILIBILI_MINI_PROGRAM_APP_ID).toBe('wx7564fd5313d24844');
+    expect(buildBilibiliMiniProgramSearchPath('蝴蝶机夹胸教学')).toBe(
+      'pages/search/search?keyword=%E8%9D%B4%E8%9D%B6%E6%9C%BA%E5%A4%B9%E8%83%B8%E6%95%99%E5%AD%A6'
+    );
+    expect(buildBilibiliWebSearchUrl('蝴蝶机夹胸教学')).toBe(
+      'https://m.bilibili.com/search?keyword=%E8%9D%B4%E8%9D%B6%E6%9C%BA%E5%A4%B9%E8%83%B8%E6%95%99%E5%AD%A6'
+    );
   });
 
   it('builds readable failure messages for timeout and generic errors', () => {

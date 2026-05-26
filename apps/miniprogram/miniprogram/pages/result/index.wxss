@@ -60,6 +60,10 @@
   margin-top: 24rpx;
 }
 
+.compact-button {
+  margin-top: 14rpx;
+}
+
 .suggestion-block {
   margin-top: 20rpx;
 }

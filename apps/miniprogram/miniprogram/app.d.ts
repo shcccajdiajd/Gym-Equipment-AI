@@ -86,6 +86,14 @@ declare namespace WechatMiniprogram {
     success?: () => void;
   }
 
+  interface NavigateToMiniProgramOption {
+    appId: string;
+    path?: string;
+    envVersion?: 'release' | 'develop' | 'trial';
+    success?: () => void;
+    fail?: (error: GeneralCallbackResult) => void;
+  }
+
   interface CompressImageSuccessCallbackResult {
     tempFilePath: string;
   }
@@ -109,6 +117,7 @@ declare const wx: {
   hideLoading: () => void;
   showToast: (options: { title: string; icon: 'none' | 'success' }) => void;
   navigateTo: (options: { url: string }) => void;
+  navigateToMiniProgram: (options: WechatMiniprogram.NavigateToMiniProgramOption) => void;
   setClipboardData: (options: WechatMiniprogram.ClipboardOption) => void;
   compressImage: (options: WechatMiniprogram.CompressImageOption) => void;
   getStorageSync: <T = unknown>(key: string) => T;

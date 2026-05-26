@@ -67,9 +67,9 @@
   <view class="section-card">
     <text class="section-title">继续看教学</text>
     <text class="list-line">{{equipment.videoRecommendation.platform}}</text>
-    <text class="list-line">{{equipment.videoRecommendation.title}}</text>
     <text class="list-line">{{equipment.videoRecommendation.searchQuery}}</text>
-    <button class="primary-button section-button" bindtap="copyVideoSearch">复制视频搜索词</button>
+    <button class="primary-button section-button" bindtap="openBilibiliSearch">去 B 站搜索</button>
+    <button class="secondary-button section-button compact-button" bindtap="copyVideoSearch">复制搜索词</button>
   </view>
 
   <view class="footer-note">

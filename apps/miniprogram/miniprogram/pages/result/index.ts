@@ -1,6 +1,11 @@
 import { getEquipmentCard } from '../../data/catalog.js';
 import { pushHistory } from '../../utils/history.js';
 import { parseAlternativeIds } from '../../utils/api.js';
+import {
+  BILIBILI_MINI_PROGRAM_APP_ID,
+  buildBilibiliMiniProgramSearchPath,
+  buildBilibiliWebSearchUrl
+} from '../../utils/platform-search.js';
 import { buildUnsupportedState, buildVideoSearchCopy } from '../../utils/result-view-model.js';
 
 type ResultPageData = {
@@ -10,6 +15,7 @@ type ResultPageData = {
   primaryMusclesText: string;
   similarEquipmentNames: string[];
   suggestedEquipment: Array<{ id: string; zhName: string }>;
+  bilibiliSearchQuery: string;
 };
 
 Page({
@@ -19,7 +25,8 @@ Page({
     showLowConfidence: false,
     primaryMusclesText: '',
     similarEquipmentNames: [],
-    suggestedEquipment: []
+    suggestedEquipment: [],
+    bilibiliSearchQuery: ''
   } satisfies ResultPageData,
 
   onLoad(this: MiniProgramPageInstance<ResultPageData>, query: Record<string, string | undefined>) {
@@ -67,7 +74,8 @@ Page({
       showLowConfidence: query.status === 'low_confidence',
       primaryMusclesText: equipment.primaryMuscles.join('、'),
       similarEquipmentNames,
-      suggestedEquipment: []
+      suggestedEquipment: [],
+      bilibiliSearchQuery: equipment.videoRecommendation.searchQuery
     });
   },
 
@@ -81,6 +89,27 @@ Page({
       data: buildVideoSearchCopy(equipment.videoRecommendation),
       success: () => {
         wx.showToast({ title: '已复制搜索词', icon: 'success' });
+      }
+    });
+  },
+
+  openBilibiliSearch(this: MiniProgramPageInstance<ResultPageData>) {
+    const searchQuery = this.data?.bilibiliSearchQuery;
+    if (!searchQuery) {
+      return;
+    }
+
+    wx.navigateToMiniProgram({
+      appId: BILIBILI_MINI_PROGRAM_APP_ID,
+      path: buildBilibiliMiniProgramSearchPath(searchQuery),
+      envVersion: 'release',
+      fail: () => {
+        wx.setClipboardData({
+          data: buildBilibiliWebSearchUrl(searchQuery),
+          success: () => {
+            wx.showToast({ title: '已复制B站搜索链接', icon: 'none' });
+          }
+        });
       }
     });
   },
