@@ -10,7 +10,8 @@ import {
   buildResultNavigationUrl,
   compressImageForRecognition,
   normalizeRecognitionResponse,
-  parseAlternativeIds
+  parseAlternativeIds,
+  recognizeImagePathForEquipment
 } from '../miniprogram/utils/api.ts';
 import { buildUnsupportedState, buildVideoSearchCopy } from '../miniprogram/utils/result-view-model.ts';
 import {
@@ -19,10 +20,12 @@ import {
   buildBilibiliWebSearchUrl
 } from '../miniprogram/utils/platform-search.ts';
 
-const testGlobal = globalThis as typeof globalThis & { wx: typeof wx };
+const testGlobal = globalThis as typeof globalThis & { getApp: typeof getApp; wx: typeof wx };
+const originalGetApp = testGlobal.getApp;
 const originalWx = testGlobal.wx;
 
 afterEach(() => {
+  testGlobal.getApp = originalGetApp;
   testGlobal.wx = originalWx;
 });
 
@@ -132,6 +135,34 @@ describe('result view model', () => {
       message: '开发联调模式：识别服务暂时连不上，先用候选结果跑通流程。'
     });
     expect(buildRecognitionDevFallbackPayload(false)).toBeUndefined();
+  });
+
+  it('uses the development fallback when selected image reading fails before API request', async () => {
+    testGlobal.getApp = <T = IAppOption>() =>
+      ({
+      globalData: {
+        apiBaseUrl: 'http://127.0.0.1:3001',
+        enableRecognitionDevFallback: true
+      }
+      }) as T;
+    testGlobal.wx = {
+      ...originalWx,
+      compressImage: (options: WechatMiniprogram.CompressImageOption) => {
+        options.success?.({ tempFilePath: '/tmp/compressed.jpg' });
+      },
+      getFileSystemManager: () => ({
+        readFile: (options) => {
+          options.fail?.({ errMsg: 'readFile:fail permission denied' });
+        }
+      }),
+      request: () => {
+        throw new Error('request should not run when image reading fails');
+      }
+    };
+
+    await expect(recognizeImagePathForEquipment('/tmp/input.jpg', 'album')).resolves.toEqual(
+      buildRecognitionDevFallbackPayload(true)
+    );
   });
 
   it('builds readable failure messages for timeout and generic errors', () => {

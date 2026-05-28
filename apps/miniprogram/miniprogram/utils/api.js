@@ -10,6 +10,7 @@ exports.buildRecognitionFailureMessage = buildRecognitionFailureMessage;
 exports.buildMediaFlowFailureMessage = buildMediaFlowFailureMessage;
 exports.normalizeRecognitionResponse = normalizeRecognitionResponse;
 exports.recognizeEquipment = recognizeEquipment;
+exports.recognizeImagePathForEquipment = recognizeImagePathForEquipment;
 exports.compressImageForRecognition = compressImageForRecognition;
 exports.readFileAsBase64 = readFileAsBase64;
 exports.chooseSingleImageFromAlbum = chooseSingleImageFromAlbum;
@@ -152,6 +153,20 @@ async function recognizeEquipment(imageBase64, source) {
         return devFallback;
     }
     throw lastError !== null && lastError !== void 0 ? lastError : new Error('recognition request failed');
+}
+async function recognizeImagePathForEquipment(path, source) {
+    const preparedImagePath = await compressImageForRecognition(path);
+    try {
+        const imageBase64 = await readFileAsBase64(preparedImagePath);
+        return await recognizeEquipment(imageBase64, source);
+    }
+    catch (error) {
+        const devFallback = buildRecognitionDevFallbackPayload(isRecognitionDevFallbackEnabled());
+        if (devFallback) {
+            return devFallback;
+        }
+        throw error;
+    }
 }
 async function compressImageForRecognition(path) {
     return new Promise((resolve, reject) => {

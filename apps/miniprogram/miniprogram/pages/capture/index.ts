@@ -3,9 +3,7 @@ import {
   buildMediaFlowFailureMessage,
   buildRecognitionFailureMessage,
   buildResultNavigationUrl,
-  compressImageForRecognition,
-  readFileAsBase64,
-  recognizeEquipment,
+  recognizeImagePathForEquipment,
   takeSinglePhoto
 } from '../../utils/api.js';
 
@@ -17,9 +15,7 @@ Page({
 
     try {
       const tempImagePath = await takeSinglePhoto();
-      const preparedImagePath = await compressImageForRecognition(tempImagePath);
-      const imageBase64 = await readFileAsBase64(preparedImagePath);
-      const result = await recognizeEquipment(imageBase64, 'camera');
+      const result = await recognizeImagePathForEquipment(tempImagePath, 'camera');
 
       if (result.equipment?.id && (result.status === 'recognized' || result.status === 'low_confidence')) {
         wx.navigateTo({ url: buildResultNavigationUrl(result.equipment.id, result.status) });

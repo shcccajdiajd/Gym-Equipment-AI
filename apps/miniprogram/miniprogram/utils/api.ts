@@ -202,6 +202,25 @@ export async function recognizeEquipment(
   throw lastError ?? new Error('recognition request failed');
 }
 
+export async function recognizeImagePathForEquipment(
+  path: string,
+  source: 'camera' | 'album'
+): Promise<RecognitionPayload> {
+  const preparedImagePath = await compressImageForRecognition(path);
+
+  try {
+    const imageBase64 = await readFileAsBase64(preparedImagePath);
+    return await recognizeEquipment(imageBase64, source);
+  } catch (error) {
+    const devFallback = buildRecognitionDevFallbackPayload(isRecognitionDevFallbackEnabled());
+    if (devFallback) {
+      return devFallback;
+    }
+
+    throw error;
+  }
+}
+
 export async function compressImageForRecognition(path: string): Promise<string> {
   return new Promise((resolve, reject) => {
     wx.compressImage({

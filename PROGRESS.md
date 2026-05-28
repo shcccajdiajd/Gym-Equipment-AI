@@ -50,6 +50,7 @@
 - Added clearer mini program media-flow error messages for WeChat callback errors such as request timeout, request failure, read-file failure, and user cancel.
 - Verified the local API and Aliyun recognizer path directly with the real `ims.webp` sample; the backend returned HTTP `200` with an `unsupported` candidate list, so the remaining upload failure is in the WeChat Developer Tools transport path rather than the API itself.
 - Added a development-only recognition fallback: when all mini program API requests fail and `enableRecognitionDevFallback` is enabled, the upload flow returns an unsupported candidate page instead of staying blocked by local DevTools networking.
+- Moved the development fallback earlier in the mini program image pipeline: if WeChat Developer Tools cannot read the selected temporary image file, the upload flow now returns the same unsupported candidate result instead of stopping on `图片读取失败`.
 
 ## Modified Files
 
@@ -164,6 +165,7 @@
 - Root `vitest run` now passes across shared, API, and mini program tests with `40` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `42` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `43` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `44` passing tests.
 - The mini program runtime JavaScript has been rebuilt with:
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
@@ -187,6 +189,7 @@
 - The current LAN API URL `http://192.168.7.51:3001/api/recognitions` was verified with a direct POST and returned the expected structured `invalid_request` response for an intentionally invalid image payload.
 - Album/camera import should no longer fail solely because local image compression fails; the current fix still needs manual WeChat Developer Tools verification with the user's selected image.
 - In development, failed mini program transport requests should now fall back to an unsupported candidate result so the user can continue testing result pages and Bilibili search jumps even when local `wx.request` cannot reach the API.
+- In development, failed mini program image reading should also fall back to the unsupported candidate result, so the user can continue testing even when WeChat Developer Tools cannot read a selected album file.
 
 ## Current Problems
 

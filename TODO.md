@@ -141,6 +141,13 @@ Acceptance:
 - The upload flow can navigate to the unsupported/candidate result page instead of stopping at a transport timeout.
 - `./node_modules/.bin/vitest run` exits `0` with regression coverage for the dev fallback payload.
 
+- [x] Move development fallback ahead of image-read failures.
+Acceptance:
+- Album/camera flows call one shared image-path recognition helper.
+- If WeChat Developer Tools cannot read the selected temporary image and development fallback is enabled, the flow returns the unsupported candidate payload.
+- The rebuilt mini program runtime JavaScript includes the shared image-path recognition helper.
+- `./node_modules/.bin/vitest run` exits `0` with regression coverage for image-read fallback.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -152,6 +159,7 @@ Acceptance:
 - If `127.0.0.1` times out in WeChat Developer Tools, the mini program successfully retries the current LAN API URL `http://192.168.7.51:3001`.
 - Selecting the same image that previously showed `导入失败` either reaches the result page or shows a more specific toast that identifies the failing step.
 - With development fallback enabled, selecting any image in WeChat Developer Tools should at least reach the unsupported candidate result page even if local API transport still times out.
+- With development fallback enabled, selecting any image in WeChat Developer Tools should at least reach the unsupported candidate result page even if temporary image reading fails.
 - If Aliyun still fails, the mini program exits `识别中` and shows a readable toast rather than staying stuck.
 - The API terminal log shows either `recognition provider completed` or a structured `recognition provider failed` / `recognition request crashed unexpectedly` entry.
 - If the API logs `recognition provider failed` with `invalid_response`, the logged message identifies whether the provider returned invalid JSON or an unexpected JSON shape.

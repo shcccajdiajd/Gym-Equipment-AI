@@ -5,9 +5,7 @@ import {
   buildRecognitionFailureMessage,
   buildResultNavigationUrl,
   chooseSingleImageFromAlbum,
-  compressImageForRecognition,
-  readFileAsBase64,
-  recognizeEquipment
+  recognizeImagePathForEquipment
 } from '../../utils/api.js';
 
 Page({
@@ -19,9 +17,7 @@ Page({
       wx.showLoading({ title: '识别中' });
       loadingShown = true;
 
-      const preparedImagePath = await compressImageForRecognition(tempFilePath);
-      const imageBase64 = await readFileAsBase64(preparedImagePath);
-      const result = await recognizeEquipment(imageBase64, 'album');
+      const result = await recognizeImagePathForEquipment(tempFilePath, 'album');
 
       if (result.equipment?.id && (result.status === 'recognized' || result.status === 'low_confidence')) {
         wx.navigateTo({ url: buildResultNavigationUrl(result.equipment.id, result.status) });

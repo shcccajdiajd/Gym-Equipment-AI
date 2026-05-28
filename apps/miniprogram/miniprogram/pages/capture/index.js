@@ -9,9 +9,7 @@ Page({
         loadingShown = true;
         try {
             const tempImagePath = await (0, api_js_1.takeSinglePhoto)();
-            const preparedImagePath = await (0, api_js_1.compressImageForRecognition)(tempImagePath);
-            const imageBase64 = await (0, api_js_1.readFileAsBase64)(preparedImagePath);
-            const result = await (0, api_js_1.recognizeEquipment)(imageBase64, 'camera');
+            const result = await (0, api_js_1.recognizeImagePathForEquipment)(tempImagePath, 'camera');
             if (((_a = result.equipment) === null || _a === void 0 ? void 0 : _a.id) && (result.status === 'recognized' || result.status === 'low_confidence')) {
                 wx.navigateTo({ url: (0, api_js_1.buildResultNavigationUrl)(result.equipment.id, result.status) });
                 return;

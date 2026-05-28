@@ -9,9 +9,7 @@ Page({
             const tempFilePath = await (0, api_js_1.chooseSingleImageFromAlbum)();
             wx.showLoading({ title: '识别中' });
             loadingShown = true;
-            const preparedImagePath = await (0, api_js_1.compressImageForRecognition)(tempFilePath);
-            const imageBase64 = await (0, api_js_1.readFileAsBase64)(preparedImagePath);
-            const result = await (0, api_js_1.recognizeEquipment)(imageBase64, 'album');
+            const result = await (0, api_js_1.recognizeImagePathForEquipment)(tempFilePath, 'album');
             if (((_a = result.equipment) === null || _a === void 0 ? void 0 : _a.id) && (result.status === 'recognized' || result.status === 'low_confidence')) {
                 wx.navigateTo({ url: (0, api_js_1.buildResultNavigationUrl)(result.equipment.id, result.status) });
                 return;
