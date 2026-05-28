@@ -29,8 +29,24 @@ function getApiBaseUrls() {
   return globalData.apiBaseUrls?.length ? globalData.apiBaseUrls : [globalData.apiBaseUrl];
 }
 
+function isRecognitionDevFallbackEnabled() {
+  return getApp<IAppOption>().globalData.enableRecognitionDevFallback === true;
+}
+
 export function buildRecognitionRequestUrls(apiBaseUrls: string[]) {
   return apiBaseUrls.map((apiBaseUrl) => `${apiBaseUrl}/api/recognitions`);
+}
+
+export function buildRecognitionDevFallbackPayload(enabled: boolean): RecognitionPayload | undefined {
+  if (!enabled) {
+    return undefined;
+  }
+
+  return {
+    status: 'unsupported',
+    alternatives: ['pec-deck-fly', 'lat-pulldown', 'seated-row'],
+    message: '开发联调模式：识别服务暂时连不上，先用候选结果跑通流程。'
+  };
 }
 
 function requestRecognition(
@@ -176,6 +192,11 @@ export async function recognizeEquipment(
     } catch (error) {
       lastError = error as WechatMiniprogram.GeneralCallbackResult;
     }
+  }
+
+  const devFallback = buildRecognitionDevFallbackPayload(isRecognitionDevFallbackEnabled());
+  if (devFallback) {
+    return devFallback;
   }
 
   throw lastError ?? new Error('recognition request failed');

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildRecognitionRequestUrls = buildRecognitionRequestUrls;
+exports.buildRecognitionDevFallbackPayload = buildRecognitionDevFallbackPayload;
 exports.buildResultNavigationUrl = buildResultNavigationUrl;
 exports.buildFallbackNavigationUrl = buildFallbackNavigationUrl;
 exports.parseAlternativeIds = parseAlternativeIds;
@@ -20,8 +21,21 @@ function getApiBaseUrls() {
     const globalData = getApp().globalData;
     return ((_a = globalData.apiBaseUrls) === null || _a === void 0 ? void 0 : _a.length) ? globalData.apiBaseUrls : [globalData.apiBaseUrl];
 }
+function isRecognitionDevFallbackEnabled() {
+    return getApp().globalData.enableRecognitionDevFallback === true;
+}
 function buildRecognitionRequestUrls(apiBaseUrls) {
     return apiBaseUrls.map((apiBaseUrl) => `${apiBaseUrl}/api/recognitions`);
+}
+function buildRecognitionDevFallbackPayload(enabled) {
+    if (!enabled) {
+        return undefined;
+    }
+    return {
+        status: 'unsupported',
+        alternatives: ['pec-deck-fly', 'lat-pulldown', 'seated-row'],
+        message: '开发联调模式：识别服务暂时连不上，先用候选结果跑通流程。'
+    };
 }
 function requestRecognition(url, imageBase64, source) {
     return new Promise((resolve, reject) => {
@@ -132,6 +146,10 @@ async function recognizeEquipment(imageBase64, source) {
         catch (error) {
             lastError = error;
         }
+    }
+    const devFallback = buildRecognitionDevFallbackPayload(isRecognitionDevFallbackEnabled());
+    if (devFallback) {
+        return devFallback;
     }
     throw lastError !== null && lastError !== void 0 ? lastError : new Error('recognition request failed');
 }

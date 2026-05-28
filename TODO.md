@@ -134,6 +134,13 @@ Acceptance:
 - The rebuilt mini program runtime JavaScript includes the compression fallback and updated page error handling.
 - `./node_modules/.bin/vitest run` exits `0` with regression coverage for compression fallback and callback error messages.
 
+- [x] Add a development fallback when WeChat Developer Tools cannot reach the local API.
+Acceptance:
+- A direct backend call with the real `ims.webp` sample returns HTTP `200`, confirming the API and Aliyun provider path are alive.
+- When all mini program recognition requests fail and `enableRecognitionDevFallback` is enabled, `recognizeEquipment` returns an unsupported candidate payload.
+- The upload flow can navigate to the unsupported/candidate result page instead of stopping at a transport timeout.
+- `./node_modules/.bin/vitest run` exits `0` with regression coverage for the dev fallback payload.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -144,6 +151,7 @@ Acceptance:
 - The running Aliyun-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
 - If `127.0.0.1` times out in WeChat Developer Tools, the mini program successfully retries the current LAN API URL `http://192.168.7.51:3001`.
 - Selecting the same image that previously showed `导入失败` either reaches the result page or shows a more specific toast that identifies the failing step.
+- With development fallback enabled, selecting any image in WeChat Developer Tools should at least reach the unsupported candidate result page even if local API transport still times out.
 - If Aliyun still fails, the mini program exits `识别中` and shows a readable toast rather than staying stuck.
 - The API terminal log shows either `recognition provider completed` or a structured `recognition provider failed` / `recognition request crashed unexpectedly` entry.
 - If the API logs `recognition provider failed` with `invalid_response`, the logged message identifies whether the provider returned invalid JSON or an unexpected JSON shape.

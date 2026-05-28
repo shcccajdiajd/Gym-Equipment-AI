@@ -2,6 +2,7 @@ interface IAppOption {
   globalData: {
     apiBaseUrl: string;
     apiBaseUrls?: string[];
+    enableRecognitionDevFallback?: boolean;
   };
 }
 

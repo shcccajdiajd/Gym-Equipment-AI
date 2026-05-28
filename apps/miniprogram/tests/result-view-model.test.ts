@@ -4,6 +4,7 @@ import {
   buildDemoNavigationUrl,
   buildFallbackNavigationUrl,
   buildMediaFlowFailureMessage,
+  buildRecognitionDevFallbackPayload,
   buildRecognitionRequestUrls,
   buildRecognitionFailureMessage,
   buildResultNavigationUrl,
@@ -122,6 +123,15 @@ describe('result view model', () => {
       '图片读取失败，请换一张图片再试'
     );
     expect(buildMediaFlowFailureMessage({ errMsg: 'chooseMedia:fail cancel' }, '导入失败，请重试')).toBe('');
+  });
+
+  it('builds a development fallback payload when recognition transport fails', () => {
+    expect(buildRecognitionDevFallbackPayload(true)).toEqual({
+      status: 'unsupported',
+      alternatives: ['pec-deck-fly', 'lat-pulldown', 'seated-row'],
+      message: '开发联调模式：识别服务暂时连不上，先用候选结果跑通流程。'
+    });
+    expect(buildRecognitionDevFallbackPayload(false)).toBeUndefined();
   });
 
   it('builds readable failure messages for timeout and generic errors', () => {
