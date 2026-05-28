@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildDemoNavigationUrl,
   buildFallbackNavigationUrl,
+  buildRecognitionRequestUrls,
   buildRecognitionFailureMessage,
   buildResultNavigationUrl,
   normalizeRecognitionResponse,
@@ -84,6 +85,13 @@ describe('result view model', () => {
     expect(buildBilibiliWebSearchUrl('蝴蝶机夹胸教学')).toBe(
       'https://m.bilibili.com/search?keyword=%E8%9D%B4%E8%9D%B6%E6%9C%BA%E5%A4%B9%E8%83%B8%E6%95%99%E5%AD%A6'
     );
+  });
+
+  it('builds recognition request urls from multiple local API candidates', () => {
+    expect(buildRecognitionRequestUrls(['http://192.168.7.51:3001', 'http://127.0.0.1:3001'])).toEqual([
+      'http://192.168.7.51:3001/api/recognitions',
+      'http://127.0.0.1:3001/api/recognitions'
+    ]);
   });
 
   it('builds readable failure messages for timeout and generic errors', () => {

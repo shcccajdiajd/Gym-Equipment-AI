@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildRecognitionRequestUrls = buildRecognitionRequestUrls;
 exports.buildResultNavigationUrl = buildResultNavigationUrl;
 exports.buildFallbackNavigationUrl = buildFallbackNavigationUrl;
 exports.parseAlternativeIds = parseAlternativeIds;
@@ -13,8 +14,28 @@ exports.chooseSingleImageFromAlbum = chooseSingleImageFromAlbum;
 exports.takeSinglePhoto = takeSinglePhoto;
 const REQUEST_TIMEOUT_MS = 180000;
 const GENERIC_RECOGNITION_ERROR_MESSAGE = '识别服务暂时不可用，请稍后重试。';
-function getApiBaseUrl() {
-    return getApp().globalData.apiBaseUrl;
+function getApiBaseUrls() {
+    var _a;
+    const globalData = getApp().globalData;
+    return ((_a = globalData.apiBaseUrls) === null || _a === void 0 ? void 0 : _a.length) ? globalData.apiBaseUrls : [globalData.apiBaseUrl];
+}
+function buildRecognitionRequestUrls(apiBaseUrls) {
+    return apiBaseUrls.map((apiBaseUrl) => `${apiBaseUrl}/api/recognitions`);
+}
+function requestRecognition(url, imageBase64, source) {
+    return new Promise((resolve, reject) => {
+        wx.request({
+            url,
+            method: 'POST',
+            timeout: REQUEST_TIMEOUT_MS,
+            data: {
+                imageBase64,
+                source
+            },
+            success: (response) => resolve(normalizeRecognitionResponse(response)),
+            fail: reject
+        });
+    });
 }
 function buildResultNavigationUrl(id, status = 'recognized') {
     const baseUrl = `/pages/result/index?id=${encodeURIComponent(id)}`;
@@ -76,19 +97,17 @@ function normalizeRecognitionResponse(response) {
     };
 }
 async function recognizeEquipment(imageBase64, source) {
-    return new Promise((resolve, reject) => {
-        wx.request({
-            url: `${getApiBaseUrl()}/api/recognitions`,
-            method: 'POST',
-            timeout: REQUEST_TIMEOUT_MS,
-            data: {
-                imageBase64,
-                source
-            },
-            success: (response) => resolve(normalizeRecognitionResponse(response)),
-            fail: reject
-        });
-    });
+    const urls = buildRecognitionRequestUrls(getApiBaseUrls());
+    let lastError;
+    for (const url of urls) {
+        try {
+            return await requestRecognition(url, imageBase64, source);
+        }
+        catch (error) {
+            lastError = error;
+        }
+    }
+    throw lastError !== null && lastError !== void 0 ? lastError : new Error('recognition request failed');
 }
 async function compressImageForRecognition(path) {
     return new Promise((resolve, reject) => {

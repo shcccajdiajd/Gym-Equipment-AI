@@ -120,6 +120,13 @@ Acceptance:
 - If the mini program jump fails, the action copies the mobile Bilibili search URL so the user still has a usable fallback.
 - `./node_modules/.bin/vitest run` exits `0` with platform-search URL/path tests included.
 
+- [x] Add a WeChat Developer Tools local API fallback for album import timeout.
+Acceptance:
+- The mini program can build recognition request URLs from multiple API base URL candidates.
+- The app config tries the current LAN API URL before falling back to `127.0.0.1`.
+- The rebuilt mini program runtime JavaScript includes the fallback URL list.
+- `./node_modules/.bin/vitest run apps/miniprogram/tests/result-view-model.test.ts` exits `0` with the new URL test included.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -128,6 +135,7 @@ Acceptance:
 - Camera capture, album import, clipboard copy, and equipment-list navigation all work in the actual mini program runtime.
 - The "去 B 站搜索" button either opens the Bilibili mini program search page or copies the Bilibili mobile search URL on failure.
 - The running Aliyun-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
+- If `127.0.0.1` times out in WeChat Developer Tools, the mini program successfully retries the current LAN API URL `http://192.168.7.51:3001`.
 - If Aliyun still fails, the mini program exits `识别中` and shows a readable toast rather than staying stuck.
 - The API terminal log shows either `recognition provider completed` or a structured `recognition provider failed` / `recognition request crashed unexpectedly` entry.
 - If the API logs `recognition provider failed` with `invalid_response`, the logged message identifies whether the provider returned invalid JSON or an unexpected JSON shape.

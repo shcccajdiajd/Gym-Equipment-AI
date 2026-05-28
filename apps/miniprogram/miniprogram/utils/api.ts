@@ -24,8 +24,33 @@ type RecognitionHttpResponse = {
   };
 };
 
-function getApiBaseUrl() {
-  return getApp<IAppOption>().globalData.apiBaseUrl;
+function getApiBaseUrls() {
+  const globalData = getApp<IAppOption>().globalData;
+  return globalData.apiBaseUrls?.length ? globalData.apiBaseUrls : [globalData.apiBaseUrl];
+}
+
+export function buildRecognitionRequestUrls(apiBaseUrls: string[]) {
+  return apiBaseUrls.map((apiBaseUrl) => `${apiBaseUrl}/api/recognitions`);
+}
+
+function requestRecognition(
+  url: string,
+  imageBase64: string,
+  source: 'camera' | 'album'
+): Promise<RecognitionPayload> {
+  return new Promise((resolve, reject) => {
+    wx.request<RecognitionPayload>({
+      url,
+      method: 'POST',
+      timeout: REQUEST_TIMEOUT_MS,
+      data: {
+        imageBase64,
+        source
+      },
+      success: (response) => resolve(normalizeRecognitionResponse(response)),
+      fail: reject
+    });
+  });
 }
 
 export function buildResultNavigationUrl(id: string, status: RecognitionStatus = 'recognized') {
@@ -108,19 +133,18 @@ export async function recognizeEquipment(
   imageBase64: string,
   source: 'camera' | 'album'
 ): Promise<RecognitionPayload> {
-  return new Promise((resolve, reject) => {
-    wx.request<RecognitionPayload>({
-      url: `${getApiBaseUrl()}/api/recognitions`,
-      method: 'POST',
-      timeout: REQUEST_TIMEOUT_MS,
-      data: {
-        imageBase64,
-        source
-      },
-      success: (response) => resolve(normalizeRecognitionResponse(response)),
-      fail: reject
-    });
-  });
+  const urls = buildRecognitionRequestUrls(getApiBaseUrls());
+  let lastError: WechatMiniprogram.GeneralCallbackResult | undefined;
+
+  for (const url of urls) {
+    try {
+      return await requestRecognition(url, imageBase64, source);
+    } catch (error) {
+      lastError = error as WechatMiniprogram.GeneralCallbackResult;
+    }
+  }
+
+  throw lastError ?? new Error('recognition request failed');
 }
 
 export async function compressImageForRecognition(path: string): Promise<string> {
