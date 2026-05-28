@@ -31,10 +31,10 @@ Page({
             }
         }
         catch (error) {
-            const errMsg = error instanceof Error && error.message.includes('timeout')
-                ? '识别请求超时，请稍后重试'
-                : '拍照失败，请重试';
-            wx.showToast({ title: errMsg, icon: 'none' });
+            const errMsg = (0, api_js_1.buildMediaFlowFailureMessage)(error, '拍照失败，请重试');
+            if (errMsg) {
+                wx.showToast({ title: errMsg, icon: 'none' });
+            }
         }
         finally {
             if (loadingShown) {

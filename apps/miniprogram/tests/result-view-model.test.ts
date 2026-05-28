@@ -1,11 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import {
   buildDemoNavigationUrl,
   buildFallbackNavigationUrl,
+  buildMediaFlowFailureMessage,
   buildRecognitionRequestUrls,
   buildRecognitionFailureMessage,
   buildResultNavigationUrl,
+  compressImageForRecognition,
   normalizeRecognitionResponse,
   parseAlternativeIds
 } from '../miniprogram/utils/api.ts';
@@ -15,6 +17,13 @@ import {
   buildBilibiliMiniProgramSearchPath,
   buildBilibiliWebSearchUrl
 } from '../miniprogram/utils/platform-search.ts';
+
+const testGlobal = globalThis as typeof globalThis & { wx: typeof wx };
+const originalWx = testGlobal.wx;
+
+afterEach(() => {
+  testGlobal.wx = originalWx;
+});
 
 describe('result view model', () => {
   it('builds a result page url from an API payload id', () => {
@@ -92,6 +101,27 @@ describe('result view model', () => {
       'http://192.168.7.51:3001/api/recognitions',
       'http://127.0.0.1:3001/api/recognitions'
     ]);
+  });
+
+  it('falls back to the original image path when compression fails', async () => {
+    testGlobal.wx = {
+      ...originalWx,
+      compressImage: (options: WechatMiniprogram.CompressImageOption) => {
+        options.fail?.({ errMsg: 'compressImage:fail invalid image type' });
+      }
+    };
+
+    await expect(compressImageForRecognition('/tmp/input.webp')).resolves.toBe('/tmp/input.webp');
+  });
+
+  it('builds readable media flow messages from WeChat callback errors', () => {
+    expect(buildMediaFlowFailureMessage({ errMsg: 'request:fail timeout' }, '导入失败，请重试')).toBe(
+      '识别请求超时，请确认 API 服务正在运行'
+    );
+    expect(buildMediaFlowFailureMessage({ errMsg: 'readFile:fail permission denied' }, '导入失败，请重试')).toBe(
+      '图片读取失败，请换一张图片再试'
+    );
+    expect(buildMediaFlowFailureMessage({ errMsg: 'chooseMedia:fail cancel' }, '导入失败，请重试')).toBe('');
   });
 
   it('builds readable failure messages for timeout and generic errors', () => {

@@ -46,6 +46,8 @@
 - Added a result-page "去 B 站搜索" action that attempts to open the Bilibili mini program search page and falls back to copying the mobile Bilibili search URL if the mini program jump fails.
 - Added reusable Bilibili platform-search utilities for the mini program and regenerated the mini program runtime JavaScript.
 - Added a mini program API base URL fallback list for WeChat Developer Tools, using the current LAN address before falling back to `127.0.0.1`.
+- Made album/camera image compression non-blocking: if `wx.compressImage` fails for a selected image, the mini program now continues with the original image path instead of showing `导入失败`.
+- Added clearer mini program media-flow error messages for WeChat callback errors such as request timeout, request failure, read-file failure, and user cancel.
 
 ## Modified Files
 
@@ -158,6 +160,7 @@
 - Root `vitest run` now passes across shared, API, and mini program tests with `30` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `39` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `40` passing tests.
+- Root `vitest run` now passes across shared, API, and mini program tests with `42` passing tests.
 - The mini program runtime JavaScript has been rebuilt with:
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
@@ -179,6 +182,7 @@
 - The result page can now attempt a Bilibili mini program search jump via AppID `wx7564fd5313d24844`; the exact search page path is still pending manual validation in WeChat Developer Tools.
 - The current local API server is reachable from the host at `http://127.0.0.1:3001`, and the mini program now first tries `http://192.168.7.51:3001` to avoid WeChat Developer Tools localhost timeout behavior.
 - The current LAN API URL `http://192.168.7.51:3001/api/recognitions` was verified with a direct POST and returned the expected structured `invalid_request` response for an intentionally invalid image payload.
+- Album/camera import should no longer fail solely because local image compression fails; the current fix still needs manual WeChat Developer Tools verification with the user's selected image.
 
 ## Current Problems
 
@@ -193,6 +197,7 @@
 - The last live Aliyun result before this prompt fix returned `assisted-pull-up-dip` with `0.9` confidence for the `蝴蝶机夹胸` sample, so real-image accuracy remains the next manual verification gate.
 - The Bilibili mini program search page path (`pages/search/search?keyword=...`) is a best-effort target and still needs live validation; if it fails, the current code copies the mobile Bilibili search URL.
 - If the Mac's Wi-Fi/LAN IP changes, [apps/miniprogram/miniprogram/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.ts) must be updated with the new `http://<local-ip>:3001` value and rebuilt.
+- If album import still fails after the compression fallback, the next screenshot should reveal a more specific toast such as API timeout, API connection failure, or image read failure instead of the generic `导入失败`.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

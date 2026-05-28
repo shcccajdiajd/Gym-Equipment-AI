@@ -127,6 +127,13 @@ Acceptance:
 - The rebuilt mini program runtime JavaScript includes the fallback URL list.
 - `./node_modules/.bin/vitest run apps/miniprogram/tests/result-view-model.test.ts` exits `0` with the new URL test included.
 
+- [x] Make image compression failures non-blocking during import.
+Acceptance:
+- If `wx.compressImage` fails, the mini program continues with the original selected image path.
+- WeChat callback errors now produce more specific toasts for timeout, request failure, read-file failure, and user cancel.
+- The rebuilt mini program runtime JavaScript includes the compression fallback and updated page error handling.
+- `./node_modules/.bin/vitest run` exits `0` with regression coverage for compression fallback and callback error messages.
+
 ## Next Recommended Steps
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
@@ -136,6 +143,7 @@ Acceptance:
 - The "去 B 站搜索" button either opens the Bilibili mini program search page or copies the Bilibili mobile search URL on failure.
 - The running Aliyun-backed API on `http://127.0.0.1:3001` is used successfully from the mini program during the session.
 - If `127.0.0.1` times out in WeChat Developer Tools, the mini program successfully retries the current LAN API URL `http://192.168.7.51:3001`.
+- Selecting the same image that previously showed `导入失败` either reaches the result page or shows a more specific toast that identifies the failing step.
 - If Aliyun still fails, the mini program exits `识别中` and shows a readable toast rather than staying stuck.
 - The API terminal log shows either `recognition provider completed` or a structured `recognition provider failed` / `recognition request crashed unexpectedly` entry.
 - If the API logs `recognition provider failed` with `invalid_response`, the logged message identifies whether the provider returned invalid JSON or an unexpected JSON shape.

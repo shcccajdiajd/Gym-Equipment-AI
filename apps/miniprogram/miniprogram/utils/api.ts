@@ -109,6 +109,40 @@ export function buildRecognitionFailureMessage(result: {
   return result.message ?? '识别服务暂时不可用，请稍后重试。';
 }
 
+function extractCallbackErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === 'object' && error !== null && 'errMsg' in error) {
+    return String((error as WechatMiniprogram.GeneralCallbackResult).errMsg);
+  }
+
+  return '';
+}
+
+export function buildMediaFlowFailureMessage(error: unknown, fallbackMessage: string) {
+  const message = extractCallbackErrorMessage(error);
+
+  if (message.includes('cancel')) {
+    return '';
+  }
+
+  if (message.includes('timeout')) {
+    return '识别请求超时，请确认 API 服务正在运行';
+  }
+
+  if (message.includes('request:fail')) {
+    return '识别服务连接失败，请检查 API 服务';
+  }
+
+  if (message.includes('readFile')) {
+    return '图片读取失败，请换一张图片再试';
+  }
+
+  return fallbackMessage;
+}
+
 export function normalizeRecognitionResponse(response: RecognitionHttpResponse): RecognitionPayload {
   const data = response.data;
 
@@ -153,7 +187,7 @@ export async function compressImageForRecognition(path: string): Promise<string>
       src: path,
       quality: 72,
       success: (result) => resolve(result.tempFilePath),
-      fail: reject
+      fail: () => resolve(path)
     });
   });
 }

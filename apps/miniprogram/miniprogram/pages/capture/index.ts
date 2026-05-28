@@ -1,5 +1,6 @@
 import {
   buildFallbackNavigationUrl,
+  buildMediaFlowFailureMessage,
   buildRecognitionFailureMessage,
   buildResultNavigationUrl,
   compressImageForRecognition,
@@ -40,12 +41,11 @@ Page({
         });
       }
     } catch (error) {
-      const errMsg =
-        error instanceof Error && error.message.includes('timeout')
-          ? '识别请求超时，请稍后重试'
-          : '拍照失败，请重试';
+      const errMsg = buildMediaFlowFailureMessage(error, '拍照失败，请重试');
 
-      wx.showToast({ title: errMsg, icon: 'none' });
+      if (errMsg) {
+        wx.showToast({ title: errMsg, icon: 'none' });
+      }
     } finally {
       if (loadingShown) {
         wx.hideLoading();
