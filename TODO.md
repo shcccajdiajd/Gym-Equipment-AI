@@ -168,6 +168,12 @@ Acceptance:
 - WeChat in-app browser shows the “用浏览器打开” guidance.
 - History and “识别错了？” local feedback write to localStorage without storing base64 images.
 
+- [ ] Retest the H5 mobile upload entry points on a real phone.
+Acceptance:
+- Tapping `拍照识别` opens the camera or camera-first chooser.
+- Tapping `从相册上传` opens the album/photo picker without forcing the camera.
+- Both paths can select an image, show preview/loading, and call the same recognition API.
+
 - [ ] Run the manual smoke test in WeChat Developer Tools.
 Acceptance:
 - Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.

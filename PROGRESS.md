@@ -211,6 +211,7 @@
 - In development, failed mini program image reading should also fall back to the unsupported candidate result, so the user can continue testing even when WeChat Developer Tools cannot read a selected album file.
 - The web app can be run locally with `npm run dev:web`; during development, `/api` requests are proxied to `services/api`, while deployed builds can use `VITE_API_BASE_URL`.
 - Fixed the current H5 recognition outage root cause: the API key can access `qwen3-vl-plus`, while `qwen-vl-max-latest` returns Aliyun `403 Access denied`; local `.env`, API defaults, docs, and tests now use `qwen3-vl-plus`.
+- Split the H5 home upload flow into two explicit mobile controls: `拍照识别` uses `capture="environment"`, while `从相册上传` uses a separate image file input without `capture`.
 
 ## Current Problems
 
@@ -228,6 +229,7 @@
 - If album import still fails after the compression fallback, the next screenshot should reveal a more specific toast such as API timeout, API connection failure, or image read failure instead of the generic `导入失败`.
 - The development fallback is intentionally not a production recognition strategy; before real launch, `enableRecognitionDevFallback` should be disabled and the mini program should call a deployed HTTPS API domain.
 - `apps/web` still needs real phone-browser QA for camera capture behavior, platform search jumps, WeChat in-app browser messaging, and deployed HTTPS API connectivity.
+- The two-entry H5 upload UX still needs a quick phone-browser retest to confirm the album button opens the photo picker on the user's device/browser.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

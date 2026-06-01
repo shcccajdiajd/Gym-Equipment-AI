@@ -26,7 +26,8 @@ function getSimilarCandidates(equipment?: EquipmentCard) {
 }
 
 export function App() {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const albumInputRef = useRef<HTMLInputElement>(null);
   const [view, setView] = useState<AppView>('home');
   const [resultState, setResultState] = useState<ResultState>();
   const [previewUrl, setPreviewUrl] = useState('');
@@ -211,6 +212,7 @@ export function App() {
         {notice ? <p className="mt-4 rounded-2xl bg-moss px-4 py-3 text-sm text-fern">{notice}</p> : null}
         <input
           accept="image/*"
+          aria-label="拍照识别器械"
           capture="environment"
           className="hidden"
           onChange={(event) => {
@@ -220,15 +222,36 @@ export function App() {
             }
             event.currentTarget.value = '';
           }}
-          ref={fileInputRef}
+          ref={cameraInputRef}
+          type="file"
+        />
+        <input
+          accept="image/*"
+          aria-label="从相册上传器械图片"
+          className="hidden"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+              void handleFile(file);
+            }
+            event.currentTarget.value = '';
+          }}
+          ref={albumInputRef}
           type="file"
         />
         <button
           className="mt-6 w-full rounded-3xl bg-fern px-5 py-4 text-lg font-black text-white shadow-soft"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => cameraInputRef.current?.click()}
           type="button"
         >
-          拍照 / 上传器械
+          拍照识别
+        </button>
+        <button
+          className="mt-3 w-full rounded-3xl bg-moss px-5 py-4 text-base font-black text-fern shadow-soft"
+          onClick={() => albumInputRef.current?.click()}
+          type="button"
+        >
+          从相册上传
         </button>
         <div className="mt-3 grid grid-cols-2 gap-3">
           <button
