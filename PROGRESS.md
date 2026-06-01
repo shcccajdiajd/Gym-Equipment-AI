@@ -45,6 +45,9 @@
 - Local API development still uses `npm run dev:api`.
 - FC deployment can be built with `npm run build:fc`.
 - OSS frontend deployment can be built with `npm run build:web`.
+- Deployment upload artifacts have been prepared locally:
+  - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
+  - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
 - `npm test` passes with `67` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/recognitions.mjs`.

@@ -27,7 +27,7 @@ Build output:
 apps/web/dist
 ```
 
-Upload every file inside `apps/web/dist` to the OSS bucket root.
+Upload every file inside `apps/web/dist` to the OSS bucket root. Do not upload `apps/web/dist` as one zip unless the OSS console explicitly extracts it. The bucket root should contain `index.html` and the `assets/` folder.
 
 Recommended OSS static website settings:
 
@@ -49,7 +49,13 @@ Build output:
 dist/aliyun-fc/recognitions.mjs
 ```
 
-Create a Node.js Function Compute function and upload `dist/aliyun-fc/recognitions.mjs`.
+The prepared local upload package is:
+
+```text
+deploy-artifacts/aliyun-fc-recognitions.zip
+```
+
+Create a Node.js Function Compute function and upload `deploy-artifacts/aliyun-fc-recognitions.zip`, or upload `dist/aliyun-fc/recognitions.mjs` directly if the console asks for a single code file.
 
 Recommended handler:
 
