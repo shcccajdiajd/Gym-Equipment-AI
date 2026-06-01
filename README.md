@@ -1,10 +1,13 @@
 # Gym Equipment AI
 
-WeChat mini program plus Fastify API for recognizing common fixed gym machines and serving curated beginner-friendly teaching cards.
+Mobile-first H5/PWA plus Fastify API for recognizing common fixed gym machines and turning the result into high-quality tutorial search entry points.
+
+The product mainline has moved from the WeChat mini program to `apps/web`. The mini program remains in the repository as a historical asset, but the current MVP target is a phone browser experience that can be opened by QR code and can link out to tutorial search pages more freely.
 
 ## Workspace Layout
 
-- `apps/miniprogram`: native WeChat mini program client
+- `apps/web`: mobile-first H5/PWA MVP built with Vite, React, TypeScript, and Tailwind
+- `apps/miniprogram`: native WeChat mini program client, currently paused
 - `services/api`: recognition API
 - `packages/shared`: shared catalog data and schemas
 - `scripts/sync-catalog.ts`: generates the mini program catalog snapshot from the shared package
@@ -14,24 +17,39 @@ WeChat mini program plus Fastify API for recognizing common fixed gym machines a
 1. Install dependencies:
 
 ```bash
-corepack pnpm install
+node .tools/pnpm/dist/pnpm.mjs install --ignore-scripts
 ```
 
-2. Sync the equipment catalog into the mini program package:
-
-```bash
-corepack pnpm sync:catalog
-```
-
-3. Start the API:
+2. Start the API:
 
 ```bash
 cp services/api/.env.example services/api/.env
-corepack pnpm --filter @gym-equipment-ai/api dev
+npm run dev:api
 ```
 
-4. Open `apps/miniprogram` in WeChat Developer Tools.
-5. Use local debug request settings or a local tunnel before testing on a real device.
+3. Start the H5/PWA web app:
+
+```bash
+npm run dev:web
+```
+
+4. Open the Vite local URL on a phone browser or desktop mobile emulator.
+5. Keep AI provider keys only in `services/api/.env`. `apps/web` uses `VITE_API_BASE_URL` or the Vite `/api` proxy and must not contain provider keys.
+
+For local web development, [apps/web/.env.example](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/.env.example) supports:
+
+```env
+VITE_API_BASE_URL=
+VITE_API_PROXY_TARGET=http://127.0.0.1:3001
+```
+
+Leaving `VITE_API_BASE_URL` empty lets the browser call `/api/recognitions`, which Vite proxies to the local API during development.
+
+If you need to revisit the mini program later, sync the equipment catalog and open `apps/miniprogram` in WeChat Developer Tools:
+
+```bash
+npm run sync:catalog
+```
 
 The API now auto-loads `services/api/.env` on startup, so you do not need to export these variables manually before running `node --import tsx src/server.ts`.
 
@@ -65,10 +83,19 @@ The current Aliyun provider uses DashScope's OpenAI-compatible endpoint, so the 
 ## Useful Commands
 
 ```bash
-corepack pnpm test
-corepack pnpm typecheck
-corepack pnpm --filter @gym-equipment-ai/miniprogram test
-corepack pnpm --filter @gym-equipment-ai/api test
+npm test
+npm run build
+npm run typecheck
+npm run dev:api
+npm run dev:web
+```
+
+Web-only verification:
+
+```bash
+cd apps/web
+../../node_modules/.bin/vitest run
+../../node_modules/.bin/vite build
 ```
 
 ## Local Ollama Setup
@@ -99,9 +126,8 @@ node --import tsx scripts/sync-catalog.ts
 
 1. Confirm the 20 launch equipment cards are complete and reviewed for safety wording.
 2. Set `RECOGNIZER_PROVIDER=aliyun` and a real `ALIYUN_API_KEY` in [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env).
-3. Run `corepack pnpm sync:catalog`.
-4. Run `corepack pnpm test`.
-5. Run `corepack pnpm typecheck`.
-6. Execute [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) in WeChat Developer Tools.
-7. Replace `touristappid` in [apps/miniprogram/project.config.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/project.config.json) with the real AppID before upload.
-8. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.
+3. Run `npm test`.
+4. Run `npm run build`.
+5. Test `apps/web` on a real phone browser, including image upload, result rendering, Bilibili search, Douyin/Xiaohongshu/Baidu search buttons, search-term copying, and WeChat in-app browser messaging.
+6. Deploy `services/api` behind HTTPS before public H5 testing.
+7. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.

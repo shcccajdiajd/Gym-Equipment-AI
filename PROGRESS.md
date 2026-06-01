@@ -51,6 +51,11 @@
 - Verified the local API and Aliyun recognizer path directly with the real `ims.webp` sample; the backend returned HTTP `200` with an `unsupported` candidate list, so the remaining upload failure is in the WeChat Developer Tools transport path rather than the API itself.
 - Added a development-only recognition fallback: when all mini program API requests fail and `enableRecognitionDevFallback` is enabled, the upload flow returns an unsupported candidate page instead of staying blocked by local DevTools networking.
 - Moved the development fallback earlier in the mini program image pipeline: if WeChat Developer Tools cannot read the selected temporary image file, the upload flow now returns the same unsupported candidate result instead of stopping on `图片读取失败`.
+- Paused the WeChat mini program as the product mainline and added `apps/web` as the new mobile-first H5/PWA MVP.
+- Built the H5 MVP with Vite, React, TypeScript, and Tailwind while reusing `packages/shared` catalog data and `services/api` `POST /api/recognitions`.
+- Added browser image upload with camera capture hint, preview, client-side compression, API loading/error handling, result rendering, unsupported/low-confidence candidate flows, supported-equipment search, localStorage history, local wrong-prediction feedback, and WeChat in-app browser guidance.
+- Added centralized web search target generation for Bilibili, Douyin, Xiaohongshu, Baidu, plus copy-search fallback text.
+- Added web tests for search URL generation, WeChat browser detection, API response normalization, recognition request handling, result/candidate rendering, and localStorage history/feedback.
 
 ## Modified Files
 
@@ -136,6 +141,17 @@
 - [apps/miniprogram/miniprogram/utils/result-view-model.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/result-view-model.js)
 - [apps/miniprogram/miniprogram/utils/platform-search.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/platform-search.ts)
 - [apps/miniprogram/miniprogram/utils/platform-search.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/utils/platform-search.js)
+- [apps/web/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/package.json)
+- [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx)
+- [apps/web/src/components/EquipmentResult.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/EquipmentResult.tsx)
+- [apps/web/src/components/PlatformSearchPanel.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/PlatformSearchPanel.tsx)
+- [apps/web/src/components/CandidateList.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/CandidateList.tsx)
+- [apps/web/src/components/UnsupportedResult.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/UnsupportedResult.tsx)
+- [apps/web/src/utils/api.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/api.ts)
+- [apps/web/src/utils/image.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/image.ts)
+- [apps/web/src/utils/searchTargets.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchTargets.ts)
+- [apps/web/src/utils/searchQueries.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchQueries.ts)
+- [apps/web/src/utils/history.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/history.ts)
 - [scripts/sync-catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/scripts/sync-catalog.ts)
 - [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md)
 - [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md)
@@ -166,6 +182,9 @@
 - Root `vitest run` now passes across shared, API, and mini program tests with `42` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `43` passing tests.
 - Root `vitest run` now passes across shared, API, and mini program tests with `44` passing tests.
+- `npm test` now passes across shared, API, mini program, and web tests with `53` passing tests.
+- `npm run build` now builds the H5/PWA MVP in `apps/web/dist`.
+- `apps/web` typecheck, web-only Vitest, and Vite production build pass.
 - The mini program runtime JavaScript has been rebuilt with:
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
@@ -190,6 +209,7 @@
 - Album/camera import should no longer fail solely because local image compression fails; the current fix still needs manual WeChat Developer Tools verification with the user's selected image.
 - In development, failed mini program transport requests should now fall back to an unsupported candidate result so the user can continue testing result pages and Bilibili search jumps even when local `wx.request` cannot reach the API.
 - In development, failed mini program image reading should also fall back to the unsupported candidate result, so the user can continue testing even when WeChat Developer Tools cannot read a selected album file.
+- The web app can be run locally with `npm run dev:web`; during development, `/api` requests are proxied to `services/api`, while deployed builds can use `VITE_API_BASE_URL`.
 
 ## Current Problems
 
@@ -206,6 +226,7 @@
 - If the Mac's Wi-Fi/LAN IP changes, [apps/miniprogram/miniprogram/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.ts) must be updated with the new `http://<local-ip>:3001` value and rebuilt.
 - If album import still fails after the compression fallback, the next screenshot should reveal a more specific toast such as API timeout, API connection failure, or image read failure instead of the generic `导入失败`.
 - The development fallback is intentionally not a production recognition strategy; before real launch, `enableRecognitionDevFallback` should be disabled and the mini program should call a deployed HTTPS API domain.
+- `apps/web` still needs real phone-browser QA for camera capture behavior, platform search jumps, WeChat in-app browser messaging, and deployed HTTPS API connectivity.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

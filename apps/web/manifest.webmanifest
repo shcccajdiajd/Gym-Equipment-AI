@@ -1,0 +1,9 @@
+{
+  "name": "Gym Equipment AI",
+  "short_name": "器械识别",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4efe4",
+  "theme_color": "#13251d",
+  "description": "拍照识别健身器械，快速打开教程搜索入口。"
+}

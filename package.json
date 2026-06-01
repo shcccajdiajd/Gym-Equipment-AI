@@ -8,10 +8,12 @@
     "services/*"
   ],
   "scripts": {
-    "dev:api": "pnpm --filter @gym-equipment-ai/api dev",
+    "build": "npm run build --workspace @gym-equipment-ai/web",
+    "dev:api": "npm run dev --workspace @gym-equipment-ai/api",
+    "dev:web": "npm run dev --workspace @gym-equipment-ai/web",
     "sync:catalog": "node --import tsx scripts/sync-catalog.ts",
-    "test": "pnpm -r test",
-    "typecheck": "pnpm -r typecheck"
+    "test": "vitest run",
+    "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {
     "tsx": "^4.19.4"

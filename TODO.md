@@ -150,6 +150,24 @@ Acceptance:
 
 ## Next Recommended Steps
 
+- [x] Create the mobile H5/PWA MVP in `apps/web`.
+Acceptance:
+- `apps/web` uses Vite, React, TypeScript, and Tailwind.
+- The web app reuses `packages/shared` catalog data and `services/api` recognition API.
+- The web app includes upload/preview/compression, result rendering, candidate flows, platform search buttons, copy-search fallback, history, and local correction feedback.
+- `npm test` exits `0`.
+- `npm run build` exits `0`.
+
+- [ ] Run real-device H5 smoke testing.
+Acceptance:
+- A phone browser can open the local or deployed web URL.
+- The user can upload or capture an image.
+- The API returns a result and the page renders recognized, low-confidence, or unsupported states correctly.
+- Bilibili search opens `https://search.bilibili.com/all?keyword=...`.
+- Douyin, Xiaohongshu, and Baidu buttons are clickable and the copy-search fallback works.
+- WeChat in-app browser shows the “用浏览器打开” guidance.
+- History and “识别错了？” local feedback write to localStorage without storing base64 images.
+
 - [ ] Run the manual smoke test in WeChat Developer Tools.
 Acceptance:
 - Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.
