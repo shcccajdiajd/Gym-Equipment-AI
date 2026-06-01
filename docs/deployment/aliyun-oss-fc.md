@@ -21,6 +21,12 @@ Set the frontend API base URL before building. Use the FC HTTP trigger base URL 
 VITE_API_BASE_URL=https://your-fc-http-trigger.example.com npm run build:web
 ```
 
+For the currently verified FC trigger in this project, you can run:
+
+```bash
+npm run build:web:aliyun
+```
+
 Build output:
 
 ```text
@@ -113,6 +119,12 @@ For Aliyun deployment, set only:
 
 ```env
 VITE_API_BASE_URL=https://your-fc-http-trigger.example.com
+```
+
+The current verified FC base URL is:
+
+```text
+https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run
 ```
 
 Then rebuild and upload the new `apps/web/dist`.

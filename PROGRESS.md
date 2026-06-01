@@ -9,6 +9,8 @@
 - Replaced the temporary debug handler with a final FC adapter that parses Buffer/string/object inputs, supports Aliyun v1 HTTP events, decodes base64-encoded request bodies, returns proxy-style responses when no response helper is present, and keeps the shared recognition core path.
 - Regenerated [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) with a root-level `index.js` for Aliyun FC Handler `index.handler`.
 - Verified the uploaded Aliyun FC function through the public HTTP Trigger URL: `GET` returns structured `METHOD_NOT_ALLOWED`, empty `POST` returns structured `IMAGE_REQUIRED`, `OPTIONS` returns `204`, and the real `ims.webp` sample returns `pec-deck-fly` with `0.92` confidence.
+- Added `npm run build:web:aliyun` so the H5 frontend can be built directly against the verified FC base URL `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run`.
+- Rebuilt [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) with the verified Aliyun FC API base URL for OSS upload.
 - Switched the active deployment direction away from Vercel/Render and toward Aliyun OSS static website hosting plus Aliyun Function Compute.
 - Extracted platform-neutral recognition logic into [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts).
 - Added [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts) so local Fastify and FC can share the same provider selection without duplicating code.
@@ -55,6 +57,7 @@
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
 - `npm test` passes with `69` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
+- `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run typecheck` passes across workspaces.
 - The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition` plus the deployable `handler`.
@@ -63,7 +66,8 @@
 
 ## Current Problems
 
-- OSS frontend deployment or frontend API base URL wiring still needs final deployed-phone testing.
+- The Aliyun-targeted H5 build is ready in `apps/web/dist`, but it still needs to be uploaded to OSS.
+- OSS frontend deployment still needs final deployed-phone testing after upload.
 - Platform search jumps still need real phone testing from the OSS domain.
 
 ## Completed

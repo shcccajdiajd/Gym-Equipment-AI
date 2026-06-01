@@ -71,12 +71,18 @@ Acceptance:
 - `OPTIONS /api/recognitions` returns `204` with CORS headers.
 - A real image POST using `ims.webp` returns HTTP `200` with `equipmentId: pec-deck-fly` and confidence `0.92`.
 
+- [x] Build the H5 frontend for the verified Aliyun FC API.
+Acceptance:
+- Root `package.json` includes `npm run build:web:aliyun`.
+- `npm run build:web:aliyun` exits `0`.
+- The generated `apps/web/dist` bundle contains the verified FC base URL `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run`.
+
 - [ ] Deploy to Aliyun OSS and FC.
 Acceptance:
-- `apps/web/dist` is uploaded to OSS static website hosting.
+- `apps/web/dist` is uploaded to OSS static website hosting. Current status: build is ready locally, upload still pending.
 - `deploy-artifacts/aliyun-fc-recognitions.zip` or `dist/aliyun-fc/index.js` is uploaded to FC. Current status: done and verified.
 - FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`. Current status: enough is configured for live recognition to succeed.
-- The OSS build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger. Current status: still pending for public web deployment.
+- The OSS build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger. Current status: local `apps/web/dist` is ready for OSS upload.
 
 - [ ] Run deployed phone smoke test.
 Acceptance:

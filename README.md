@@ -91,6 +91,7 @@ The older [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) an
 ```bash
 npm test
 npm run build:web
+npm run build:web:aliyun
 npm run build:fc
 npm run build
 npm run typecheck
@@ -136,7 +137,7 @@ node --import tsx scripts/sync-catalog.ts
 1. Confirm the 20 launch equipment cards are complete and reviewed for safety wording.
 2. Set `RECOGNIZER_PROVIDER=aliyun` and a real `ALIYUN_API_KEY` in [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env).
 3. Run `npm test`.
-4. Run `npm run build:web`.
+4. Run `npm run build:web:aliyun` for the current Aliyun public-beta API, or `npm run build:web` with your own `VITE_API_BASE_URL`.
 5. Run `npm run build:fc`.
 6. Deploy `apps/web/dist` to OSS and `dist/aliyun-fc/index.js` to FC with `ALIYUN_API_KEY` configured only in FC.
 7. Test `apps/web` on a real phone browser, including image upload, result rendering, Bilibili search, Douyin/Xiaohongshu/Baidu search buttons, search-term copying, and WeChat in-app browser messaging.
