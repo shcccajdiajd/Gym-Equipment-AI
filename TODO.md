@@ -174,6 +174,14 @@ Acceptance:
 - Tapping `从相册上传` opens the album/photo picker without forcing the camera.
 - Both paths can select an image, show preview/loading, and call the same recognition API.
 
+- [ ] Deploy the H5 public beta.
+Acceptance:
+- Backend is deployed behind HTTPS and `GET /health` returns `status: ok`.
+- Backend environment keeps provider keys server-side only and uses `ALIYUN_MODEL=qwen3-vl-plus`.
+- Frontend is deployed from `apps/web/dist` with `VITE_API_BASE_URL` pointing to the deployed API origin.
+- A phone outside the local Wi-Fi can open the web URL, upload an image, and receive a recognized, low-confidence, unsupported, or clear error state.
+- Platform search buttons and copy-search fallback work from the deployed URL.
+
 - [ ] Run the manual smoke test in WeChat Developer Tools.
 Acceptance:
 - Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.

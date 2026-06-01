@@ -6,6 +6,7 @@ import { mockRecognizer } from './lib/recognizers/mock.js';
 import { createOllamaRecognizer } from './lib/recognizers/ollama.js';
 import { createOpenAiRecognizer } from './lib/recognizers/openai.js';
 import type { Recognizer } from './lib/recognizers/types.js';
+import { registerHealthRoutes } from './routes/health.js';
 import { registerRecognitionRoutes } from './routes/recognitions.js';
 
 function defaultRecognizer(): Recognizer {
@@ -47,6 +48,7 @@ export function buildApp(options?: { recognizer?: Recognizer }) {
   const app = Fastify({ logger: { level: env.LOG_LEVEL } });
 
   app.register(cors, { origin: true });
+  registerHealthRoutes(app);
   registerRecognitionRoutes(app, options?.recognizer ?? defaultRecognizer());
 
   return app;

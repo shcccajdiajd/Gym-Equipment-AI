@@ -11,6 +11,7 @@
     "build": "npm run build --workspace @gym-equipment-ai/web",
     "dev:api": "npm run dev --workspace @gym-equipment-ai/api",
     "dev:web": "npm run dev --workspace @gym-equipment-ai/web",
+    "start:api": "npm run start --workspace @gym-equipment-ai/api",
     "sync:catalog": "node --import tsx scripts/sync-catalog.ts",
     "test": "vitest run",
     "typecheck": "npm run typecheck --workspaces --if-present"

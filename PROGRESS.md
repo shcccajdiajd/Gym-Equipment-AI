@@ -185,6 +185,9 @@
 - `npm test` now passes across shared, API, mini program, and web tests with `53` passing tests.
 - `npm run build` now builds the H5/PWA MVP in `apps/web/dist`.
 - `apps/web` typecheck, web-only Vitest, and Vite production build pass.
+- `npm test` now passes across shared, API, mini program, and web tests with `57` passing tests.
+- `npm run build` and `npm run typecheck` pass after adding the H5 deployment-readiness changes.
+- `npm run start:api` was verified on a temporary local port, and `GET /health` returned `{"status":"ok","service":"gym-equipment-ai-api","provider":"aliyun","model":"qwen3-vl-plus"}`.
 - The mini program runtime JavaScript has been rebuilt with:
   - `./node_modules/.bin/tsc -p apps/miniprogram/tsconfig.runtime.json`
 - `scripts/sync-catalog.ts` successfully generates the mini program catalog snapshot when run with:
@@ -212,6 +215,7 @@
 - The web app can be run locally with `npm run dev:web`; during development, `/api` requests are proxied to `services/api`, while deployed builds can use `VITE_API_BASE_URL`.
 - Fixed the current H5 recognition outage root cause: the API key can access `qwen3-vl-plus`, while `qwen-vl-max-latest` returns Aliyun `403 Access denied`; local `.env`, API defaults, docs, and tests now use `qwen3-vl-plus`.
 - Split the H5 home upload flow into two explicit mobile controls: `拍照识别` uses `capture="environment"`, while `从相册上传` uses a separate image file input without `capture`.
+- Prepared the H5 public-beta deployment path by adding API health endpoints (`/health`, `/api/health`), backend `start`/`build` scripts, frontend/backend env examples, and [docs/deployment/h5-public-beta.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/h5-public-beta.md).
 
 ## Current Problems
 
@@ -230,6 +234,7 @@
 - The development fallback is intentionally not a production recognition strategy; before real launch, `enableRecognitionDevFallback` should be disabled and the mini program should call a deployed HTTPS API domain.
 - `apps/web` still needs real phone-browser QA for camera capture behavior, platform search jumps, WeChat in-app browser messaging, and deployed HTTPS API connectivity.
 - The two-entry H5 upload UX still needs a quick phone-browser retest to confirm the album button opens the photo picker on the user's device/browser.
+- Public H5 beta still needs actual hosting accounts/domains selected and configured; this repo is now deployment-ready but not deployed.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

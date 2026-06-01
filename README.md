@@ -75,6 +75,8 @@ The current Aliyun provider uses DashScope's OpenAI-compatible endpoint, so the 
 
 If the API log shows `403 Access denied`, first check `ALIYUN_MODEL`. In local testing, `qwen-vl-max-latest` was denied for the current key while `qwen3-vl-plus` returned `200`, so `qwen3-vl-plus` is the recommended default for this project.
 
+For public H5 beta deployment, use [docs/deployment/h5-public-beta.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/h5-public-beta.md). The backend now exposes `GET /health` and `GET /api/health` for deployment health checks.
+
 ## Recognition Providers
 
 - `mock`: deterministic local development provider for fast UI testing
@@ -90,6 +92,7 @@ npm run build
 npm run typecheck
 npm run dev:api
 npm run dev:web
+npm run start:api
 ```
 
 Web-only verification:
