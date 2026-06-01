@@ -157,4 +157,19 @@ describe('aliyunFcRecognition adapter', () => {
       errorCode: 'IMAGE_REQUIRED'
     });
   });
+
+  it('infers POST when Aliyun omits the method but passes a body', async () => {
+    const result = await handler({
+      body: JSON.stringify({
+        imageBase64: '',
+        source: 'album'
+      })
+    });
+
+    expect(result?.statusCode).toBe(400);
+    expect(JSON.parse(result?.body ?? '')).toMatchObject({
+      status: 'error',
+      errorCode: 'IMAGE_REQUIRED'
+    });
+  });
 });

@@ -6,6 +6,10 @@ import type { Recognizer } from '../lib/recognizers/types.js';
 type FcEvent = {
   httpMethod?: string;
   method?: string;
+  requestMethod?: string;
+  headers?: Record<string, string | string[] | undefined>;
+  path?: string;
+  queries?: Record<string, string | undefined>;
   requestContext?: {
     http?: {
       method?: string;
@@ -23,7 +27,14 @@ type FcResponse = {
 
 type FcHttpRequest = {
   method?: string;
+  httpMethod?: string;
+  requestMethod?: string;
+  headers?: Record<string, string | string[] | undefined>;
+  path?: string;
+  queries?: Record<string, string | undefined>;
+  requestContext?: FcEvent['requestContext'];
   body?: Buffer | string | Record<string, unknown> | null;
+  isBase64Encoded?: boolean;
 };
 
 type FcHttpResponse = {
@@ -111,7 +122,12 @@ export async function aliyunFcRecognition(
   event: FcEvent,
   options: { recognizer?: Recognizer } = {}
 ): Promise<FcResponse> {
-  const method = (event.httpMethod ?? event.method ?? event.requestContext?.http?.method ?? 'GET').toUpperCase();
+  const inferredMethod = event.httpMethod ??
+    event.method ??
+    event.requestMethod ??
+    event.requestContext?.http?.method ??
+    (event.body ? 'POST' : 'GET');
+  const method = inferredMethod.toUpperCase();
   if (method === 'OPTIONS') {
     return json(204, {});
   }
@@ -153,6 +169,10 @@ export async function handler(request: FcHttpRequest & FcEvent, response?: unkno
   const result = await aliyunFcRecognition({
     httpMethod: request.httpMethod,
     method: request.method,
+    requestMethod: request.requestMethod,
+    headers: request.headers,
+    path: request.path,
+    queries: request.queries,
     requestContext: request.requestContext,
     body: request.body ?? null,
     isBase64Encoded: request.isBase64Encoded ?? false
