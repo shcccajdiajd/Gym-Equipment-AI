@@ -8,7 +8,7 @@
 - Extracted platform-neutral recognition logic into [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts).
 - Added [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts) so local Fastify and FC can share the same provider selection without duplicating code.
 - Updated the local Fastify `POST /api/recognitions` route to call the shared recognition core.
-- Added an Aliyun FC adapter at [services/api/src/adapters/aliyunFcRecognition.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.ts), including compact JSON responses, CORS preflight handling, method checks, image validation, and shared core reuse.
+- Added an Aliyun FC adapter at [services/api/src/adapters/aliyunFcRecognition.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.ts), including a Node.js HTTP `handler(request, response)` wrapper, compact JSON responses, CORS preflight handling, method checks, image validation, and shared core reuse.
 - Added explicit recognition error codes for missing Aliyun key, provider failure, image too large, missing image, timeout, invalid request, method mismatch, and catalog-mapping failure.
 - Updated the H5 frontend API normalization so compact FC responses with `equipmentId` and `candidates` hydrate into full catalog cards from `packages/shared`.
 - Tightened H5 image compression to maximum edge `1280px`, JPEG quality `0.75`, and a client-side oversized-image guard before upload.
@@ -45,11 +45,11 @@
 - Local API development still uses `npm run dev:api`.
 - FC deployment can be built with `npm run build:fc`.
 - OSS frontend deployment can be built with `npm run build:web`.
-- `npm test` passes with `65` tests.
+- `npm test` passes with `67` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/recognitions.mjs`.
 - `npm run typecheck` passes across workspaces.
-- The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition`.
+- The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition` plus the deployable `handler`.
 
 ## Current Problems
 

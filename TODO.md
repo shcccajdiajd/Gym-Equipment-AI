@@ -11,7 +11,7 @@ Acceptance:
 - [x] Add the Aliyun FC recognition adapter.
 Acceptance:
 - [services/api/src/adapters/aliyunFcRecognition.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.ts) accepts only recognition `POST` requests plus CORS `OPTIONS` preflight.
-- It parses JSON request bodies, validates image fields, calls `recognizeEquipment`, and returns compact JSON without base64 image data.
+- It exposes a deployable `handler(request, response)` wrapper, parses JSON request bodies, validates image fields, calls `recognizeEquipment`, and returns compact JSON without base64 image data.
 - Adapter tests cover preflight, non-POST rejection, success, and empty-image error.
 
 - [x] Make the H5 frontend deployment-configurable and FC-response compatible.

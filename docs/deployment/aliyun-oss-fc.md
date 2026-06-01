@@ -54,10 +54,10 @@ Create a Node.js Function Compute function and upload `dist/aliyun-fc/recognitio
 Recommended handler:
 
 ```text
-recognitions.aliyunFcRecognition
+recognitions.handler
 ```
 
-The handler accepts HTTP events, handles CORS preflight, allows recognition only through `POST`, and returns compact JSON:
+The exported `handler(request, response)` wrapper adapts Aliyun FC's Node.js HTTP handler shape to the shared recognition adapter. It handles CORS preflight, allows recognition only through `POST`, and returns compact JSON:
 
 ```json
 {

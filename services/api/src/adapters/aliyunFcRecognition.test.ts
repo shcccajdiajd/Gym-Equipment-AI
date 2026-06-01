@@ -1,7 +1,7 @@
 import { Buffer } from 'node:buffer';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { Recognizer } from '../lib/recognizers/types.js';
-import { aliyunFcRecognition } from './aliyunFcRecognition.js';
+import { aliyunFcRecognition, handler } from './aliyunFcRecognition.js';
 
 const successRecognizer: Recognizer = {
   async recognize() {
@@ -66,6 +66,28 @@ describe('aliyunFcRecognition adapter', () => {
     expect(response.body).not.toContain(imageBase64);
   });
 
+  it('parses Buffer request bodies from HTTP handlers', async () => {
+    const imageBase64 = Buffer.from('fixture-image').toString('base64');
+    const response = await aliyunFcRecognition(
+      {
+        method: 'POST',
+        body: Buffer.from(JSON.stringify({
+          imageBase64,
+          source: 'album'
+        }))
+      },
+      {
+        recognizer: successRecognizer
+      }
+    );
+
+    expect(response.statusCode).toBe(200);
+    expect(JSON.parse(response.body)).toMatchObject({
+      status: 'recognized',
+      equipmentId: 'pec-deck-fly'
+    });
+  });
+
   it('returns IMAGE_REQUIRED for empty image payloads', async () => {
     const response = await aliyunFcRecognition(
       {
@@ -82,6 +104,34 @@ describe('aliyunFcRecognition adapter', () => {
 
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.body)).toMatchObject({
+      status: 'error',
+      errorCode: 'IMAGE_REQUIRED'
+    });
+  });
+
+  it('exposes an Aliyun FC HTTP handler wrapper', async () => {
+    const setStatusCode = vi.fn();
+    const setHeader = vi.fn();
+    const send = vi.fn();
+
+    await handler(
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          imageBase64: '',
+          source: 'album'
+        })
+      },
+      {
+        setStatusCode,
+        setHeader,
+        send
+      }
+    );
+
+    expect(setStatusCode).toHaveBeenCalledWith(400);
+    expect(setHeader).toHaveBeenCalledWith('content-type', 'application/json; charset=utf-8');
+    expect(JSON.parse(send.mock.calls[0][0])).toMatchObject({
       status: 'error',
       errorCode: 'IMAGE_REQUIRED'
     });

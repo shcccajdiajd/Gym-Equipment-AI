@@ -11,7 +11,7 @@ type FcEvent = {
       method?: string;
     };
   };
-  body?: string | Record<string, unknown> | null;
+  body?: Buffer | string | Record<string, unknown> | null;
   isBase64Encoded?: boolean;
 };
 
@@ -19,6 +19,17 @@ type FcResponse = {
   statusCode: number;
   headers: Record<string, string>;
   body: string;
+};
+
+type FcHttpRequest = {
+  method?: string;
+  body?: Buffer | string | Record<string, unknown> | null;
+};
+
+type FcHttpResponse = {
+  setStatusCode(statusCode: number): void;
+  setHeader(name: string, value: string): void;
+  send(body: string): void;
 };
 
 const JSON_HEADERS = {
@@ -66,6 +77,10 @@ function json(statusCode: number, payload: Record<string, unknown>): FcResponse 
 function parseBody(event: FcEvent) {
   if (!event.body) {
     return {};
+  }
+
+  if (Buffer.isBuffer(event.body)) {
+    return JSON.parse(event.body.toString('utf8')) as Record<string, unknown>;
   }
 
   if (typeof event.body === 'object') {
@@ -119,6 +134,20 @@ export async function aliyunFcRecognition(
   );
 
   return json(statusCodeForResponse(payload), compactResponse(payload));
+}
+
+export async function handler(request: FcHttpRequest, response: FcHttpResponse) {
+  const result = await aliyunFcRecognition({
+    method: request.method,
+    body: request.body ?? null,
+    isBase64Encoded: false
+  });
+
+  response.setStatusCode(result.statusCode);
+  for (const [name, value] of Object.entries(result.headers)) {
+    response.setHeader(name, value);
+  }
+  response.send(result.body);
 }
 
 export default aliyunFcRecognition;
