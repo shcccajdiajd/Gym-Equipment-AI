@@ -184,8 +184,8 @@ Acceptance:
 
 - [ ] Connect the repo to hosting accounts.
 Acceptance:
-- A GitHub remote exists for this repository at `https://github.com/shcccajdiajd/Gym-Equipment-AI.git` and `main` is pushed.
-- If `git push` fails, confirm the machine can reach `github.com:443` or push from a network that can access GitHub.
+- [x] A GitHub remote exists for this repository at `https://github.com/shcccajdiajd/Gym-Equipment-AI.git` and `main` is pushed.
+- If a future `git push` fails, confirm the machine can reach `github.com:443` or push from a network that can access GitHub.
 - Render imports [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) and has `ALIYUN_API_KEY` configured as a secret.
 - Vercel imports [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) and has `VITE_API_BASE_URL` configured.
 

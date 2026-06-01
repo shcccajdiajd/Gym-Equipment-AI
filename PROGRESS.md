@@ -219,6 +219,7 @@
 - Added platform deployment presets: [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) for the API and [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) for the H5 frontend.
 - Configured the GitHub remote as `https://github.com/shcccajdiajd/Gym-Equipment-AI.git`; the next step is pushing `main` and importing the repo into Render/Vercel.
 - Attempted `git push -u origin main`, but the environment could not connect to `github.com:443`, so the local branch has not reached GitHub yet.
+- The user successfully pushed `main` to `https://github.com/shcccajdiajd/Gym-Equipment-AI.git`; local `main` now tracks `origin/main`.
 
 ## Current Problems
 
@@ -239,7 +240,7 @@
 - The two-entry H5 upload UX still needs a quick phone-browser retest to confirm the album button opens the photo picker on the user's device/browser.
 - Public H5 beta still needs actual hosting accounts/domains selected and configured; this repo is now deployment-ready but not deployed.
 - The current machine does not have `gh`, `vercel`, `railway`, or `render` CLI installed, so account-level deployment still needs browser login/authorization setup.
-- GitHub push is currently blocked by network connectivity to `github.com:443`, not by a repository or authentication error.
+- GitHub push is no longer blocked; the next deployment blocker is connecting the GitHub repo to Render and Vercel and filling required environment variables.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.
