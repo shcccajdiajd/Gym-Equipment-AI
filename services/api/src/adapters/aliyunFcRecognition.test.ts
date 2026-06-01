@@ -172,4 +172,21 @@ describe('aliyunFcRecognition adapter', () => {
       errorCode: 'IMAGE_REQUIRED'
     });
   });
+
+  it('parses Buffer event payloads from Aliyun event-style handlers', async () => {
+    const result = await handler(Buffer.from(JSON.stringify({
+      httpMethod: 'POST',
+      body: JSON.stringify({
+        imageBase64: '',
+        source: 'album'
+      }),
+      isBase64Encoded: false
+    })));
+
+    expect(result?.statusCode).toBe(400);
+    expect(JSON.parse(result?.body ?? '')).toMatchObject({
+      status: 'error',
+      errorCode: 'IMAGE_REQUIRED'
+    });
+  });
 });

@@ -118,6 +118,22 @@ function hasHttpResponseMethods(value: unknown): value is FcHttpResponse {
   );
 }
 
+function parseHandlerInput(input: unknown): FcEvent {
+  if (!input) {
+    return {};
+  }
+
+  if (Buffer.isBuffer(input)) {
+    return JSON.parse(input.toString('utf8')) as FcEvent;
+  }
+
+  if (typeof input === 'string') {
+    return JSON.parse(input) as FcEvent;
+  }
+
+  return input as FcEvent;
+}
+
 export async function aliyunFcRecognition(
   event: FcEvent,
   options: { recognizer?: Recognizer } = {}
@@ -165,18 +181,9 @@ export async function aliyunFcRecognition(
   return json(statusCodeForResponse(payload), compactResponse(payload));
 }
 
-export async function handler(request: FcHttpRequest & FcEvent, response?: unknown) {
-  const result = await aliyunFcRecognition({
-    httpMethod: request.httpMethod,
-    method: request.method,
-    requestMethod: request.requestMethod,
-    headers: request.headers,
-    path: request.path,
-    queries: request.queries,
-    requestContext: request.requestContext,
-    body: request.body ?? null,
-    isBase64Encoded: request.isBase64Encoded ?? false
-  });
+export async function handler(request: (FcHttpRequest & FcEvent) | Buffer | string, response?: unknown) {
+  const event = parseHandlerInput(request);
+  const result = await aliyunFcRecognition(event);
 
   if (!hasHttpResponseMethods(response)) {
     return result;
