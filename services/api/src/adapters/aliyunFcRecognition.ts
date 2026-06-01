@@ -94,6 +94,19 @@ function parseBody(event: FcEvent) {
   return JSON.parse(text) as Record<string, unknown>;
 }
 
+function hasHttpResponseMethods(value: unknown): value is FcHttpResponse {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      'setStatusCode' in value &&
+      typeof value.setStatusCode === 'function' &&
+      'setHeader' in value &&
+      typeof value.setHeader === 'function' &&
+      'send' in value &&
+      typeof value.send === 'function'
+  );
+}
+
 export async function aliyunFcRecognition(
   event: FcEvent,
   options: { recognizer?: Recognizer } = {}
@@ -136,12 +149,18 @@ export async function aliyunFcRecognition(
   return json(statusCodeForResponse(payload), compactResponse(payload));
 }
 
-export async function handler(request: FcHttpRequest, response: FcHttpResponse) {
+export async function handler(request: FcHttpRequest & FcEvent, response?: unknown) {
   const result = await aliyunFcRecognition({
+    httpMethod: request.httpMethod,
     method: request.method,
+    requestContext: request.requestContext,
     body: request.body ?? null,
-    isBase64Encoded: false
+    isBase64Encoded: request.isBase64Encoded ?? false
   });
+
+  if (!hasHttpResponseMethods(response)) {
+    return result;
+  }
 
   response.setStatusCode(result.statusCode);
   for (const [name, value] of Object.entries(result.headers)) {

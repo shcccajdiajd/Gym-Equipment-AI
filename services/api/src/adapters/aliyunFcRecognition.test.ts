@@ -136,4 +136,25 @@ describe('aliyunFcRecognition adapter', () => {
       errorCode: 'IMAGE_REQUIRED'
     });
   });
+
+  it('falls back to returned proxy responses when FC does not pass response helpers', async () => {
+    const result = await handler({
+      httpMethod: 'POST',
+      body: JSON.stringify({
+        imageBase64: '',
+        source: 'album'
+      })
+    });
+
+    expect(result).toMatchObject({
+      statusCode: 400,
+      headers: expect.objectContaining({
+        'content-type': 'application/json; charset=utf-8'
+      })
+    });
+    expect(JSON.parse(result?.body ?? '')).toMatchObject({
+      status: 'error',
+      errorCode: 'IMAGE_REQUIRED'
+    });
+  });
 });
