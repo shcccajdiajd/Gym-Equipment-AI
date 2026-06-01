@@ -210,6 +210,7 @@
 - In development, failed mini program transport requests should now fall back to an unsupported candidate result so the user can continue testing result pages and Bilibili search jumps even when local `wx.request` cannot reach the API.
 - In development, failed mini program image reading should also fall back to the unsupported candidate result, so the user can continue testing even when WeChat Developer Tools cannot read a selected album file.
 - The web app can be run locally with `npm run dev:web`; during development, `/api` requests are proxied to `services/api`, while deployed builds can use `VITE_API_BASE_URL`.
+- Fixed the current H5 recognition outage root cause: the API key can access `qwen3-vl-plus`, while `qwen-vl-max-latest` returns Aliyun `403 Access denied`; local `.env`, API defaults, docs, and tests now use `qwen3-vl-plus`.
 
 ## Current Problems
 
@@ -218,9 +219,9 @@
 - The latest Ollama prompt changes for the `蝴蝶机夹胸` vs `坐姿划船` confusion have not yet been re-verified in WeChat DevTools with the same real image.
 - The latest unsupported-result candidate flow has not yet been re-verified in WeChat DevTools after the encoded-alternatives parsing fix, so the new suggested-machine buttons are still code-verified only.
 - Live OpenAI recognition has not been verified yet because no `OPENAI_API_KEY` flow was exercised in this environment.
-- Live Aliyun recognition has not been verified yet because no `ALIYUN_API_KEY` flow was exercised in this environment.
-- Live Aliyun recognition still needs one manual WeChat Developer Tools retest after restarting the API server; this environment has not called the real DashScope endpoint.
-- A remaining Aliyun live failure is now expected to be diagnosable from the API terminal log as an auth, model-name, quota, or upstream-response issue rather than a silent mini program hang.
+- Live Aliyun model access was checked without printing the key: `qwen-vl-max-latest` returned `403 Access denied`, while `qwen3-vl-plus` returned `200`.
+- Live H5 recognition still needs one manual browser retest after restarting the API server so the running process reloads `services/api/.env`.
+- A remaining Aliyun live failure is now expected to be diagnosable from the API terminal log as an auth, quota, model permission, or upstream-response issue rather than a silent UI failure.
 - The last live Aliyun result before this prompt fix returned `assisted-pull-up-dip` with `0.9` confidence for the `蝴蝶机夹胸` sample, so real-image accuracy remains the next manual verification gate.
 - The Bilibili mini program search page path (`pages/search/search?keyword=...`) is a best-effort target and still needs live validation; if it fails, the current code copies the mobile Bilibili search URL.
 - If the Mac's Wi-Fi/LAN IP changes, [apps/miniprogram/miniprogram/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/app.ts) must be updated with the new `http://<local-ip>:3001` value and rebuilt.

@@ -178,6 +178,56 @@ describe('POST /api/recognitions', () => {
     expect(createMock).toHaveBeenCalledOnce();
   });
 
+  it('defaults the aliyun provider to a generally accessible vision model', async () => {
+    process.env.RECOGNIZER_PROVIDER = 'aliyun';
+    process.env.ALIYUN_API_KEY = 'test-key';
+    process.env.ALIYUN_BASE_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    delete process.env.ALIYUN_MODEL;
+
+    const createMock = vi.fn(async () => ({
+      choices: [
+        {
+          message: {
+            content: JSON.stringify({
+              topMatchId: 'pec-deck-fly',
+              confidence: 0.88,
+              alternatives: ['seated-chest-press']
+            })
+          }
+        }
+      ]
+    }));
+
+    const OpenAiMock = vi.fn(() => ({
+      chat: {
+        completions: {
+          create: createMock
+        }
+      }
+    }));
+
+    vi.doMock('openai', () => ({
+      default: OpenAiMock
+    }));
+
+    vi.resetModules();
+    const { buildApp: buildAppWithEnv } = await import('../app.js');
+    const app = buildAppWithEnv();
+
+    await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('chest-fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(createMock).toHaveBeenCalledWith(expect.objectContaining({
+      model: 'qwen3-vl-plus'
+    }));
+  });
+
   it('returns a recognized equipment card payload', async () => {
     const app = buildApp({
       recognizer: createRecognizer({

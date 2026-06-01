@@ -62,7 +62,7 @@ PORT=3001
 RECOGNIZER_PROVIDER=aliyun
 ALIYUN_API_KEY=your_real_key_here
 ALIYUN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-ALIYUN_MODEL=qwen-vl-max-latest
+ALIYUN_MODEL=qwen3-vl-plus
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4.1
 OLLAMA_BASE_URL=http://127.0.0.1:11434
@@ -72,6 +72,8 @@ LOG_LEVEL=info
 ```
 
 The current Aliyun provider uses DashScope's OpenAI-compatible endpoint, so the rest of the API contract stays the same. If you later want an international fallback, you can switch `RECOGNIZER_PROVIDER=openai` and populate `OPENAI_API_KEY`.
+
+If the API log shows `403 Access denied`, first check `ALIYUN_MODEL`. In local testing, `qwen-vl-max-latest` was denied for the current key while `qwen3-vl-plus` returned `200`, so `qwen3-vl-plus` is the recommended default for this project.
 
 ## Recognition Providers
 

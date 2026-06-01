@@ -18,12 +18,12 @@ describe('env helpers', () => {
 PORT=3001
 # comment
 RECOGNIZER_PROVIDER=aliyun
-ALIYUN_MODEL=qwen-vl-max-latest
+ALIYUN_MODEL=qwen3-vl-plus
       `)
     ).toEqual({
       PORT: '3001',
       RECOGNIZER_PROVIDER: 'aliyun',
-      ALIYUN_MODEL: 'qwen-vl-max-latest'
+      ALIYUN_MODEL: 'qwen3-vl-plus'
     });
   });
 
@@ -33,7 +33,7 @@ ALIYUN_MODEL=qwen-vl-max-latest
 
     await writeFile(
       envPath,
-      ['PORT=3001', 'RECOGNIZER_PROVIDER=aliyun', 'ALIYUN_MODEL=qwen-vl-max-latest'].join('\n'),
+      ['PORT=3001', 'RECOGNIZER_PROVIDER=aliyun', 'ALIYUN_MODEL=qwen3-vl-plus'].join('\n'),
       'utf8'
     );
 
@@ -42,6 +42,6 @@ ALIYUN_MODEL=qwen-vl-max-latest
 
     expect(process.env.PORT).toBe('9999');
     expect(process.env.RECOGNIZER_PROVIDER).toBe('aliyun');
-    expect(process.env.ALIYUN_MODEL).toBe('qwen-vl-max-latest');
+    expect(process.env.ALIYUN_MODEL).toBe('qwen3-vl-plus');
   });
 });

@@ -194,7 +194,7 @@ Acceptance:
 - `services/api/.env` is populated with `RECOGNIZER_PROVIDER=aliyun`, a valid `ALIYUN_API_KEY`, and the expected `ALIYUN_BASE_URL`.
 - At least one real equipment image returns a recognized or low-confidence response instead of a transport/config error.
 - A failed live Aliyun request returns a structured `error` or `timeout` response to the mini program rather than an unhandled Fastify default body.
-- The preferred launch model is `qwen-vl-max-latest`.
+- The preferred launch model is `qwen3-vl-plus`, because it returned `200` with the current key while `qwen-vl-max-latest` returned Aliyun `403 Access denied`.
 - The API successfully authenticates against `https://dashscope.aliyuncs.com/compatible-mode/v1` without an upstream 401 or model-name error.
 
 - [ ] Verify the live Ollama recognition path with a local model.
