@@ -44,7 +44,7 @@ For FC deployment, build the bundled function entry:
 npm run build:fc
 ```
 
-Upload [dist/aliyun-fc/recognitions.mjs](/Users/shc/Documents/Codex/2026-05-24/ai/dist/aliyun-fc/recognitions.mjs) to Aliyun FC and use handler `recognitions.handler`. Set `ALIYUN_API_KEY` only in FC environment variables.
+Upload [dist/aliyun-fc/index.js](/Users/shc/Documents/Codex/2026-05-24/ai/dist/aliyun-fc/index.js) to Aliyun FC and use handler `index.handler`. Set `ALIYUN_API_KEY` only in FC environment variables.
 
 Health checks:
 

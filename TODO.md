@@ -46,14 +46,14 @@ Acceptance:
 - [x] Prepare local Aliyun upload artifacts.
 Acceptance:
 - `npm run build:web` exits `0` and refreshes `apps/web/dist`.
-- `npm run build:fc` exits `0` and refreshes `dist/aliyun-fc/recognitions.mjs`.
+- `npm run build:fc` exits `0` and refreshes `dist/aliyun-fc/index.js`.
 - `deploy-artifacts/aliyun-fc-recognitions.zip` exists for FC upload.
 - `apps/web/dist` is ready for OSS static website upload.
 
 - [ ] Deploy to Aliyun OSS and FC.
 Acceptance:
 - `apps/web/dist` is uploaded to OSS static website hosting.
-- `deploy-artifacts/aliyun-fc-recognitions.zip` or `dist/aliyun-fc/recognitions.mjs` is uploaded to FC.
+- `deploy-artifacts/aliyun-fc-recognitions.zip` or `dist/aliyun-fc/index.js` is uploaded to FC.
 - FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`.
 - The OSS build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger.
 

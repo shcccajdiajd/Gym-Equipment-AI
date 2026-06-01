@@ -50,7 +50,7 @@
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
 - `npm test` passes with `67` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
-- `npm run build:fc` passes and emits `dist/aliyun-fc/recognitions.mjs`.
+- `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run typecheck` passes across workspaces.
 - The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition` plus the deployable `handler`.
 

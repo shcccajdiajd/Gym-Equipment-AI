@@ -46,7 +46,7 @@ npm run build:fc
 Build output:
 
 ```text
-dist/aliyun-fc/recognitions.mjs
+dist/aliyun-fc/index.js
 ```
 
 The prepared local upload package is:
@@ -55,12 +55,12 @@ The prepared local upload package is:
 deploy-artifacts/aliyun-fc-recognitions.zip
 ```
 
-Create a Node.js Function Compute function and upload `deploy-artifacts/aliyun-fc-recognitions.zip`, or upload `dist/aliyun-fc/recognitions.mjs` directly if the console asks for a single code file.
+Create a Node.js Function Compute function and upload `deploy-artifacts/aliyun-fc-recognitions.zip`, or upload `dist/aliyun-fc/index.js` directly if the console asks for a single code file.
 
 Recommended handler:
 
 ```text
-recognitions.handler
+index.handler
 ```
 
 The exported `handler(request, response)` wrapper adapts Aliyun FC's Node.js HTTP handler shape to the shared recognition adapter. It handles CORS preflight, allows recognition only through `POST`, and returns compact JSON:

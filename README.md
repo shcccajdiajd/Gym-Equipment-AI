@@ -138,6 +138,6 @@ node --import tsx scripts/sync-catalog.ts
 3. Run `npm test`.
 4. Run `npm run build:web`.
 5. Run `npm run build:fc`.
-6. Deploy `apps/web/dist` to OSS and `dist/aliyun-fc/recognitions.mjs` to FC with `ALIYUN_API_KEY` configured only in FC.
+6. Deploy `apps/web/dist` to OSS and `dist/aliyun-fc/index.js` to FC with `ALIYUN_API_KEY` configured only in FC.
 7. Test `apps/web` on a real phone browser, including image upload, result rendering, Bilibili search, Douyin/Xiaohongshu/Baidu search buttons, search-term copying, and WeChat in-app browser messaging.
 8. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.

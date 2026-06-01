@@ -19,7 +19,19 @@ export function parseDotEnv(source: string) {
   ) as Record<string, string>;
 }
 
-export function loadRuntimeEnv(envPath = resolve(dirname(fileURLToPath(import.meta.url)), '../.env')) {
+function defaultEnvPath() {
+  try {
+    if (import.meta.url) {
+      return resolve(dirname(fileURLToPath(import.meta.url)), '../.env');
+    }
+  } catch {
+    // Bundled CommonJS FC builds do not have a useful import.meta.url.
+  }
+
+  return resolve(process.cwd(), 'services/api/.env');
+}
+
+export function loadRuntimeEnv(envPath = defaultEnvPath()) {
   try {
     const fileContents = readFileSync(envPath, 'utf8');
     const parsed = parseDotEnv(fileContents);
