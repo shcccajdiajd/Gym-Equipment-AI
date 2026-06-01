@@ -64,12 +64,19 @@ Acceptance:
 - A local Node smoke test using an Aliyun-style Buffer POST event returns structured `IMAGE_REQUIRED` JSON instead of crashing.
 - `deploy-artifacts/aliyun-fc-recognitions.zip` is regenerated with root-level `index.js`.
 
+- [x] Verify the uploaded Aliyun FC function with the real HTTP Trigger.
+Acceptance:
+- `GET /api/recognitions` returns structured `METHOD_NOT_ALLOWED`.
+- Empty `POST /api/recognitions` returns structured `IMAGE_REQUIRED`.
+- `OPTIONS /api/recognitions` returns `204` with CORS headers.
+- A real image POST using `ims.webp` returns HTTP `200` with `equipmentId: pec-deck-fly` and confidence `0.92`.
+
 - [ ] Deploy to Aliyun OSS and FC.
 Acceptance:
 - `apps/web/dist` is uploaded to OSS static website hosting.
-- `deploy-artifacts/aliyun-fc-recognitions.zip` or `dist/aliyun-fc/index.js` is uploaded to FC.
-- FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`.
-- The OSS build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger.
+- `deploy-artifacts/aliyun-fc-recognitions.zip` or `dist/aliyun-fc/index.js` is uploaded to FC. Current status: done and verified.
+- FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`. Current status: enough is configured for live recognition to succeed.
+- The OSS build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger. Current status: still pending for public web deployment.
 
 - [ ] Run deployed phone smoke test.
 Acceptance:
