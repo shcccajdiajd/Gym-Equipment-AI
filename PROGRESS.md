@@ -1,9 +1,13 @@
 # Progress
 
-## Latest Update: Aliyun OSS + FC Deployment Refactor
+## Latest Update: Aliyun FC Real Event Adapter
 
 ## Completed
 
+- Used a temporary FC debug handler to inspect Aliyun's real runtime input shape from console logs.
+- Confirmed the deployed HTTP trigger passes the first handler argument as a `Buffer` containing a v1 JSON event, with the request method at `requestContext.http.method`.
+- Replaced the temporary debug handler with a final FC adapter that parses Buffer/string/object inputs, supports Aliyun v1 HTTP events, decodes base64-encoded request bodies, returns proxy-style responses when no response helper is present, and keeps the shared recognition core path.
+- Regenerated [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) with a root-level `index.js` for Aliyun FC Handler `index.handler`.
 - Switched the active deployment direction away from Vercel/Render and toward Aliyun OSS static website hosting plus Aliyun Function Compute.
 - Extracted platform-neutral recognition logic into [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts).
 - Added [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts) so local Fastify and FC can share the same provider selection without duplicating code.
@@ -48,17 +52,18 @@
 - Deployment upload artifacts have been prepared locally:
   - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
-- `npm test` passes with `67` tests.
+- `npm test` passes with `69` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run typecheck` passes across workspaces.
 - The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition` plus the deployable `handler`.
+- A local Node smoke test using an Aliyun-style Buffer event reaches `index.handler` and returns structured JSON instead of crashing.
 
 ## Current Problems
 
-- Aliyun OSS bucket and FC function have not been created in the Aliyun console yet.
-- The FC HTTP Trigger URL is not available yet, so deployed-phone testing is still pending.
-- Live FC invocation with the real `ALIYUN_API_KEY` still needs to be tested after uploading the function bundle.
+- The final non-debug FC zip still needs to be uploaded to the existing Aliyun FC function.
+- Live FC invocation with the real `ALIYUN_API_KEY` needs to be retested after uploading the final function bundle.
+- OSS frontend deployment or frontend API base URL wiring still needs final deployed-phone testing.
 - Platform search jumps still need real phone testing from the OSS domain.
 
 ## Completed

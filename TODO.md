@@ -50,6 +50,20 @@ Acceptance:
 - `deploy-artifacts/aliyun-fc-recognitions.zip` exists for FC upload.
 - `apps/web/dist` is ready for OSS static website upload.
 
+- [x] Inspect the real Aliyun FC HTTP trigger event shape.
+Acceptance:
+- A temporary debug Handler `index.handler` logs the first argument type, Buffer status, constructor name, event preview, context keys, and argument count.
+- Aliyun console logs confirm the first handler argument is a `Buffer` containing a v1 JSON event.
+- The request method is read from `requestContext.http.method`.
+
+- [x] Restore the final FC adapter from the observed event shape.
+Acceptance:
+- [services/api/src/adapters/aliyunFcRecognition.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.ts) parses Buffer, string, and object handler inputs.
+- The adapter supports Aliyun v1 events, including `requestContext.http.method` and base64-encoded JSON request bodies.
+- Handler `index.handler` can return proxy-style `{ statusCode, headers, body }` responses when Aliyun does not provide response helper methods.
+- A local Node smoke test using an Aliyun-style Buffer POST event returns structured `IMAGE_REQUIRED` JSON instead of crashing.
+- `deploy-artifacts/aliyun-fc-recognitions.zip` is regenerated with root-level `index.js`.
+
 - [ ] Deploy to Aliyun OSS and FC.
 Acceptance:
 - `apps/web/dist` is uploaded to OSS static website hosting.
