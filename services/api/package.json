@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
+    "build:fc": "esbuild src/adapters/aliyunFcRecognition.ts --bundle --platform=node --format=esm --target=node20 --outfile=../../dist/aliyun-fc/recognitions.mjs",
     "dev": "tsx watch src/server.ts",
     "start": "node --import tsx src/server.ts",
     "test": "vitest run",

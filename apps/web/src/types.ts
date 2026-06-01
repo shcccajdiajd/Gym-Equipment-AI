@@ -7,9 +7,20 @@ export type RecognitionApiStatus = RecognitionStatus | RecognitionFailureStatus;
 export type RecognitionPayload = {
   status: RecognitionApiStatus;
   equipment?: EquipmentCard;
+  equipmentId?: string;
   confidence?: number;
   alternatives?: string[];
+  candidates?: string[];
   message?: string;
+  errorCode?:
+    | 'ALIYUN_API_KEY_MISSING'
+    | 'VISION_PROVIDER_FAILED'
+    | 'IMAGE_TOO_LARGE'
+    | 'IMAGE_REQUIRED'
+    | 'VISION_TIMEOUT'
+    | 'INVALID_REQUEST'
+    | 'METHOD_NOT_ALLOWED'
+    | 'RECOGNITION_MAPPING_FAILED';
 };
 
 export type HistoryItem = {

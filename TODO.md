@@ -1,5 +1,62 @@
 # TODO
 
+## Current Phase: Aliyun OSS + FC Deployment
+
+- [x] Extract recognition into a platform-neutral core function.
+Acceptance:
+- [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts) accepts `imageBase64` or `imageDataUrl`.
+- Local Fastify routes and Aliyun FC adapter call the same core function.
+- Missing image, oversized image, timeout, provider failure, and missing Aliyun key return explicit error codes.
+
+- [x] Add the Aliyun FC recognition adapter.
+Acceptance:
+- [services/api/src/adapters/aliyunFcRecognition.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.ts) accepts only recognition `POST` requests plus CORS `OPTIONS` preflight.
+- It parses JSON request bodies, validates image fields, calls `recognizeEquipment`, and returns compact JSON without base64 image data.
+- Adapter tests cover preflight, non-POST rejection, success, and empty-image error.
+
+- [x] Make the H5 frontend deployment-configurable and FC-response compatible.
+Acceptance:
+- The frontend uses `VITE_API_BASE_URL` for deployed API calls and keeps provider keys out of `VITE_` variables.
+- Compact FC responses with `equipmentId` and `candidates` hydrate into shared catalog cards.
+- Frontend errors map `ALIYUN_API_KEY_MISSING`, `VISION_PROVIDER_FAILED`, `IMAGE_TOO_LARGE`, `IMAGE_REQUIRED`, and `VISION_TIMEOUT` to user-friendly messages.
+
+- [x] Enforce H5 image upload limits before sending to the API.
+Acceptance:
+- Browser compression uses max edge `1280px` and JPEG quality `0.75`.
+- If the base64 payload is still too large, the user sees a retry prompt before upload.
+- localStorage history continues to store only equipment id/name/confidence/time/search term, not base64 images.
+
+- [x] Document the Aliyun deployment path.
+Acceptance:
+- README points to Aliyun OSS + FC as the primary public beta path.
+- [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md) explains web build, OSS upload, FC creation, HTTP Trigger, FC env vars, `VITE_API_BASE_URL`, and phone smoke testing.
+- `PROGRESS.md` and `TODO.md` record this phase.
+
+- [x] Verify the Aliyun deployment refactor.
+Acceptance:
+- `npm test` exits `0`.
+- `npm run build:web` exits `0`.
+- `npm run build:fc` exits `0`.
+- `npm run typecheck` exits `0`.
+
+- [x] Commit the Aliyun deployment refactor.
+Acceptance:
+- A git commit is created for the phase.
+
+- [ ] Deploy to Aliyun OSS and FC.
+Acceptance:
+- `apps/web/dist` is uploaded to OSS static website hosting.
+- `dist/aliyun-fc/recognitions.mjs` is uploaded to FC.
+- FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`.
+- The OSS build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger.
+
+- [ ] Run deployed phone smoke test.
+Acceptance:
+- A phone opens the OSS static website URL outside local-only networking.
+- Uploading an image reaches FC and returns recognized, low-confidence, unsupported, or clear error state.
+- B站/抖音/小红书/百度 buttons are clickable and copy-search fallback works.
+- WeChat in-app browser shows the “用浏览器打开” guidance.
+
 ## Phase 1: Persist Context And Create Checkpoints
 
 - [x] Initialize a git repository in `/Users/shc/Documents/Codex/2026-05-24/ai`.
@@ -186,8 +243,9 @@ Acceptance:
 Acceptance:
 - [x] A GitHub remote exists for this repository at `https://github.com/shcccajdiajd/Gym-Equipment-AI.git` and `main` is pushed.
 - If a future `git push` fails, confirm the machine can reach `github.com:443` or push from a network that can access GitHub.
-- Render imports [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) and has `ALIYUN_API_KEY` configured as a secret.
-- Vercel imports [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) and has `VITE_API_BASE_URL` configured.
+- Aliyun OSS bucket is created and configured for static website hosting.
+- Aliyun FC function is created with `ALIYUN_API_KEY` configured as a server-side environment variable.
+- The H5 build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger URL.
 
 - [ ] Run the manual smoke test in WeChat Developer Tools.
 Acceptance:

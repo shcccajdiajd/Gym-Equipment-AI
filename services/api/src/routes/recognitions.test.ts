@@ -53,30 +53,54 @@ describe('POST /api/recognitions', () => {
     });
   });
 
-  it('throws when openai provider is configured without an api key', async () => {
+  it('returns a structured provider error when openai provider is configured without an api key', async () => {
     process.env.RECOGNIZER_PROVIDER = 'openai';
     process.env.OPENAI_API_KEY = '';
     delete process.env.OPENAI_MODEL;
 
     vi.resetModules();
     const { buildApp: buildAppWithEnv } = await import('../app.js');
+    const app = buildAppWithEnv();
 
-    expect(() => buildAppWithEnv()).toThrow(
-      'OPENAI_API_KEY is required when RECOGNIZER_PROVIDER=openai'
-    );
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(response.statusCode).toBe(502);
+    expect(response.json()).toMatchObject({
+      status: 'error',
+      errorCode: 'VISION_PROVIDER_FAILED'
+    });
   });
 
-  it('throws when aliyun provider is configured without an api key', async () => {
+  it('returns ALIYUN_API_KEY_MISSING when aliyun provider is configured without an api key', async () => {
     process.env.RECOGNIZER_PROVIDER = 'aliyun';
     process.env.ALIYUN_API_KEY = '';
     delete process.env.ALIYUN_MODEL;
 
     vi.resetModules();
     const { buildApp: buildAppWithEnv } = await import('../app.js');
+    const app = buildAppWithEnv();
 
-    expect(() => buildAppWithEnv()).toThrow(
-      'ALIYUN_API_KEY is required when RECOGNIZER_PROVIDER=aliyun'
-    );
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/recognitions',
+      payload: {
+        imageBase64: Buffer.from('fixture-image').toString('base64'),
+        source: 'album'
+      }
+    });
+
+    expect(response.statusCode).toBe(502);
+    expect(response.json()).toMatchObject({
+      status: 'error',
+      errorCode: 'ALIYUN_API_KEY_MISSING'
+    });
   });
 
   it('uses the ollama provider when configured', async () => {
@@ -258,7 +282,7 @@ describe('POST /api/recognitions', () => {
     });
   });
 
-  it('returns 400 for an invalid request payload', async () => {
+  it('returns 400 when image content is missing', async () => {
     const app = buildApp({
       recognizer: createRecognizer({
         topMatchId: 'lat-pulldown',
@@ -271,14 +295,15 @@ describe('POST /api/recognitions', () => {
       method: 'POST',
       url: '/api/recognitions',
       payload: {
-        imageBase64: 'too-short',
+        imageBase64: '',
         source: 'camera'
       }
     });
 
     expect(response.statusCode).toBe(400);
     expect(response.json()).toMatchObject({
-      status: 'invalid_request'
+      status: 'error',
+      errorCode: 'IMAGE_REQUIRED'
     });
   });
 
@@ -410,7 +435,8 @@ describe('POST /api/recognitions', () => {
 
     expect(response.statusCode).toBe(500);
     expect(response.json()).toMatchObject({
-      status: 'error'
+      status: 'error',
+      errorCode: 'RECOGNITION_MAPPING_FAILED'
     });
   });
 
@@ -441,7 +467,7 @@ describe('POST /api/recognitions', () => {
     });
   });
 
-  it('returns a structured 500 payload when the recognizer crashes unexpectedly', async () => {
+  it('returns a structured 502 payload when the recognizer crashes unexpectedly', async () => {
     const app = buildApp({
       recognizer: {
         async recognize() {
@@ -459,9 +485,10 @@ describe('POST /api/recognitions', () => {
       }
     });
 
-    expect(response.statusCode).toBe(500);
+    expect(response.statusCode).toBe(502);
     expect(response.json()).toMatchObject({
       status: 'error',
+      errorCode: 'VISION_PROVIDER_FAILED',
       message: '识别服务暂时不可用，请稍后重试。'
     });
   });

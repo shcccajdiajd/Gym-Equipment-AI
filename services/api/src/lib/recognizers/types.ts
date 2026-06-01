@@ -1,3 +1,13 @@
+export type RecognitionErrorCode =
+  | 'ALIYUN_API_KEY_MISSING'
+  | 'VISION_PROVIDER_FAILED'
+  | 'IMAGE_TOO_LARGE'
+  | 'IMAGE_REQUIRED'
+  | 'VISION_TIMEOUT'
+  | 'INVALID_REQUEST'
+  | 'METHOD_NOT_ALLOWED'
+  | 'RECOGNITION_MAPPING_FAILED';
+
 export interface RecognitionResult {
   topMatchId: string | null;
   confidence: number;
@@ -6,8 +16,9 @@ export interface RecognitionResult {
 
 export class RecognitionProviderError extends Error {
   constructor(
-    public readonly code: 'timeout' | 'upstream_error' | 'invalid_response',
-    message: string
+    public readonly code: 'timeout' | 'upstream_error' | 'invalid_response' | 'config_error',
+    message: string,
+    public readonly errorCode?: RecognitionErrorCode
   ) {
     super(message);
     this.name = 'RecognitionProviderError';

@@ -75,12 +75,9 @@ The current Aliyun provider uses DashScope's OpenAI-compatible endpoint, so the 
 
 If the API log shows `403 Access denied`, first check `ALIYUN_MODEL`. In local testing, `qwen-vl-max-latest` was denied for the current key while `qwen3-vl-plus` returned `200`, so `qwen3-vl-plus` is the recommended default for this project.
 
-For public H5 beta deployment, use [docs/deployment/h5-public-beta.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/h5-public-beta.md). The backend now exposes `GET /health` and `GET /api/health` for deployment health checks.
+For public H5 beta deployment, the primary path is now Aliyun OSS static website hosting for `apps/web` plus Aliyun Function Compute for recognition. Use [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md). The local Fastify API still exposes `GET /health` and `GET /api/health` for development health checks.
 
-The repo also includes deployment presets:
-
-- [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) for the backend API on Render
-- [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) for the H5 frontend on Vercel
+The older [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) and [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) files remain as historical/optional hosting presets, but they are no longer the recommended deployment path.
 
 ## Recognition Providers
 
@@ -93,6 +90,8 @@ The repo also includes deployment presets:
 
 ```bash
 npm test
+npm run build:web
+npm run build:fc
 npm run build
 npm run typecheck
 npm run dev:api
@@ -137,7 +136,8 @@ node --import tsx scripts/sync-catalog.ts
 1. Confirm the 20 launch equipment cards are complete and reviewed for safety wording.
 2. Set `RECOGNIZER_PROVIDER=aliyun` and a real `ALIYUN_API_KEY` in [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env).
 3. Run `npm test`.
-4. Run `npm run build`.
-5. Test `apps/web` on a real phone browser, including image upload, result rendering, Bilibili search, Douyin/Xiaohongshu/Baidu search buttons, search-term copying, and WeChat in-app browser messaging.
-6. Deploy `services/api` behind HTTPS before public H5 testing.
-7. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.
+4. Run `npm run build:web`.
+5. Run `npm run build:fc`.
+6. Deploy `apps/web/dist` to OSS and `dist/aliyun-fc/recognitions.mjs` to FC with `ALIYUN_API_KEY` configured only in FC.
+7. Test `apps/web` on a real phone browser, including image upload, result rendering, Bilibili search, Douyin/Xiaohongshu/Baidu search buttons, search-term copying, and WeChat in-app browser messaging.
+8. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.

@@ -4,7 +4,7 @@ import { CandidateList } from './components/CandidateList.js';
 import { EquipmentResult } from './components/EquipmentResult.js';
 import { UnsupportedResult } from './components/UnsupportedResult.js';
 import type { HistoryItem, RecognitionPayload } from './types.js';
-import { compressImageToBase64 } from './utils/image.js';
+import { compressImageToBase64, ImageTooLargeError } from './utils/image.js';
 import { addHistoryItem, readHistory, recordWrongPrediction } from './utils/history.js';
 import { recognizeEquipmentImage } from './utils/api.js';
 import { isWeChatBrowser } from './utils/searchTargets.js';
@@ -91,8 +91,8 @@ export function App() {
       setNotice(compressed.warning);
       const payload = await recognizeEquipmentImage(compressed.base64, 'album');
       handleRecognitionPayload(payload, compressed.previewUrl);
-    } catch {
-      setNotice('图片处理失败，请换一张图片再试。');
+    } catch (error) {
+      setNotice(error instanceof ImageTooLargeError ? error.message : '图片处理失败，请换一张图片再试。');
       setView('home');
     }
   }

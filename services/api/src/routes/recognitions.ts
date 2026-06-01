@@ -1,29 +1,29 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { resolveEquipmentPayload } from '../lib/catalog-service.js';
-import { RECOGNIZED_CONFIDENCE_THRESHOLD } from '../lib/recognizers/prompt.js';
-import { RecognitionProviderError } from '../lib/recognizers/types.js';
-import type { Recognizer, RecognitionResult } from '../lib/recognizers/types.js';
+import { recognizeEquipment } from '../core/recognizeEquipment.js';
+import type { RecognitionCoreResponse } from '../core/recognizeEquipment.js';
+import type { Recognizer } from '../lib/recognizers/types.js';
 
 const requestSchema = z.object({
-  imageBase64: z.string().min(16),
-  source: z.enum(['camera', 'album'])
+  imageBase64: z.string().optional(),
+  imageDataUrl: z.string().optional(),
+  source: z.enum(['camera', 'album']).optional()
 });
 
-function uniqueIds(ids: string[]) {
-  return ids.filter((id, index) => ids.indexOf(id) === index);
-}
-
-function applyRecognitionSafetyGuards(result: RecognitionResult): RecognitionResult {
-  if (result.topMatchId === 'assisted-pull-up-dip' && result.confidence < 0.95) {
-    return {
-      topMatchId: null,
-      confidence: Math.min(result.confidence, 0.4),
-      alternatives: uniqueIds(['pec-deck-fly', 'assisted-pull-up-dip', ...result.alternatives]).slice(0, 3)
-    };
+function statusCodeForResponse(response: RecognitionCoreResponse) {
+  if (response.errorCode === 'IMAGE_REQUIRED' || response.errorCode === 'IMAGE_TOO_LARGE') {
+    return 400;
   }
-
-  return result;
+  if (response.errorCode === 'RECOGNITION_MAPPING_FAILED') {
+    return 500;
+  }
+  if (response.status === 'timeout') {
+    return 504;
+  }
+  if (response.status === 'error') {
+    return 502;
+  }
+  return 200;
 }
 
 export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Recognizer) {
@@ -38,87 +38,31 @@ export function registerRecognitionRoutes(app: FastifyInstance, recognizer: Reco
 
     const body = parsedBody.data;
     const startedAt = Date.now();
+    const imageBase64Length = (body.imageBase64 ?? body.imageDataUrl ?? '').length;
 
     request.log.info(
       {
-        source: body.source,
-        imageBase64Length: body.imageBase64.length
+        source: body.source ?? 'album',
+        imageBase64Length
       },
       'recognition request received'
     );
 
-    let result;
+    const result = await recognizeEquipment(body, { recognizer });
+    const statusCode = statusCodeForResponse(result);
 
-    try {
-      result = await recognizer.recognize(body);
-    } catch (error) {
-      if (error instanceof RecognitionProviderError) {
-        const statusCode = error.code === 'timeout' ? 504 : 502;
-        request.log.error(
-          {
-            code: error.code,
-            durationMs: Date.now() - startedAt,
-            message: error.message
-          },
-          'recognition provider failed'
-        );
-
-        return reply.status(statusCode).send({
-          status: error.code === 'timeout' ? 'timeout' : 'error',
-          message:
-            error.code === 'timeout'
-              ? '识别服务响应超时，请稍后重试或换一张更清晰的图片。'
-              : '识别服务暂时不可用，请稍后重试。'
-        });
-      }
-
-      request.log.error(
-        {
-          durationMs: Date.now() - startedAt,
-          err: error
-        },
-        'recognition request crashed unexpectedly'
-      );
-      return reply.status(500).send({
-        status: 'error',
-        message: '识别服务暂时不可用，请稍后重试。'
-      });
-    }
-
-    result = applyRecognitionSafetyGuards(result);
-
-    request.log.info(
+    request.log[statusCode >= 500 ? 'error' : 'info'](
       {
         durationMs: Date.now() - startedAt,
-        topMatchId: result.topMatchId,
+        status: result.status,
+        equipmentId: result.equipmentId,
         confidence: result.confidence,
-        alternatives: result.alternatives
+        candidates: result.candidates,
+        errorCode: result.errorCode
       },
-      'recognition provider completed'
+      statusCode >= 500 ? 'recognition provider failed' : 'recognition provider completed'
     );
 
-    if (!result.topMatchId) {
-      return reply.status(200).send({
-        status: 'unsupported',
-        alternatives: result.alternatives,
-        message: '这类器械暂未收录，请尝试重新拍摄或查看支持列表。'
-      });
-    }
-
-    const equipment = resolveEquipmentPayload(result.topMatchId);
-    if (!equipment) {
-      return reply.status(500).send({
-        status: 'error',
-        message: '识别结果未能映射到器械内容，请检查目录数据。'
-      });
-    }
-
-    return {
-      status:
-        result.confidence >= RECOGNIZED_CONFIDENCE_THRESHOLD ? 'recognized' : 'low_confidence',
-      equipment,
-      confidence: result.confidence,
-      alternatives: result.alternatives
-    };
+    return reply.status(statusCode).send(result);
   });
 }

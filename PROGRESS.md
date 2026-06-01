@@ -1,5 +1,63 @@
 # Progress
 
+## Latest Update: Aliyun OSS + FC Deployment Refactor
+
+## Completed
+
+- Switched the active deployment direction away from Vercel/Render and toward Aliyun OSS static website hosting plus Aliyun Function Compute.
+- Extracted platform-neutral recognition logic into [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts).
+- Added [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts) so local Fastify and FC can share the same provider selection without duplicating code.
+- Updated the local Fastify `POST /api/recognitions` route to call the shared recognition core.
+- Added an Aliyun FC adapter at [services/api/src/adapters/aliyunFcRecognition.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.ts), including compact JSON responses, CORS preflight handling, method checks, image validation, and shared core reuse.
+- Added explicit recognition error codes for missing Aliyun key, provider failure, image too large, missing image, timeout, invalid request, method mismatch, and catalog-mapping failure.
+- Updated the H5 frontend API normalization so compact FC responses with `equipmentId` and `candidates` hydrate into full catalog cards from `packages/shared`.
+- Tightened H5 image compression to maximum edge `1280px`, JPEG quality `0.75`, and a client-side oversized-image guard before upload.
+- Added `npm run build:web` and `npm run build:fc` scripts for OSS and FC deployment artifacts.
+- Added the Aliyun deployment guide at [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md).
+
+## Modified Files In This Phase
+
+- [README.md](/Users/shc/Documents/Codex/2026-05-24/ai/README.md)
+- [PROGRESS.md](/Users/shc/Documents/Codex/2026-05-24/ai/PROGRESS.md)
+- [TODO.md](/Users/shc/Documents/Codex/2026-05-24/ai/TODO.md)
+- [package.json](/Users/shc/Documents/Codex/2026-05-24/ai/package.json)
+- [docs/deployment/h5-public-beta.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/h5-public-beta.md)
+- [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md)
+- [services/api/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/package.json)
+- [services/api/src/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/app.ts)
+- [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts)
+- [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts)
+- [services/api/src/core/recognizeEquipment.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.test.ts)
+- [services/api/src/adapters/aliyunFcRecognition.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.ts)
+- [services/api/src/adapters/aliyunFcRecognition.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/adapters/aliyunFcRecognition.test.ts)
+- [services/api/src/lib/recognizers/types.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/types.ts)
+- [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
+- [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
+- [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx)
+- [apps/web/src/types.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/types.ts)
+- [apps/web/src/utils/api.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/api.ts)
+- [apps/web/src/utils/api.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/api.test.ts)
+- [apps/web/src/utils/image.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/image.ts)
+
+## Current Run State
+
+- Local web development still uses `npm run dev:web` and Vite proxying to local `services/api`.
+- Local API development still uses `npm run dev:api`.
+- FC deployment can be built with `npm run build:fc`.
+- OSS frontend deployment can be built with `npm run build:web`.
+- `npm test` passes with `65` tests.
+- `npm run build:web` passes and emits `apps/web/dist`.
+- `npm run build:fc` passes and emits `dist/aliyun-fc/recognitions.mjs`.
+- `npm run typecheck` passes across workspaces.
+- The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition`.
+
+## Current Problems
+
+- Aliyun OSS bucket and FC function have not been created in the Aliyun console yet.
+- The FC HTTP Trigger URL is not available yet, so deployed-phone testing is still pending.
+- Live FC invocation with the real `ALIYUN_API_KEY` still needs to be tested after uploading the function bundle.
+- Platform search jumps still need real phone testing from the OSS domain.
+
 ## Completed
 
 - Defined the V1 product spec for the gym-equipment recognition mini program.
@@ -217,7 +275,7 @@
 - Split the H5 home upload flow into two explicit mobile controls: `拍照识别` uses `capture="environment"`, while `从相册上传` uses a separate image file input without `capture`.
 - Prepared the H5 public-beta deployment path by adding API health endpoints (`/health`, `/api/health`), backend `start`/`build` scripts, frontend/backend env examples, and [docs/deployment/h5-public-beta.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/h5-public-beta.md).
 - Added platform deployment presets: [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) for the API and [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) for the H5 frontend.
-- Configured the GitHub remote as `https://github.com/shcccajdiajd/Gym-Equipment-AI.git`; the next step is pushing `main` and importing the repo into Render/Vercel.
+- Configured the GitHub remote as `https://github.com/shcccajdiajd/Gym-Equipment-AI.git`; the deployment direction later moved from Render/Vercel to Aliyun OSS + FC.
 - Attempted `git push -u origin main`, but the environment could not connect to `github.com:443`, so the local branch has not reached GitHub yet.
 - The user successfully pushed `main` to `https://github.com/shcccajdiajd/Gym-Equipment-AI.git`; local `main` now tracks `origin/main`.
 
@@ -240,7 +298,7 @@
 - The two-entry H5 upload UX still needs a quick phone-browser retest to confirm the album button opens the photo picker on the user's device/browser.
 - Public H5 beta still needs actual hosting accounts/domains selected and configured; this repo is now deployment-ready but not deployed.
 - The current machine does not have `gh`, `vercel`, `railway`, or `render` CLI installed, so account-level deployment still needs browser login/authorization setup.
-- GitHub push is no longer blocked; the next deployment blocker is connecting the GitHub repo to Render and Vercel and filling required environment variables.
+- GitHub push is no longer blocked; the next deployment blocker is creating the Aliyun OSS bucket, FC function, HTTP Trigger, and server-side FC environment variables.
 - The local ignored `services/api/.env` still requires your real key before the OpenAI path can be run end to end on your machine.
 - Root `sync:catalog` works, but in this sandbox the direct `tsx` CLI path hits an IPC pipe `EPERM`; `node --import tsx ...` is the working fallback here.
 - `packages/shared/dist` is ignored in git, so the workspace now relies on source exports rather than checked-in dist artifacts during local development.

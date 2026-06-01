@@ -4,14 +4,14 @@ This product is now led by the mobile H5/PWA flow. The goal of this phase is a s
 
 ## Target Architecture
 
-- `apps/web`: static H5/PWA frontend deployed to a static hosting platform.
-- `services/api`: Node/Fastify backend deployed behind HTTPS.
+- `apps/web`: static H5/PWA frontend deployed to Aliyun OSS static website hosting.
+- `services/api`: local Fastify development API plus an Aliyun FC HTTP adapter for public deployment.
 - `packages/shared`: bundled into both frontend and backend during build.
 - AI provider keys stay only in the backend environment. Do not put `ALIYUN_API_KEY`, `OPENAI_API_KEY`, or any provider secret in `apps/web`.
 
 ## Backend API
 
-Recommended first-beta host: Render Web Service.
+Recommended first-beta host: Aliyun Function Compute (FC).
 
 Required environment variables:
 
@@ -29,7 +29,7 @@ OLLAMA_TIMEOUT_MS=120000
 LOG_LEVEL=info
 ```
 
-Recommended backend commands:
+Local backend commands:
 
 ```bash
 corepack enable
@@ -38,7 +38,13 @@ pnpm --filter @gym-equipment-ai/api typecheck
 pnpm --filter @gym-equipment-ai/api start
 ```
 
-This repository includes [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml), so Render can create the API service from a Blueprint. You still need to fill the secret `ALIYUN_API_KEY` in Render's environment settings.
+For FC deployment, build the bundled function entry:
+
+```bash
+npm run build:fc
+```
+
+Upload [dist/aliyun-fc/recognitions.mjs](/Users/shc/Documents/Codex/2026-05-24/ai/dist/aliyun-fc/recognitions.mjs) to Aliyun FC and use handler `recognitions.aliyunFcRecognition`. Set `ALIYUN_API_KEY` only in FC environment variables.
 
 Health checks:
 
@@ -51,7 +57,7 @@ Both health endpoints return service readiness metadata without exposing API key
 
 ## Frontend Web
 
-Recommended first-beta host: Vercel.
+Recommended first-beta host: Aliyun OSS static website hosting.
 
 Required frontend environment variable for deployment:
 
@@ -62,7 +68,7 @@ VITE_API_BASE_URL=https://your-api-domain.example.com
 Build command:
 
 ```bash
-pnpm run build
+npm run build:web
 ```
 
 Build output:
@@ -71,7 +77,7 @@ Build output:
 apps/web/dist
 ```
 
-This repository includes [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json), so Vercel can reuse the expected install, build, and output settings. After creating the project, set `VITE_API_BASE_URL` to the deployed backend origin.
+Upload the contents of `apps/web/dist` to the OSS bucket root. After changing `VITE_API_BASE_URL`, rebuild and re-upload the frontend.
 
 For local development, leave `VITE_API_BASE_URL` empty and use `VITE_API_PROXY_TARGET=http://127.0.0.1:3001` so Vite proxies `/api` to the local backend.
 
@@ -89,13 +95,14 @@ For local development, leave `VITE_API_BASE_URL` empty and use `VITE_API_PROXY_T
 
 ## Deployment Order
 
-1. Push this repository to GitHub.
-2. Create the Render backend from `render.yaml`.
-3. Set `ALIYUN_API_KEY` in Render and wait for `/health` to pass.
-4. Create the Vercel frontend from the same GitHub repository.
-5. Set `VITE_API_BASE_URL` in Vercel to the Render API origin.
-6. Redeploy the frontend after setting the env var.
-7. Run the public beta smoke test above from a phone not relying on local Wi-Fi.
+1. Build the FC handler with `npm run build:fc`.
+2. Create an Aliyun FC Node.js function and HTTP Trigger.
+3. Set `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus` in FC environment variables.
+4. Build the frontend with `VITE_API_BASE_URL=<FC HTTP Trigger URL> npm run build:web`.
+5. Upload `apps/web/dist` to OSS static website hosting.
+6. Run the public beta smoke test above from a phone not relying on local Wi-Fi.
+
+For the full Aliyun guide, see [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md).
 
 ## Known First-Beta Tradeoffs
 
