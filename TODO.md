@@ -182,6 +182,12 @@ Acceptance:
 - A phone outside the local Wi-Fi can open the web URL, upload an image, and receive a recognized, low-confidence, unsupported, or clear error state.
 - Platform search buttons and copy-search fallback work from the deployed URL.
 
+- [ ] Connect the repo to hosting accounts.
+Acceptance:
+- A GitHub remote exists for this repository and `main` is pushed.
+- Render imports [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) and has `ALIYUN_API_KEY` configured as a secret.
+- Vercel imports [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) and has `VITE_API_BASE_URL` configured.
+
 - [ ] Run the manual smoke test in WeChat Developer Tools.
 Acceptance:
 - Every item in [docs/qa/manual-smoke-test.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/manual-smoke-test.md) is checked off by a human.

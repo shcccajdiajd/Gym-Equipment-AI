@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: gym-equipment-ai-api
+    runtime: node
+    plan: free
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @gym-equipment-ai/api typecheck
+    startCommand: pnpm --filter @gym-equipment-ai/api start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RECOGNIZER_PROVIDER
+        value: aliyun
+      - key: ALIYUN_API_KEY
+        sync: false
+      - key: ALIYUN_BASE_URL
+        value: https://dashscope.aliyuncs.com/compatible-mode/v1
+      - key: ALIYUN_MODEL
+        value: qwen3-vl-plus
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1
+      - key: OLLAMA_BASE_URL
+        value: http://127.0.0.1:11434
+      - key: OLLAMA_MODEL
+        value: qwen2.5vl:3b
+      - key: OLLAMA_TIMEOUT_MS
+        value: "120000"
+      - key: LOG_LEVEL
+        value: info

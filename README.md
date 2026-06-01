@@ -77,6 +77,11 @@ If the API log shows `403 Access denied`, first check `ALIYUN_MODEL`. In local t
 
 For public H5 beta deployment, use [docs/deployment/h5-public-beta.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/h5-public-beta.md). The backend now exposes `GET /health` and `GET /api/health` for deployment health checks.
 
+The repo also includes deployment presets:
+
+- [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) for the backend API on Render
+- [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) for the H5 frontend on Vercel
+
 ## Recognition Providers
 
 - `mock`: deterministic local development provider for fast UI testing
