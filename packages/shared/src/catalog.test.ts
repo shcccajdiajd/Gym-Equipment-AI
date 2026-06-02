@@ -24,6 +24,18 @@ describe('equipment catalog', () => {
     expect(card?.videoRecommendation.searchQuery).toContain('坐姿推胸机');
   });
 
+  it('models multi-use equipment with exercise variants', () => {
+    const card = getEquipmentCard('pec-deck-fly');
+
+    expect(card?.exerciseVariants).toHaveLength(2);
+    expect(card?.exerciseVariants?.map((variant) => variant.id)).toEqual([
+      'pec-deck-chest-fly',
+      'pec-deck-rear-delt-fly'
+    ]);
+    expect(card?.exerciseVariants?.[1].primaryMuscles).toContain('三角肌后束');
+    expect(card?.exerciseVariants?.[1].videoRecommendation.searchQuery).toContain('后束');
+  });
+
   it('keeps similar equipment links inside the launch catalog', () => {
     const ids = new Set(equipmentCatalog.map((item) => item.id));
 

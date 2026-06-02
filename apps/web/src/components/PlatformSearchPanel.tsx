@@ -1,26 +1,33 @@
-import type { EquipmentCard } from '@gym-equipment-ai/shared';
-import { useMemo, useState } from 'react';
+import type { EquipmentCard, EquipmentExerciseVariant } from '@gym-equipment-ai/shared';
+import { useEffect, useMemo, useState } from 'react';
 import { buildSearchTargets, isWeChatBrowser } from '../utils/searchTargets.js';
 import { buildTutorialSearchQueries, getPrimarySearchQuery } from '../utils/searchQueries.js';
 
 type PlatformSearchPanelProps = {
   equipment: EquipmentCard;
+  variant?: EquipmentExerciseVariant;
 };
 
-export function PlatformSearchPanel({ equipment }: PlatformSearchPanelProps) {
-  const queries = buildTutorialSearchQueries(equipment);
+export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelProps) {
+  const queries = buildTutorialSearchQueries(equipment, variant);
+  const primaryQuery = getPrimarySearchQuery(equipment, variant);
   const queryOptions = [
-    ['推荐搜索词', getPrimarySearchQuery(equipment)],
+    ['推荐搜索词', primaryQuery],
     ['中文基础', queries.basicZh],
     ['新手教学', queries.beginnerZh],
     ['目标肌群', queries.muscleZh],
     ['常见错误', queries.mistakesZh],
     ['英文教程', queries.english]
   ] as const;
-  const [selectedQuery, setSelectedQuery] = useState(queryOptions[0][1]);
+  const [selectedQuery, setSelectedQuery] = useState(primaryQuery);
   const [copied, setCopied] = useState(false);
   const targets = useMemo(() => buildSearchTargets(selectedQuery), [selectedQuery]);
   const inWeChat = isWeChatBrowser();
+
+  useEffect(() => {
+    setSelectedQuery(primaryQuery);
+    setCopied(false);
+  }, [primaryQuery]);
 
   async function copySearchQuery() {
     await navigator.clipboard?.writeText(selectedQuery);

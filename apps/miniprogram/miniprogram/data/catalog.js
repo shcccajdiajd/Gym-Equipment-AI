@@ -77,6 +77,75 @@ exports.equipmentCatalog = [
             "常见为座椅加靠背，胸前两侧各有一根摆臂或肘垫，主要是胸部夹胸器械。",
             "如果只有座椅、靠背和胸前两根大弧形摆臂，没有站台、膝垫、引体把手或双杠把手，优先判断为蝴蝶机夹胸。"
         ],
+        "exerciseVariants": [
+            {
+                "id": "pec-deck-chest-fly",
+                "zhName": "蝴蝶机夹胸",
+                "enName": "Pec Deck Chest Fly",
+                "targetLabel": "胸肌",
+                "primaryMuscles": [
+                    "胸大肌"
+                ],
+                "secondaryMuscles": [
+                    "前三角肌"
+                ],
+                "summary": "通过向中间夹拢手臂，帮助新手找到胸肌收缩感。",
+                "adjustment": "坐垫高度调到肘部或把手与肩同高，背部贴住靠垫，胸口自然打开。",
+                "steps": [
+                    "双臂打开到胸部有轻微拉伸。",
+                    "像拥抱一样向中间夹拢。",
+                    "在中间停顿一秒，再慢慢还原。"
+                ],
+                "safety": [
+                    "肩前侧不舒服时缩小打开幅度。",
+                    "手肘保持微屈，不要完全伸直硬顶。"
+                ],
+                "commonErrors": [
+                    "借惯性猛夹。",
+                    "肩膀前顶，导致胸肌发力变弱。"
+                ],
+                "beginnerTip": "想象用两侧胸肌把上臂向中间带，而不是用手去推把手。",
+                "videoRecommendation": {
+                    "platform": "Bilibili",
+                    "title": "蝴蝶机夹胸教学",
+                    "searchQuery": "蝴蝶机夹胸 正确使用 教学"
+                }
+            },
+            {
+                "id": "pec-deck-rear-delt-fly",
+                "zhName": "反向蝴蝶机飞鸟",
+                "enName": "Reverse Pec Deck Rear Delt Fly",
+                "targetLabel": "肩后束",
+                "primaryMuscles": [
+                    "三角肌后束"
+                ],
+                "secondaryMuscles": [
+                    "菱形肌",
+                    "斜方肌中下束"
+                ],
+                "summary": "反向坐姿使用蝴蝶机，训练肩后束和上背部控制。",
+                "adjustment": "面向靠垫坐下，让胸口贴稳靠垫，把手高度调到肩膀附近。",
+                "steps": [
+                    "双手握住把手，肩膀下沉。",
+                    "用肘部带动双臂向身体两侧打开。",
+                    "打开到肩后侧收紧后，控制回到起点。"
+                ],
+                "safety": [
+                    "不要耸肩或甩动身体。",
+                    "重量不要太大，避免用斜方肌和腰背代偿。"
+                ],
+                "commonErrors": [
+                    "手臂伸得太直，变成手腕在拉。",
+                    "身体离开靠垫借力后摆。"
+                ],
+                "beginnerTip": "先用很轻的重量，专注感受肩膀后侧向外打开。",
+                "videoRecommendation": {
+                    "platform": "Bilibili",
+                    "title": "反向蝴蝶机后束教学",
+                    "searchQuery": "反向蝴蝶机 后束 正确使用 教学"
+                }
+            }
+        ],
         "videoRecommendation": {
             "platform": "Bilibili",
             "title": "蝴蝶机夹胸教学",

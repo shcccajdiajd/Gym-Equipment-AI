@@ -1,6 +1,31 @@
 # TODO
 
-## Current Phase: Vercel Temporary H5 Demo Deployment
+## Current Phase: Multi-Exercise Equipment Results
+
+- [x] Add a data model for multiple exercise variants on one equipment card.
+Acceptance:
+- [packages/shared/src/schemas.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/schemas.ts) supports optional `exerciseVariants`.
+- Existing equipment cards remain valid without variants.
+- `pec-deck-fly` includes both chest fly and rear-delt reverse fly variants.
+
+- [x] Let the H5 result page switch teaching content by selected exercise variant.
+Acceptance:
+- [apps/web/src/components/EquipmentResult.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/EquipmentResult.tsx) shows "你想用它练哪里？" for multi-use equipment.
+- Selecting a variant changes the displayed muscles, adjustment, steps, safety notes, common errors, and search panel input.
+- Single-use equipment keeps the old one-card result flow.
+
+- [x] Generate tutorial search terms from the selected exercise variant.
+Acceptance:
+- Chest fly defaults to `蝴蝶机夹胸 正确使用 教学`.
+- Rear-delt reverse fly can generate 后束 and `reverse pec deck rear delt fly` search terms.
+- Platform search URL generation remains centralized in [apps/web/src/utils/searchTargets.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchTargets.ts).
+
+- [ ] Redeploy the Vercel H5 frontend after the multi-exercise result-page change.
+Acceptance:
+- GitHub contains the multi-exercise commit.
+- Vercel production deployment is rebuilt from `main`.
+- Recognizing or manually opening `pec-deck-fly` shows both `胸肌` and `肩后束` options.
+- Selecting each option updates the tutorial search terms.
 
 - [x] Extract recognition into a platform-neutral core function.
 Acceptance:

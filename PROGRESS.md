@@ -1,9 +1,15 @@
 # Progress
 
-## Latest Update: Vercel Temporary H5 Demo Path
+## Latest Update: Multi-Exercise Equipment Results
 
 ## Completed
 
+- Added a platform-wide `exerciseVariants` data model so one recognized machine can expose multiple training uses without asking the vision model to infer user intent.
+- Added two launch variants for `pec-deck-fly`: `蝴蝶机夹胸` for chest and `反向蝴蝶机飞鸟` for rear delts.
+- Updated the H5 result page to show an "你想用它练哪里？" choice module when recognized equipment has multiple exercise variants.
+- Updated result-page teaching content so muscles, adjustment, steps, safety notes, common errors, and tutorial search queries follow the selected variant.
+- Updated tutorial search query generation to accept an optional exercise variant and generate variant-specific B站/抖音/小红书/百度 queries.
+- Synced the mini program catalog TypeScript snapshot from the shared catalog, while keeping the mini program product line paused.
 - Investigated the deployed Vercel H5 recognition failure and found the FC preflight response included duplicate CORS headers from both the Aliyun HTTP Trigger and the function response.
 - Removed function-level CORS headers from the Aliyun FC adapter so the deployed HTTP Trigger can be the single CORS authority.
 - Updated the Aliyun deployment docs to warn that duplicate `Access-Control-Allow-Origin` headers can make mobile browsers show a generic connection failure.
@@ -55,10 +61,18 @@
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
 - [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
 - [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx)
+- [apps/web/src/components/EquipmentResult.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/EquipmentResult.tsx)
+- [apps/web/src/components/EquipmentResult.test.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/EquipmentResult.test.tsx)
+- [apps/web/src/components/PlatformSearchPanel.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/PlatformSearchPanel.tsx)
 - [apps/web/src/types.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/types.ts)
 - [apps/web/src/utils/api.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/api.ts)
 - [apps/web/src/utils/api.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/api.test.ts)
 - [apps/web/src/utils/image.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/image.ts)
+- [apps/web/src/utils/searchQueries.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchQueries.ts)
+- [apps/web/src/utils/searchQueries.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchQueries.test.ts)
+- [packages/shared/src/catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/catalog.ts)
+- [packages/shared/src/catalog.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/catalog.test.ts)
+- [packages/shared/src/schemas.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/schemas.ts)
 
 ## Current Run State
 
@@ -69,10 +83,11 @@
 - Deployment upload artifacts have been prepared locally:
   - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
-- `npm test` passes with `69` tests.
+- `npm test` passes with `73` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:web:vercel` is the current Vercel demo build command and should be used by Vercel.
+- `npm run build:web:vercel` passes after the multi-exercise result-page change.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run build:fc:fullstack` passes and emits a FC upload zip with root `index.js` and `public/` static files.
 - `npm run typecheck` passes across workspaces.
@@ -89,6 +104,7 @@
 - OSS static hosting is paused until a static website endpoint/custom domain strategy is used.
 - Vercel's default domain may be slow or unstable for some mainland-China users, so it needs real phone testing before sharing widely.
 - The Aliyun FC package must be rebuilt and re-uploaded after the CORS deduplication change before Vercel recognition can be retested.
+- The Vercel frontend needs to redeploy from GitHub after the multi-exercise result-page commit before testers can see the new "练哪里" module.
 - Platform search jumps still need real phone testing from the deployed Vercel H5 domain.
 
 ## Completed
