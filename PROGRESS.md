@@ -1,6 +1,6 @@
 # Progress
 
-## Latest Update: Aliyun Default Domain Download Behavior
+## Latest Update: Vercel Temporary H5 Demo Path
 
 ## Completed
 
@@ -16,6 +16,10 @@
 - Added `npm run build:fc:fullstack`, which builds the H5 app for same-origin `/api/recognitions`, bundles the FC handler, and packages `index.js` plus `public/` into [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip).
 - Verified the redeployed FC fullstack default URL returns the correct `index.html` body and `Content-Type: text/html`, but Aliyun still returns `Content-Disposition: attachment` on the `fcapp.run` default domain.
 - Verified the same forced `Content-Disposition: attachment` header appears on bundled JS assets, so the download behavior is caused by the default-domain/gateway layer rather than by the H5 build or handler routing.
+- Promoted Vercel from historical optional config to the current temporary H5 demo path, while keeping the Aliyun FC recognition API as the backend.
+- Added `npm run build:web:vercel`, which builds `apps/web` with `VITE_API_BASE_URL=https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run`.
+- Updated [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) so Vercel can build from the monorepo root and output [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist).
+- Added [docs/deployment/vercel-h5-demo.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/vercel-h5-demo.md) with the exact import settings and phone smoke-test checklist.
 - Switched the active deployment direction away from Vercel/Render and toward Aliyun OSS static website hosting plus Aliyun Function Compute.
 - Extracted platform-neutral recognition logic into [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts).
 - Added [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts) so local Fastify and FC can share the same provider selection without duplicating code.
@@ -33,6 +37,8 @@
 - [PROGRESS.md](/Users/shc/Documents/Codex/2026-05-24/ai/PROGRESS.md)
 - [TODO.md](/Users/shc/Documents/Codex/2026-05-24/ai/TODO.md)
 - [package.json](/Users/shc/Documents/Codex/2026-05-24/ai/package.json)
+- [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json)
+- [docs/deployment/vercel-h5-demo.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/vercel-h5-demo.md)
 - [docs/deployment/h5-public-beta.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/h5-public-beta.md)
 - [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md)
 - [services/api/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/package.json)
@@ -63,6 +69,7 @@
 - `npm test` passes with `69` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
+- `npm run build:web:vercel` is the current Vercel demo build command and should be used by Vercel.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run build:fc:fullstack` passes and emits a FC upload zip with root `index.js` and `public/` static files.
 - `npm run typecheck` passes across workspaces.
@@ -74,10 +81,11 @@
 
 ## Current Problems
 
-- Aliyun default domains for both OSS object URLs and FC `fcapp.run` force browser downloads, so a custom domain or a different browser-friendly frontend hosting entry is required for public H5 sharing.
+- Aliyun default domains for both OSS object URLs and FC `fcapp.run` force browser downloads, so Vercel is now the temporary browser-friendly H5 entry while custom-domain setup is pending.
 - The FC default domain remains useful as the API endpoint, but should no longer be treated as the final H5 page URL.
 - OSS static hosting is paused until a static website endpoint/custom domain strategy is used.
-- Platform search jumps still need real phone testing from the deployed H5 domain.
+- Vercel's default domain may be slow or unstable for some mainland-China users, so it needs real phone testing before sharing widely.
+- Platform search jumps still need real phone testing from the deployed Vercel H5 domain.
 
 ## Completed
 

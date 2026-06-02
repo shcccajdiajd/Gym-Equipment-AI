@@ -1,6 +1,6 @@
 # TODO
 
-## Current Phase: Aliyun OSS + FC Deployment
+## Current Phase: Vercel Temporary H5 Demo Deployment
 
 - [x] Extract recognition into a platform-neutral core function.
 Acceptance:
@@ -94,16 +94,30 @@ Acceptance:
 - FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`. Current status: enough is configured for live recognition to succeed.
 - The H5 frontend calls same-origin `/api/recognitions`.
 
-- [ ] Choose and configure a browser-renderable public H5 entry.
+- [x] Choose and configure a browser-renderable public H5 entry.
 Acceptance:
 - Do not rely on OSS default object URLs or FC `fcapp.run` default URLs as the public page entry because both force browser downloads.
-- Preferred Aliyun path: bind a custom domain to OSS static website hosting or FC, then verify the response no longer includes `Content-Disposition: attachment`.
-- If a custom domain is not available now, choose a different frontend hosting provider that can render static HTML directly, while keeping Aliyun FC as the recognition API.
-- The final public URL opens the H5 page directly on a phone browser.
+- Current temporary path: deploy `apps/web` to Vercel and keep Aliyun FC as the recognition API.
+- The root [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) builds `apps/web` with `pnpm run build:web:vercel`.
+- No provider API key is added to Vercel frontend environment variables.
+
+- [ ] Deploy the H5 frontend to Vercel.
+Acceptance:
+- GitHub has the latest commit containing [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json).
+- Vercel imports `shcccajdiajd/Gym-Equipment-AI` from the monorepo root.
+- Vercel uses `pnpm run build:web:vercel` and outputs `apps/web/dist`.
+- Vercel returns a `*.vercel.app` URL that opens the H5 page directly without downloading.
+- The built frontend calls `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/api/recognitions`.
+
+- [ ] Revisit Aliyun custom-domain deployment after the quick demo link is live.
+Acceptance:
+- Bind a custom domain to OSS static website hosting or FC.
+- Verify the response no longer includes `Content-Disposition: attachment`.
+- Decide whether to keep Vercel as temporary only or replace it with the domestic custom-domain entry.
 
 - [ ] Run deployed phone smoke test.
 Acceptance:
-- A phone opens the chosen public H5 URL outside local-only networking.
+- A phone opens the Vercel public H5 URL outside local-only networking.
 - Uploading an image reaches FC and returns recognized, low-confidence, unsupported, or clear error state.
 - B站/抖音/小红书/百度 buttons are clickable and copy-search fallback works.
 - WeChat in-app browser shows the “用浏览器打开” guidance.

@@ -75,9 +75,11 @@ The current Aliyun provider uses DashScope's OpenAI-compatible endpoint, so the 
 
 If the API log shows `403 Access denied`, first check `ALIYUN_MODEL`. In local testing, `qwen-vl-max-latest` was denied for the current key while `qwen3-vl-plus` returned `200`, so `qwen3-vl-plus` is the recommended default for this project.
 
-For public H5 beta deployment, the primary path is now Aliyun OSS static website hosting for `apps/web` plus Aliyun Function Compute for recognition. Use [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md). The local Fastify API still exposes `GET /health` and `GET /api/health` for development health checks.
+For a fast shareable H5 demo link, use Vercel for `apps/web` while keeping recognition on Aliyun FC. Follow [docs/deployment/vercel-h5-demo.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/vercel-h5-demo.md). This is the current fastest path while Aliyun custom-domain setup is not ready.
 
-The older [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) and [vercel.json](/Users/shc/Documents/Codex/2026-05-24/ai/vercel.json) files remain as historical/optional hosting presets, but they are no longer the recommended deployment path.
+For a longer-term China-friendly public beta, use Aliyun OSS static website hosting plus Aliyun Function Compute with a custom domain. Use [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md). The local Fastify API still exposes `GET /health` and `GET /api/health` for development health checks.
+
+The older [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) file remains as a historical/optional hosting preset, but it is no longer the recommended deployment path.
 
 ## Recognition Providers
 
@@ -92,6 +94,7 @@ The older [render.yaml](/Users/shc/Documents/Codex/2026-05-24/ai/render.yaml) an
 npm test
 npm run build:web
 npm run build:web:aliyun
+npm run build:web:vercel
 npm run build:fc
 npm run build:fc:fullstack
 npm run build
@@ -138,8 +141,7 @@ node --import tsx scripts/sync-catalog.ts
 1. Confirm the 20 launch equipment cards are complete and reviewed for safety wording.
 2. Set `RECOGNIZER_PROVIDER=aliyun` and a real `ALIYUN_API_KEY` in [services/api/.env](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/.env).
 3. Run `npm test`.
-4. Run `npm run build:fc:fullstack` for the current FC-only public beta path.
-5. Upload [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) to Aliyun FC with Handler `index.handler`.
-6. Open the FC HTTP Trigger root URL in a phone browser.
-7. Test the H5 flow on a real phone browser, including image upload, result rendering, Bilibili search, Douyin/Xiaohongshu/Baidu search buttons, search-term copying, and WeChat in-app browser messaging.
-8. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.
+4. For the fastest demo link, push to GitHub and import the repo into Vercel using [docs/deployment/vercel-h5-demo.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/vercel-h5-demo.md).
+5. For Aliyun-only deployment, bind a custom domain before using OSS or FC as the public H5 entry; default Aliyun domains force browser downloads.
+6. Test the H5 flow on a real phone browser, including image upload, result rendering, Bilibili search, Douyin/Xiaohongshu/Baidu search buttons, search-term copying, and WeChat in-app browser messaging.
+7. Review [docs/qa/release-checklist.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/qa/release-checklist.md) before release.
