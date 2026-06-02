@@ -184,6 +184,76 @@ export const equipmentCatalog = [
       "头顶上方有横杆，从上往下拉，常配有固定大腿的腿垫。",
       "是竖直下拉轨迹，不是水平向后拉到腹部的坐姿划船。"
     ],
+    "exerciseVariants": [
+      {
+        "id": "lat-pulldown-wide-grip",
+        "zhName": "宽握高位下拉",
+        "enName": "Wide-Grip Lat Pulldown",
+        "targetLabel": "背阔肌宽度",
+        "primaryMuscles": [
+          "背阔肌"
+        ],
+        "secondaryMuscles": [
+          "肱二头肌",
+          "大圆肌"
+        ],
+        "summary": "通过较宽握距学习背阔肌下拉发力，适合新手建立背部宽度训练感觉。",
+        "adjustment": "腿垫压稳大腿，握距略宽于肩，身体微微后仰但不要躺倒。",
+        "steps": [
+          "先沉肩，让肩膀远离耳朵。",
+          "用肘部向身体两侧下拉，把横杆拉到锁骨附近。",
+          "控制横杆回到顶部，让背部被拉长。"
+        ],
+        "safety": [
+          "不要拉到脖子后面。",
+          "不要大幅后仰借力。"
+        ],
+        "commonErrors": [
+          "先弯手臂而不是先沉肩。",
+          "每次回程都耸肩放松。"
+        ],
+        "beginnerTip": "想象把肘部塞进口袋，背阔肌会更容易参与。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "宽握高位下拉教学",
+          "searchQuery": "宽握高位下拉 背阔肌 教学"
+        }
+      },
+      {
+        "id": "lat-pulldown-close-neutral",
+        "zhName": "近握高位下拉",
+        "enName": "Close-Grip Neutral Pulldown",
+        "targetLabel": "背部厚度",
+        "primaryMuscles": [
+          "背阔肌"
+        ],
+        "secondaryMuscles": [
+          "肱二头肌",
+          "菱形肌"
+        ],
+        "summary": "使用近握或中立握把下拉，更容易把肘部向身体两侧和下方收。",
+        "adjustment": "换成近握或 V 型握把，腿垫固定大腿，胸口自然挺起。",
+        "steps": [
+          "先沉肩并收紧核心。",
+          "把握把拉向上胸或锁骨下方。",
+          "夹紧背部后慢慢放回起点。"
+        ],
+        "safety": [
+          "手腕保持中立，不要硬掰。",
+          "不要用身体后仰把重量甩下来。"
+        ],
+        "commonErrors": [
+          "只用二头肌硬拉。",
+          "底部过度挺腰顶胸。"
+        ],
+        "beginnerTip": "近握版本通常更容易找到背部发力，适合第一次学习下拉。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "近握高位下拉教学",
+          "searchQuery": "近握高位下拉 新手教学"
+        }
+      }
+    ],
     "videoRecommendation": {
       "platform": "Bilibili",
       "title": "高位下拉新手教学",
@@ -226,6 +296,77 @@ export const equipmentCatalog = [
     "recognitionHints": [
       "前方有把手，动作是水平向后拉到躯干或下腹，不是向胸前夹拢。",
       "常见有胸垫、脚踏或低位拉柄，属于背部水平拉器械。"
+    ],
+    "exerciseVariants": [
+      {
+        "id": "seated-row-lat-focus",
+        "zhName": "坐姿划船背阔肌版",
+        "enName": "Seated Row Lat Focus",
+        "targetLabel": "背阔肌",
+        "primaryMuscles": [
+          "背阔肌"
+        ],
+        "secondaryMuscles": [
+          "肱二头肌",
+          "大圆肌"
+        ],
+        "summary": "用较低肘位把手拉向下腹，更偏向背阔肌参与。",
+        "adjustment": "胸口贴稳胸垫或坐稳，握把高度略低，肩膀不要前探过多。",
+        "steps": [
+          "先沉肩并保持胸口稳定。",
+          "用肘部向后下方带，把把手拉向下腹。",
+          "控制回程，让背阔肌被拉长。"
+        ],
+        "safety": [
+          "腰背保持稳定，不要前后甩。",
+          "回程不要突然塌肩。"
+        ],
+        "commonErrors": [
+          "把手拉得太高变成耸肩划船。",
+          "身体后仰代替背部发力。"
+        ],
+        "beginnerTip": "想象肘部贴着身体两侧向后走，而不是手腕在拽。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "坐姿划船背阔肌教学",
+          "searchQuery": "坐姿划船 背阔肌 发力 教学"
+        }
+      },
+      {
+        "id": "seated-row-upper-back",
+        "zhName": "坐姿划船上背版",
+        "enName": "Seated Row Upper Back Focus",
+        "targetLabel": "上背",
+        "primaryMuscles": [
+          "菱形肌",
+          "斜方肌中下束"
+        ],
+        "secondaryMuscles": [
+          "后三角肌",
+          "背阔肌"
+        ],
+        "summary": "用较高肘位向胸下方划船，更偏向上背部和肩胛控制。",
+        "adjustment": "把胸垫调稳，选择较宽或中等握距，让把手能拉向胸下方。",
+        "steps": [
+          "肩膀下沉，胸口贴稳支撑。",
+          "肘部向外后方打开，把把手拉向胸下方。",
+          "肩胛轻轻夹紧后控制回程。"
+        ],
+        "safety": [
+          "不要耸肩夹脖子。",
+          "不要为了夹肩胛过度挺腰。"
+        ],
+        "commonErrors": [
+          "肘部过低导致又变成背阔肌主导。",
+          "顶端用斜方肌耸肩代偿。"
+        ],
+        "beginnerTip": "动作末端想象肩胛骨向中间靠近，但脖子保持放松。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "坐姿划船上背教学",
+          "searchQuery": "坐姿划船 上背 发力 教学"
+        }
+      }
     ],
     "videoRecommendation": {
       "platform": "Bilibili",
@@ -307,6 +448,107 @@ export const equipmentCatalog = [
       "膝盖完全锁死。"
     ],
     "beginnerTip": "先用中等脚位，等熟悉后再调整脚位体验不同刺激。",
+    "exerciseVariants": [
+      {
+        "id": "leg-press-quad-focus",
+        "zhName": "腿举机股四头肌版",
+        "enName": "Leg Press Quad Focus",
+        "targetLabel": "大腿前侧",
+        "primaryMuscles": [
+          "股四头肌"
+        ],
+        "secondaryMuscles": [
+          "臀大肌"
+        ],
+        "summary": "中低脚位更偏向训练大腿前侧，适合新手建立腿推动作。",
+        "adjustment": "双脚放在踏板中部略偏低的位置，脚距约与肩同宽。",
+        "steps": [
+          "膝盖跟随脚尖方向下放。",
+          "下放到腰背仍能贴稳靠垫的位置。",
+          "脚掌踩实，把踏板推回但不要锁死膝盖。"
+        ],
+        "safety": [
+          "腰部不要离开靠垫。",
+          "膝盖不要内扣。"
+        ],
+        "commonErrors": [
+          "脚位太低导致膝盖不舒服。",
+          "顶端完全锁死膝盖。"
+        ],
+        "beginnerTip": "先用中等深度和轻重量，确认膝盖舒服再加重量。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "腿举机练股四头肌教学",
+          "searchQuery": "腿举机 股四头肌 发力 教学"
+        }
+      },
+      {
+        "id": "leg-press-glute-focus",
+        "zhName": "腿举机臀腿版",
+        "enName": "Leg Press Glute Focus",
+        "targetLabel": "臀腿",
+        "primaryMuscles": [
+          "臀大肌"
+        ],
+        "secondaryMuscles": [
+          "腘绳肌",
+          "股四头肌"
+        ],
+        "summary": "脚位略高、下放受控，更偏向臀部和腿后侧参与。",
+        "adjustment": "双脚放在踏板中部略偏高的位置，保持脚跟能稳定发力。",
+        "steps": [
+          "缓慢下放，让臀部和腿后侧有拉伸。",
+          "脚跟踩稳向上推。",
+          "顶端收紧臀部但不要腰部离垫。"
+        ],
+        "safety": [
+          "不要下放到骨盆后卷。",
+          "不要为了深度牺牲腰背稳定。"
+        ],
+        "commonErrors": [
+          "脚位太高导致活动范围很小。",
+          "用腰去顶而不是用臀腿推。"
+        ],
+        "beginnerTip": "如果腰背开始卷起，说明深度已经超过当前可控范围。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "腿举机练臀教学",
+          "searchQuery": "腿举机 臀部 发力 教学"
+        }
+      },
+      {
+        "id": "leg-press-calf-press",
+        "zhName": "腿举机提踵",
+        "enName": "Leg Press Calf Press",
+        "targetLabel": "小腿",
+        "primaryMuscles": [
+          "腓肠肌",
+          "比目鱼肌"
+        ],
+        "secondaryMuscles": [],
+        "summary": "在腿举机踏板边缘做踝关节伸展，用来训练小腿。",
+        "adjustment": "前脚掌踩在踏板下缘或安全位置，膝盖保持微屈。",
+        "steps": [
+          "脚跟缓慢下沉到小腿被拉伸。",
+          "踮起脚尖把踏板推远。",
+          "顶端停顿后慢慢回到拉伸位。"
+        ],
+        "safety": [
+          "确认脚掌不会从踏板滑落。",
+          "不要用弹震完成动作。"
+        ],
+        "commonErrors": [
+          "只做很小半程。",
+          "膝盖反复弯伸代替脚踝发力。"
+        ],
+        "beginnerTip": "先用很轻的重量熟悉脚掌位置，安全优先。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "腿举机提踵教学",
+          "searchQuery": "腿举机 提踵 小腿 教学"
+        }
+      }
+    ],
     "videoRecommendation": {
       "platform": "Bilibili",
       "title": "腿举机使用教学",
@@ -709,6 +951,76 @@ export const equipmentCatalog = [
       "抬起时速度过快。"
     ],
     "beginnerTip": "先做小幅度，确认没有下背不适后再增加范围。",
+    "exerciseVariants": [
+      {
+        "id": "back-extension-lower-back",
+        "zhName": "背部伸展下背版",
+        "enName": "Back Extension Lower Back Focus",
+        "targetLabel": "下背",
+        "primaryMuscles": [
+          "竖脊肌"
+        ],
+        "secondaryMuscles": [
+          "臀大肌",
+          "腘绳肌"
+        ],
+        "summary": "通过受控伸展训练下背稳定能力，适合轻重量入门。",
+        "adjustment": "支撑垫放在髋部以下，身体能自然前屈和抬起。",
+        "steps": [
+          "从身体前屈位开始。",
+          "用下背和臀部一起把躯干抬到接近直线。",
+          "停顿后慢慢下放。"
+        ],
+        "safety": [
+          "顶端不要过度后仰。",
+          "颈部保持中立。"
+        ],
+        "commonErrors": [
+          "抬到顶端继续折腰。",
+          "速度太快导致下背不适。"
+        ],
+        "beginnerTip": "先做小幅度慢动作，确认下背没有刺痛。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "背部伸展下背教学",
+          "searchQuery": "背部伸展机 下背 教学"
+        }
+      },
+      {
+        "id": "back-extension-glute-ham",
+        "zhName": "背部伸展臀腿版",
+        "enName": "Back Extension Glute Ham Focus",
+        "targetLabel": "臀腿后侧",
+        "primaryMuscles": [
+          "臀大肌",
+          "腘绳肌"
+        ],
+        "secondaryMuscles": [
+          "竖脊肌"
+        ],
+        "summary": "把动作理解成髋伸，更偏向臀部和腿后侧发力。",
+        "adjustment": "支撑垫卡在髋部下方，让髋关节可以折叠，上背保持自然。",
+        "steps": [
+          "下放时让髋部折叠，背部保持稳定。",
+          "脚跟踩稳，用臀部带动身体抬起。",
+          "到身体接近直线时收紧臀部后下放。"
+        ],
+        "safety": [
+          "不要用腰猛甩起来。",
+          "不要顶端过度反弓。"
+        ],
+        "commonErrors": [
+          "全程圆背导致下背压力大。",
+          "只抬头挺胸而没有髋伸。"
+        ],
+        "beginnerTip": "想象臀部把身体推起来，而不是腰把身体甩起来。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "背部伸展练臀腿教学",
+          "searchQuery": "背部伸展机 臀腿 发力 教学"
+        }
+      }
+    ],
     "videoRecommendation": {
       "platform": "Bilibili",
       "title": "背部伸展机教学",
@@ -753,6 +1065,76 @@ export const equipmentCatalog = [
       "器械整体较高，支持向上拉或向下压，不是坐姿拉或夹胸设备。",
       "必须能看到膝垫/站台以及引体把手或双杠把手；如果只是座椅靠背加胸前摆臂，不要选辅助引体向上/双杠臂屈伸机。"
     ],
+    "exerciseVariants": [
+      {
+        "id": "assisted-pull-up",
+        "zhName": "辅助引体向上",
+        "enName": "Assisted Pull-up",
+        "targetLabel": "背部",
+        "primaryMuscles": [
+          "背阔肌"
+        ],
+        "secondaryMuscles": [
+          "肱二头肌",
+          "菱形肌"
+        ],
+        "summary": "用膝垫辅助完成引体向上，降低自身体重带来的难度。",
+        "adjustment": "选择较大的辅助重量开始，跪稳膝垫，双手握住上方把手。",
+        "steps": [
+          "先沉肩并收紧核心。",
+          "向上拉到下巴接近把手高度。",
+          "控制身体下降到底部但不要塌肩。"
+        ],
+        "safety": [
+          "上下膝垫时扶稳把手。",
+          "不要突然松手让膝垫弹回。"
+        ],
+        "commonErrors": [
+          "把辅助重量逻辑理解反。",
+          "底部完全放松肩膀。"
+        ],
+        "beginnerTip": "辅助重量越大，动作越轻；第一次宁可选更大的辅助。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "辅助引体向上教学",
+          "searchQuery": "辅助引体向上 正确使用 教学"
+        }
+      },
+      {
+        "id": "assisted-dip",
+        "zhName": "辅助双杠臂屈伸",
+        "enName": "Assisted Dip Machine",
+        "targetLabel": "胸/三头",
+        "primaryMuscles": [
+          "肱三头肌",
+          "胸大肌"
+        ],
+        "secondaryMuscles": [
+          "前三角肌"
+        ],
+        "summary": "用膝垫辅助完成双杠臂屈伸，训练手臂后侧和下胸推力。",
+        "adjustment": "选择合适辅助重量，双手握住双杠把手，身体保持稳定。",
+        "steps": [
+          "肩膀下沉，身体稳定在双杠上方。",
+          "手肘弯曲，缓慢下放到舒适深度。",
+          "向下压把手，把身体推回起点。"
+        ],
+        "safety": [
+          "肩前侧不适时缩小下放幅度。",
+          "不要在底部突然反弹。"
+        ],
+        "commonErrors": [
+          "肩膀耸起挤压。",
+          "身体晃动太大。"
+        ],
+        "beginnerTip": "如果想更多练胸，身体可轻微前倾；如果想更多练三头，身体更直立。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "辅助双杠臂屈伸教学",
+          "searchQuery": "辅助双杠臂屈伸 教学"
+        }
+      }
+    ],
     "videoRecommendation": {
       "platform": "Bilibili",
       "title": "辅助引体机教学",
@@ -791,6 +1173,75 @@ export const equipmentCatalog = [
       "脚跟抬起。"
     ],
     "beginnerTip": "先用较浅范围熟悉轨迹，再逐步加深。",
+    "exerciseVariants": [
+      {
+        "id": "hack-squat-quad-focus",
+        "zhName": "哈克深蹲股四头肌版",
+        "enName": "Hack Squat Quad Focus",
+        "targetLabel": "大腿前侧",
+        "primaryMuscles": [
+          "股四头肌"
+        ],
+        "secondaryMuscles": [
+          "臀大肌"
+        ],
+        "summary": "脚位相对中低，更偏向大腿前侧训练。",
+        "adjustment": "肩膀顶稳护垫，双脚与肩同宽，脚位不要过高。",
+        "steps": [
+          "解锁安全把手。",
+          "膝盖跟随脚尖方向下蹲。",
+          "脚掌踩实推回起点但不要锁死膝盖。"
+        ],
+        "safety": [
+          "膝盖不要内扣。",
+          "不要在底部失控反弹。"
+        ],
+        "commonErrors": [
+          "脚跟抬起。",
+          "为了深度导致腰背离开靠垫。"
+        ],
+        "beginnerTip": "先用较浅深度熟悉轨迹，再逐渐增加幅度。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "哈克深蹲股四头肌教学",
+          "searchQuery": "哈克深蹲 股四头肌 教学"
+        }
+      },
+      {
+        "id": "hack-squat-glute-focus",
+        "zhName": "哈克深蹲臀腿版",
+        "enName": "Hack Squat Glute Focus",
+        "targetLabel": "臀腿",
+        "primaryMuscles": [
+          "臀大肌"
+        ],
+        "secondaryMuscles": [
+          "股四头肌",
+          "腘绳肌"
+        ],
+        "summary": "脚位略高并控制下放，更偏向臀部和整体臀腿发力。",
+        "adjustment": "脚位放得比股四头肌版本略高，脚跟稳定贴住踏板。",
+        "steps": [
+          "缓慢下蹲到臀腿有拉伸。",
+          "脚跟和全脚掌踩实向上推。",
+          "顶端收紧臀部但不要过度挺腰。"
+        ],
+        "safety": [
+          "不要下蹲到骨盆失控卷起。",
+          "不要用腰部顶起身体。"
+        ],
+        "commonErrors": [
+          "脚位过高导致动作幅度太小。",
+          "膝盖方向和脚尖不一致。"
+        ],
+        "beginnerTip": "臀腿版本更需要控制深度，优先稳定再加重量。",
+        "videoRecommendation": {
+          "platform": "Bilibili",
+          "title": "哈克深蹲练臀教学",
+          "searchQuery": "哈克深蹲 臀部 发力 教学"
+        }
+      }
+    ],
     "videoRecommendation": {
       "platform": "Bilibili",
       "title": "哈克深蹲机教学",

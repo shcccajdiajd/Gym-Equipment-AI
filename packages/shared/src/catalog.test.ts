@@ -24,7 +24,25 @@ describe('equipment catalog', () => {
     expect(card?.videoRecommendation.searchQuery).toContain('坐姿推胸机');
   });
 
-  it('models multi-use equipment with exercise variants', () => {
+  it('models all multi-use equipment with exercise variants', () => {
+    const multiUseEquipmentIds = [
+      'pec-deck-fly',
+      'lat-pulldown',
+      'seated-row',
+      'leg-press',
+      'back-extension-machine',
+      'assisted-pull-up-dip',
+      'hack-squat-machine'
+    ];
+
+    for (const id of multiUseEquipmentIds) {
+      const card = getEquipmentCard(id);
+
+      expect(card?.exerciseVariants?.length, `${id} should offer multiple exercise modes`).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('keeps pec deck reverse fly as a distinct exercise variant', () => {
     const card = getEquipmentCard('pec-deck-fly');
 
     expect(card?.exerciseVariants).toHaveLength(2);

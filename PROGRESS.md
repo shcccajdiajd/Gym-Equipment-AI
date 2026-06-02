@@ -1,15 +1,20 @@
 # Progress
 
-## Latest Update: Multi-Exercise Equipment Results
+## Latest Update: Expanded Multi-Exercise Equipment Coverage
 
 ## Completed
 
 - Added a platform-wide `exerciseVariants` data model so one recognized machine can expose multiple training uses without asking the vision model to infer user intent.
 - Added two launch variants for `pec-deck-fly`: `蝴蝶机夹胸` for chest and `反向蝴蝶机飞鸟` for rear delts.
+- Expanded exercise variants to every obviously multi-use machine in the current 20-equipment launch catalog: `pec-deck-fly`, `lat-pulldown`, `seated-row`, `leg-press`, `back-extension-machine`, `assisted-pull-up-dip`, and `hack-squat-machine`.
+- Added variant-specific teaching content and tutorial-search inputs for wide/close lat pulldown, lat/upper-back seated row, quad/glute/calf leg press, lower-back/glute-ham back extension, assisted pull-up/assisted dip, and quad/glute hack squat.
+- Kept single-purpose isolation machines as single result cards so the result page does not force unnecessary choices when the machine's main use is already clear.
 - Updated the H5 result page to show an "你想用它练哪里？" choice module when recognized equipment has multiple exercise variants.
 - Updated result-page teaching content so muscles, adjustment, steps, safety notes, common errors, and tutorial search queries follow the selected variant.
 - Updated tutorial search query generation to accept an optional exercise variant and generate variant-specific B站/抖音/小红书/百度 queries.
+- Added regression coverage to ensure all current multi-use equipment exposes at least two variants and non-pec-deck variants generate variant-specific tutorial search terms.
 - Synced the mini program catalog TypeScript snapshot from the shared catalog, while keeping the mini program product line paused.
+- Rebuilt the mini program runtime catalog JavaScript snapshot after the shared catalog expansion.
 - Investigated the deployed Vercel H5 recognition failure and found the FC preflight response included duplicate CORS headers from both the Aliyun HTTP Trigger and the function response.
 - Removed function-level CORS headers from the Aliyun FC adapter so the deployed HTTP Trigger can be the single CORS authority.
 - Updated the Aliyun deployment docs to warn that duplicate `Access-Control-Allow-Origin` headers can make mobile browsers show a generic connection failure.
@@ -70,6 +75,8 @@
 - [apps/web/src/utils/image.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/image.ts)
 - [apps/web/src/utils/searchQueries.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchQueries.ts)
 - [apps/web/src/utils/searchQueries.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchQueries.test.ts)
+- [apps/miniprogram/miniprogram/data/catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/data/catalog.ts)
+- [apps/miniprogram/miniprogram/data/catalog.js](/Users/shc/Documents/Codex/2026-05-24/ai/apps/miniprogram/miniprogram/data/catalog.js)
 - [packages/shared/src/catalog.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/catalog.ts)
 - [packages/shared/src/catalog.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/catalog.test.ts)
 - [packages/shared/src/schemas.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/schemas.ts)
@@ -83,11 +90,12 @@
 - Deployment upload artifacts have been prepared locally:
   - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
-- `npm test` passes with `73` tests.
+- `npm test` passes with `75` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:web:vercel` is the current Vercel demo build command and should be used by Vercel.
 - `npm run build:web:vercel` passes after the multi-exercise result-page change.
+- `npm run build:web:vercel` passes after expanding all obvious multi-use equipment variants.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run build:fc:fullstack` passes and emits a FC upload zip with root `index.js` and `public/` static files.
 - `npm run typecheck` passes across workspaces.

@@ -1,12 +1,19 @@
 # TODO
 
-## Current Phase: Multi-Exercise Equipment Results
+## Current Phase: Expanded Multi-Exercise Equipment Coverage
 
 - [x] Add a data model for multiple exercise variants on one equipment card.
 Acceptance:
 - [packages/shared/src/schemas.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/schemas.ts) supports optional `exerciseVariants`.
 - Existing equipment cards remain valid without variants.
 - `pec-deck-fly` includes both chest fly and rear-delt reverse fly variants.
+
+- [x] Expand exercise variants beyond蝴蝶机 to every obviously multi-use launch-catalog machine.
+Acceptance:
+- `pec-deck-fly`, `lat-pulldown`, `seated-row`, `leg-press`, `back-extension-machine`, `assisted-pull-up-dip`, and `hack-squat-machine` each expose at least two `exerciseVariants`.
+- Variant content includes target label, muscles, adjustment, steps, safety notes, common errors, beginner tip, and tutorial search query.
+- Single-purpose isolation machines remain single-card results instead of showing unnecessary choices.
+- [packages/shared/src/catalog.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/packages/shared/src/catalog.test.ts) fails if one of the current multi-use machines loses its variants.
 
 - [x] Let the H5 result page switch teaching content by selected exercise variant.
 Acceptance:
@@ -18,14 +25,15 @@ Acceptance:
 Acceptance:
 - Chest fly defaults to `蝴蝶机夹胸 正确使用 教学`.
 - Rear-delt reverse fly can generate 后束 and `reverse pec deck rear delt fly` search terms.
+- Non-pec-deck variants, such as `辅助双杠臂屈伸`, generate variant-specific platform search terms.
 - Platform search URL generation remains centralized in [apps/web/src/utils/searchTargets.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/searchTargets.ts).
 
 - [ ] Redeploy the Vercel H5 frontend after the multi-exercise result-page change.
 Acceptance:
 - GitHub contains the multi-exercise commit.
 - Vercel production deployment is rebuilt from `main`.
-- Recognizing or manually opening `pec-deck-fly` shows both `胸肌` and `肩后束` options.
-- Selecting each option updates the tutorial search terms.
+- Recognizing or manually opening `pec-deck-fly`, `lat-pulldown`, `seated-row`, `leg-press`, `back-extension-machine`, `assisted-pull-up-dip`, or `hack-squat-machine` shows the "你想用它练哪里？" module.
+- Selecting any option updates the teaching content and tutorial search terms.
 
 - [x] Extract recognition into a platform-neutral core function.
 Acceptance:
