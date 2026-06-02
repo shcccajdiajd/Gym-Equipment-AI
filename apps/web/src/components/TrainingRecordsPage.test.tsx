@@ -33,14 +33,19 @@ describe('training records page', () => {
     );
 
     expect(html).toContain('我的训练记录');
+    expect(html).toContain('训练日志');
+    expect(html).toContain('按日期查看');
+    expect(html.indexOf('训练日志')).toBeLessThan(html.indexOf('进步曲线'));
     expect(html).toContain('周一');
     expect(html).toContain('6/1');
     expect(html).toContain('进步曲线');
     expect(html).toContain('记录同一器械 2 次以上，即可看到重量变化曲线');
     expect(html).toContain(equipment.zhName);
-    expect(html).toContain('2026-06-01');
+    expect(html).toContain('1 条记录');
     expect(html).toContain('3 组 x 10 次 · 20 kg');
     expect(html).toContain('删除记录');
+    expect(html).not.toContain('本周快速筛选');
+    expect(html).not.toContain('class="block text-xs font-bold text-ink/50">2026-06-01');
     expect(html).not.toContain('导入计划');
     expect(html).not.toContain('该日无计划');
   });

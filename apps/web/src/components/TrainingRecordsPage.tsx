@@ -86,6 +86,24 @@ function ProgressSummaryCards({ summary }: { summary: ProgressSummary }) {
   );
 }
 
+function getDateGroupLabel(date: string) {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const todayKey = today.toISOString().slice(0, 10);
+  const yesterdayKey = yesterday.toISOString().slice(0, 10);
+
+  if (date === todayKey) {
+    return '今天';
+  }
+
+  if (date === yesterdayKey) {
+    return '昨天';
+  }
+
+  return date;
+}
+
 function DateRecordCard({
   record,
   onDelete,
@@ -109,8 +127,7 @@ function DateRecordCard({
         }}
         type="button"
       >
-        <span className="block text-xs font-bold text-ink/50">{record.date}</span>
-        <span className="mt-1 block text-lg font-black text-ink">{record.equipmentName}</span>
+        <span className="block text-lg font-black text-ink">{record.equipmentName}</span>
         <span className="mt-1 block text-sm text-ink/60">{record.exerciseName}</span>
         <span className="mt-3 block rounded-2xl bg-moss px-3 py-2 text-sm font-bold text-fern">
           {record.sets} 组 x {record.reps} 次 · {formatWeight(record.weight)}
@@ -160,9 +177,13 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
       <h1 className="text-3xl font-black text-ink">我的训练记录</h1>
       <p className="mt-2 text-sm leading-6 text-ink/60">轻量记录器械训练，看看重量有没有一点点往上走。</p>
 
-      <section className="mt-4 rounded-[2rem] bg-white p-4 shadow-soft">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-black text-ink">本周快速筛选</p>
+      <section className="mt-4 rounded-[2rem] bg-white p-5 shadow-soft">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-fern">Training Log</p>
+            <h2 className="mt-1 text-2xl font-black text-ink">训练日志</h2>
+            <p className="mt-1 text-sm text-ink/55">按日期查看</p>
+          </div>
           <button className="text-sm font-black text-fern" onClick={() => setSelectedDate('')} type="button">
             全部日期
           </button>
@@ -193,6 +214,34 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
               </button>
             );
           })}
+        </div>
+
+        <div className="mt-5 space-y-3">
+          {selectedDate && visibleRecords.length === 0 ? (
+            <div className="rounded-3xl bg-moss p-5">
+              <p className="text-lg font-black text-ink">这一天还没有训练记录</p>
+              <p className="mt-2 text-sm leading-6 text-ink/60">识别器械后点击‘记录本次训练’开始记录</p>
+            </div>
+          ) : visibleRecords.length === 0 ? (
+            <p className="rounded-3xl bg-moss p-4 text-ink/65">还没有训练记录。识别器械后可以记录本次训练。</p>
+          ) : (
+            groupedRecords.map((group) => (
+              <section className="space-y-3" key={group.date}>
+                <div className="flex items-center justify-between px-1">
+                  <h3 className="text-sm font-black text-ink/65">{getDateGroupLabel(group.date)}</h3>
+                  <span className="text-xs font-bold text-ink/45">{group.records.length} 条记录</span>
+                </div>
+                {group.records.map((record) => (
+                  <DateRecordCard
+                    key={record.id}
+                    onDelete={removeRecord}
+                    onOpenEquipment={onOpenEquipment}
+                    record={record}
+                  />
+                ))}
+              </section>
+            ))
+          )}
         </div>
       </section>
 
@@ -226,34 +275,6 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
             记录同一器械 2 次以上，即可看到重量变化曲线
           </p>
         )}
-      </section>
-
-      <section className="mt-4">
-        <h2 className="text-xl font-black text-ink">历史记录</h2>
-        <div className="mt-3 space-y-3">
-          {selectedDate && visibleRecords.length === 0 ? (
-            <div className="rounded-3xl bg-white p-5 shadow-soft">
-              <p className="text-lg font-black text-ink">这一天还没有训练记录</p>
-              <p className="mt-2 text-sm leading-6 text-ink/60">识别器械后点击‘记录本次训练’开始记录</p>
-            </div>
-          ) : visibleRecords.length === 0 ? (
-            <p className="rounded-3xl bg-white p-4 text-ink/65">还没有训练记录。识别器械后可以记录本次训练。</p>
-          ) : (
-            groupedRecords.map((group) => (
-              <section className="space-y-3" key={group.date}>
-                <h3 className="px-1 text-sm font-black text-ink/55">{group.date}</h3>
-                {group.records.map((record) => (
-                  <DateRecordCard
-                    key={record.id}
-                    onDelete={removeRecord}
-                    onOpenEquipment={onOpenEquipment}
-                    record={record}
-                  />
-                ))}
-              </section>
-            ))
-          )}
-        </div>
       </section>
     </main>
   );

@@ -1,6 +1,38 @@
 # TODO
 
-## Current Phase: Training Log Weekly Filter UX
+## Current Phase: Training Records Information Architecture
+
+- [x] Move date filtering and history into one `训练日志` module.
+Acceptance:
+- Page title remains `我的训练记录`.
+- The first module is titled `训练日志`.
+- The week selector copy is `按日期查看`.
+- `全部日期` remains visible on the right side of the log module.
+- The training log module appears before `进步曲线`.
+
+- [x] Simplify record grouping and cards.
+Acceptance:
+- Choosing `全部日期` shows records grouped by date.
+- Choosing one date shows only that date's records.
+- Group headers show `YYYY-MM-DD`, `今天`, or `昨天`, plus the number of records.
+- Individual record cards no longer repeat the date.
+- Cards show equipment name, exercise name, `X 组 x Y 次 · Z kg`, and `删除记录`.
+
+- [x] Keep progress curve as the second module.
+Acceptance:
+- `进步曲线` appears below `训练日志`.
+- The equipment selector remains.
+- Latest weight, max weight, first-vs-latest improvement, and the SVG line chart remain.
+- No month calendar, training plan, plan import, or cloud sync is added.
+
+- [x] Verify and commit the training-record IA update.
+Acceptance:
+- `npm test` exits `0`.
+- `npm run typecheck` exits `0`.
+- `npm run build:web:vercel` exits `0`.
+- A git commit is created for this phase.
+
+## Previous Phase: Training Log Weekly Filter UX
 
 - [x] Add a lightweight current-week selector to the training log.
 Acceptance:

@@ -77,7 +77,7 @@ Upload [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/
 
 The H5 MVP includes a small post-recognition training log. After an equipment result appears, users can tap `记录本次训练` and save date, equipment, exercise name, sets, reps, optional weight in kg, and an optional note. Records stay in browser `localStorage`; there is no login, cloud sync, raw image storage, training plan, or social feature.
 
-The home page keeps `拍照识别` as the primary CTA and exposes `我的训练记录` as a secondary entry. The training-records page can:
+The home page keeps `拍照识别` as the primary CTA and exposes `我的训练记录` as a secondary entry. The training-records page is structured as `训练日志` first, then `进步曲线`, so date filtering stays visually attached to the records it filters. It can:
 
 - Show a lightweight current-week 7-day selector with record dots.
 - Filter records by a selected date, while defaulting to all records grouped by date.

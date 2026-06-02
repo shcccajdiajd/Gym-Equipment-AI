@@ -4,6 +4,12 @@
 
 ## Completed
 
+- Reworked the H5 training-records information architecture so the page now reads as `按日期查看 -> 当天训练记录` followed by `按器械查看 -> 重量进步曲线`.
+- Moved the current-week selector and history list into a first card titled `训练日志`.
+- Renamed the selector copy from `本周快速筛选` to `按日期查看`, while keeping `全部日期` as the reset action.
+- Moved `进步曲线` below the training log and preserved the equipment selector, summary metrics, and SVG line chart.
+- Removed repeated date text from individual training-record cards because dates now live in the group header.
+- Added record counts beside each date group header, while still allowing group labels to show `今天`, `昨天`, or `YYYY-MM-DD`.
 - Optimized the H5 `我的训练记录` page with a lightweight current-week 7-day selector while avoiding training-plan language and scope.
 - Added weekday/date display, selected-date green highlight, and record-dot indicators for dates that have local training logs.
 - Changed the default training-log view to show all records grouped by date; tapping a day filters the history section to that date only.
