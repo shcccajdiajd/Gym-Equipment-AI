@@ -79,7 +79,8 @@ The H5 MVP includes a small post-recognition training log. After an equipment re
 
 The home page keeps `拍照识别` as the primary CTA and exposes `我的训练记录` as a secondary entry. The training-records page can:
 
-- Show records by date descending.
+- Show a lightweight current-week 7-day selector with record dots.
+- Filter records by a selected date, while defaulting to all records grouped by date.
 - Filter records by equipment.
 - Delete a single local record.
 - Open the related equipment detail from a record.

@@ -1,6 +1,35 @@
 # TODO
 
-## Current Phase: Lightweight Training Records And Progress Curve
+## Current Phase: Training Log Weekly Filter UX
+
+- [x] Add a lightweight current-week selector to the training log.
+Acceptance:
+- The page title remains `我的训练记录` or `训练日志`.
+- The selector shows seven days in the current week with weekday and date.
+- Selecting a date highlights it with a green solid circle.
+- Dates with training records show a small dot.
+- The UI does not use `训练日历`, `导入计划`, `该日无计划`, or other training-plan wording.
+
+- [x] Filter training records by selected day while preserving grouped history by default.
+Acceptance:
+- Before selecting a date, history records are grouped by date.
+- After selecting a date, only records from that date are shown.
+- If the selected date has no records, the page shows `这一天还没有训练记录` and `识别器械后点击‘记录本次训练’开始记录`.
+
+- [x] Preserve the progress curve with clearer low-data guidance.
+Acceptance:
+- Users can still select an equipment for the weight curve.
+- Fewer than two weighted records for the same equipment show `记录同一器械 2 次以上，即可看到重量变化曲线`.
+- No month calendar, training plan, cloud sync, or plan import is added.
+
+- [x] Verify and commit the weekly filter UX update.
+Acceptance:
+- `npm test` exits `0`.
+- `npm run typecheck` exits `0`.
+- `npm run build:web:vercel` exits `0`.
+- A git commit is created for this phase.
+
+## Previous Phase: Lightweight Training Records And Progress Curve
 
 - [x] Add local training-record storage.
 Acceptance:

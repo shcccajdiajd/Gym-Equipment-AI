@@ -33,10 +33,47 @@ describe('training records page', () => {
     );
 
     expect(html).toContain('我的训练记录');
+    expect(html).toContain('周一');
+    expect(html).toContain('6/1');
     expect(html).toContain('进步曲线');
-    expect(html).toContain('继续记录几次后即可看到进步曲线');
+    expect(html).toContain('记录同一器械 2 次以上，即可看到重量变化曲线');
     expect(html).toContain(equipment.zhName);
+    expect(html).toContain('2026-06-01');
     expect(html).toContain('3 组 x 10 次 · 20 kg');
     expect(html).toContain('删除记录');
+    expect(html).not.toContain('导入计划');
+    expect(html).not.toContain('该日无计划');
+  });
+
+  it('renders grouped records by default and a selected-date empty state', () => {
+    const storage = createFakeStorage();
+    const equipment = equipmentCatalog[0];
+    saveTrainingRecord(
+      {
+        equipmentId: equipment.id,
+        equipmentName: equipment.zhName,
+        exerciseName: equipment.zhName,
+        date: '2026-06-01',
+        sets: 3,
+        reps: 10,
+        weight: 20,
+        weightUnit: 'kg'
+      },
+      storage
+    );
+    vi.stubGlobal('localStorage', storage);
+
+    const html = renderToStaticMarkup(
+      <TrainingRecordsPage
+        initialSelectedDate="2026-06-03"
+        onBack={() => undefined}
+        onOpenEquipment={() => undefined}
+      />
+    );
+
+    expect(html).toContain('data-selected-date="2026-06-03"');
+    expect(html).toContain('这一天还没有训练记录');
+    expect(html).toContain('识别器械后点击‘记录本次训练’开始记录');
+    expect(html).not.toContain('3 组 x 10 次 · 20 kg');
   });
 });

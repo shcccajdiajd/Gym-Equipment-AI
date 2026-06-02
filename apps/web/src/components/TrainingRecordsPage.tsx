@@ -4,11 +4,15 @@ import type { ProgressPoint, ProgressSummary, TrainingRecord } from '../types.js
 import {
   buildProgressSeries,
   deleteTrainingRecord,
+  filterTrainingRecordsByDate,
   filterTrainingRecordsByEquipment,
+  getCurrentWeekDays,
+  groupTrainingRecordsByDate,
   readTrainingRecords
 } from '../utils/trainingRecords.js';
 
 type TrainingRecordsPageProps = {
+  initialSelectedDate?: string;
   onBack: () => void;
   onOpenEquipment: (equipment: EquipmentCard) => void;
 };
@@ -82,16 +86,62 @@ function ProgressSummaryCards({ summary }: { summary: ProgressSummary }) {
   );
 }
 
-export function TrainingRecordsPage({ onBack, onOpenEquipment }: TrainingRecordsPageProps) {
+function DateRecordCard({
+  record,
+  onDelete,
+  onOpenEquipment
+}: {
+  record: TrainingRecord;
+  onDelete: (id: string) => void;
+  onOpenEquipment: (equipment: EquipmentCard) => void;
+}) {
+  const equipment = getEquipmentCard(record.equipmentId);
+
+  return (
+    <article className="rounded-3xl bg-white p-4 shadow-soft">
+      <button
+        className="w-full text-left"
+        disabled={!equipment}
+        onClick={() => {
+          if (equipment) {
+            onOpenEquipment(equipment);
+          }
+        }}
+        type="button"
+      >
+        <span className="block text-xs font-bold text-ink/50">{record.date}</span>
+        <span className="mt-1 block text-lg font-black text-ink">{record.equipmentName}</span>
+        <span className="mt-1 block text-sm text-ink/60">{record.exerciseName}</span>
+        <span className="mt-3 block rounded-2xl bg-moss px-3 py-2 text-sm font-bold text-fern">
+          {record.sets} 组 x {record.reps} 次 · {formatWeight(record.weight)}
+        </span>
+        {record.note ? <span className="mt-2 block text-sm text-ink/55">{record.note}</span> : null}
+      </button>
+      <button className="mt-3 text-sm font-black text-clay" onClick={() => onDelete(record.id)} type="button">
+        删除记录
+      </button>
+    </article>
+  );
+}
+
+export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEquipment }: TrainingRecordsPageProps) {
   const [records, setRecords] = useState<TrainingRecord[]>(() =>
     typeof localStorage === 'undefined' ? [] : readTrainingRecords()
   );
   const [equipmentFilter, setEquipmentFilter] = useState('');
-  const visibleRecords = useMemo(
+  const [selectedDate, setSelectedDate] = useState(initialSelectedDate);
+  const weekDays = useMemo(() => getCurrentWeekDays(), []);
+  const filteredByEquipment = useMemo(
     () => filterTrainingRecordsByEquipment(records, equipmentFilter),
     [equipmentFilter, records]
   );
-  const selectedEquipmentId = equipmentFilter || visibleRecords[0]?.equipmentId || '';
+  const visibleRecords = useMemo(
+    () => filterTrainingRecordsByDate(filteredByEquipment, selectedDate),
+    [filteredByEquipment, selectedDate]
+  );
+  const groupedRecords = useMemo(() => groupTrainingRecordsByDate(visibleRecords), [visibleRecords]);
+  const recordDates = useMemo(() => new Set(records.map((record) => record.date)), [records]);
+  const selectedEquipmentId = equipmentFilter || filteredByEquipment[0]?.equipmentId || '';
   const selectedEquipmentRecords = filterTrainingRecordsByEquipment(records, selectedEquipmentId);
   const progress = buildProgressSeries(selectedEquipmentRecords);
 
@@ -109,6 +159,42 @@ export function TrainingRecordsPage({ onBack, onOpenEquipment }: TrainingRecords
       </button>
       <h1 className="text-3xl font-black text-ink">我的训练记录</h1>
       <p className="mt-2 text-sm leading-6 text-ink/60">轻量记录器械训练，看看重量有没有一点点往上走。</p>
+
+      <section className="mt-4 rounded-[2rem] bg-white p-4 shadow-soft">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-black text-ink">本周快速筛选</p>
+          <button className="text-sm font-black text-fern" onClick={() => setSelectedDate('')} type="button">
+            全部日期
+          </button>
+        </div>
+        <div className="mt-3 grid grid-cols-7 gap-2">
+          {weekDays.map((day) => {
+            const selected = day.date === selectedDate;
+            const hasRecord = recordDates.has(day.date);
+
+            return (
+              <button
+                aria-label={`${day.weekday} ${day.dayLabel}`}
+                className="flex flex-col items-center gap-1"
+                data-selected-date={selected ? day.date : undefined}
+                key={day.date}
+                onClick={() => setSelectedDate(day.date)}
+                type="button"
+              >
+                <span className="text-[0.68rem] font-bold text-ink/45">{day.weekday}</span>
+                <span
+                  className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-black ${
+                    selected ? 'bg-fern text-white' : 'bg-moss text-fern'
+                  }`}
+                >
+                  {day.dayLabel.split('/')[1]}
+                </span>
+                <span className={`h-1.5 w-1.5 rounded-full ${hasRecord ? 'bg-fern' : 'bg-transparent'}`} />
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       <section className="mt-4 rounded-[2rem] bg-white p-5 shadow-soft">
         <div className="flex items-center justify-between gap-3">
@@ -137,7 +223,7 @@ export function TrainingRecordsPage({ onBack, onOpenEquipment }: TrainingRecords
           </>
         ) : (
           <p className="mt-4 rounded-3xl bg-moss p-4 text-sm font-bold text-fern">
-            继续记录几次后即可看到进步曲线
+            记录同一器械 2 次以上，即可看到重量变化曲线
           </p>
         )}
       </section>
@@ -145,42 +231,27 @@ export function TrainingRecordsPage({ onBack, onOpenEquipment }: TrainingRecords
       <section className="mt-4">
         <h2 className="text-xl font-black text-ink">历史记录</h2>
         <div className="mt-3 space-y-3">
-          {visibleRecords.length === 0 ? (
+          {selectedDate && visibleRecords.length === 0 ? (
+            <div className="rounded-3xl bg-white p-5 shadow-soft">
+              <p className="text-lg font-black text-ink">这一天还没有训练记录</p>
+              <p className="mt-2 text-sm leading-6 text-ink/60">识别器械后点击‘记录本次训练’开始记录</p>
+            </div>
+          ) : visibleRecords.length === 0 ? (
             <p className="rounded-3xl bg-white p-4 text-ink/65">还没有训练记录。识别器械后可以记录本次训练。</p>
           ) : (
-            visibleRecords.map((record) => {
-              const equipment = getEquipmentCard(record.equipmentId);
-
-              return (
-                <article className="rounded-3xl bg-white p-4 shadow-soft" key={record.id}>
-                  <button
-                    className="w-full text-left"
-                    disabled={!equipment}
-                    onClick={() => {
-                      if (equipment) {
-                        onOpenEquipment(equipment);
-                      }
-                    }}
-                    type="button"
-                  >
-                    <span className="block text-xs font-bold text-ink/50">{record.date}</span>
-                    <span className="mt-1 block text-lg font-black text-ink">{record.equipmentName}</span>
-                    <span className="mt-1 block text-sm text-ink/60">{record.exerciseName}</span>
-                    <span className="mt-3 block rounded-2xl bg-moss px-3 py-2 text-sm font-bold text-fern">
-                      {record.sets} 组 x {record.reps} 次 · {formatWeight(record.weight)}
-                    </span>
-                    {record.note ? <span className="mt-2 block text-sm text-ink/55">{record.note}</span> : null}
-                  </button>
-                  <button
-                    className="mt-3 text-sm font-black text-clay"
-                    onClick={() => removeRecord(record.id)}
-                    type="button"
-                  >
-                    删除记录
-                  </button>
-                </article>
-              );
-            })
+            groupedRecords.map((group) => (
+              <section className="space-y-3" key={group.date}>
+                <h3 className="px-1 text-sm font-black text-ink/55">{group.date}</h3>
+                {group.records.map((record) => (
+                  <DateRecordCard
+                    key={record.id}
+                    onDelete={removeRecord}
+                    onOpenEquipment={onOpenEquipment}
+                    record={record}
+                  />
+                ))}
+              </section>
+            ))
           )}
         </div>
       </section>

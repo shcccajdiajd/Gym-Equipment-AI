@@ -4,6 +4,12 @@
 
 ## Completed
 
+- Optimized the H5 `我的训练记录` page with a lightweight current-week 7-day selector while avoiding training-plan language and scope.
+- Added weekday/date display, selected-date green highlight, and record-dot indicators for dates that have local training logs.
+- Changed the default training-log view to show all records grouped by date; tapping a day filters the history section to that date only.
+- Added the selected-day empty state copy: `这一天还没有训练记录` and `识别器械后点击‘记录本次训练’开始记录`.
+- Preserved the progress curve module and updated the low-data prompt to `记录同一器械 2 次以上，即可看到重量变化曲线`.
+- Added date helper coverage for current-week generation, selected-date filtering, date grouping, and page rendering without plan-system copy.
 - Added a lightweight post-recognition training log to the H5 MVP without turning the product into a full fitness app.
 - Kept the home page recognition-first: `拍照识别` remains the primary CTA, while `我的训练记录` is a secondary entry.
 - Added `记录本次训练` on the equipment result page, passing the recognized equipment and selected/default exercise name into a local form.
