@@ -85,18 +85,25 @@ Acceptance:
 - `POST /api/recognitions` keeps using the same shared recognition API.
 - `npm run build:fc:fullstack` exits `0` and packages root `index.js` plus `public/` into `deploy-artifacts/aliyun-fc-recognitions.zip`.
 
-- [ ] Deploy the FC-only fullstack package.
+- [x] Deploy and inspect the FC-only fullstack package.
 Acceptance:
 - `deploy-artifacts/aliyun-fc-recognitions.zip` is uploaded to the existing Aliyun FC function.
 - Handler remains `index.handler`.
-- Opening `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/` returns the H5 page instead of downloading a file.
-- Opening `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/assets/...` returns JS/CSS assets.
+- Opening `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/` returns the correct H5 HTML body and `Content-Type: text/html`, but Aliyun's default domain still forces `Content-Disposition: attachment`.
+- Opening `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/assets/...` returns JS/CSS assets with correct content types, but the default domain still forces `Content-Disposition: attachment`.
 - FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`. Current status: enough is configured for live recognition to succeed.
 - The H5 frontend calls same-origin `/api/recognitions`.
 
+- [ ] Choose and configure a browser-renderable public H5 entry.
+Acceptance:
+- Do not rely on OSS default object URLs or FC `fcapp.run` default URLs as the public page entry because both force browser downloads.
+- Preferred Aliyun path: bind a custom domain to OSS static website hosting or FC, then verify the response no longer includes `Content-Disposition: attachment`.
+- If a custom domain is not available now, choose a different frontend hosting provider that can render static HTML directly, while keeping Aliyun FC as the recognition API.
+- The final public URL opens the H5 page directly on a phone browser.
+
 - [ ] Run deployed phone smoke test.
 Acceptance:
-- A phone opens the FC root URL outside local-only networking.
+- A phone opens the chosen public H5 URL outside local-only networking.
 - Uploading an image reaches FC and returns recognized, low-confidence, unsupported, or clear error state.
 - B站/抖音/小红书/百度 buttons are clickable and copy-search fallback works.
 - WeChat in-app browser shows the “用浏览器打开” guidance.

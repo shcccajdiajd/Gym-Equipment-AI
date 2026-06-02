@@ -1,6 +1,6 @@
 # Progress
 
-## Latest Update: Aliyun FC Real Event Adapter
+## Latest Update: Aliyun Default Domain Download Behavior
 
 ## Completed
 
@@ -14,6 +14,8 @@
 - Added FC-only H5 hosting as the current MVP shortcut because OSS default object URLs force-download `index.html`.
 - Updated the Aliyun FC handler so `GET /` and `GET /assets/...` serve the H5 frontend from bundled `public/` files, while `POST /api/recognitions` continues to call the shared recognition API.
 - Added `npm run build:fc:fullstack`, which builds the H5 app for same-origin `/api/recognitions`, bundles the FC handler, and packages `index.js` plus `public/` into [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip).
+- Verified the redeployed FC fullstack default URL returns the correct `index.html` body and `Content-Type: text/html`, but Aliyun still returns `Content-Disposition: attachment` on the `fcapp.run` default domain.
+- Verified the same forced `Content-Disposition: attachment` header appears on bundled JS assets, so the download behavior is caused by the default-domain/gateway layer rather than by the H5 build or handler routing.
 - Switched the active deployment direction away from Vercel/Render and toward Aliyun OSS static website hosting plus Aliyun Function Compute.
 - Extracted platform-neutral recognition logic into [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts).
 - Added [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts) so local Fastify and FC can share the same provider selection without duplicating code.
@@ -67,13 +69,14 @@
 - The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition` plus the deployable `handler`.
 - A local Node smoke test using an Aliyun-style Buffer event reaches `index.handler` and returns structured JSON instead of crashing.
 - The deployed Aliyun FC HTTP Trigger at `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/api/recognitions` can process a real image request and call DashScope successfully.
+- The deployed FC root URL returns the H5 HTML content, but the default domain forces download via `Content-Disposition: attachment`, so it is not usable as the public browser page.
 - A local Node smoke test using the packaged static root confirms `GET /` returns inline HTML, `GET /assets/...` returns JavaScript, and `POST /api/recognitions` still returns API JSON.
 
 ## Current Problems
 
-- The FC-only fullstack zip still needs to be uploaded to Aliyun FC.
-- The FC root URL still needs final deployed-phone testing after upload.
-- OSS static hosting is paused because the default OSS object URL forces HTML downloads unless a static website endpoint/custom domain strategy is used.
+- Aliyun default domains for both OSS object URLs and FC `fcapp.run` force browser downloads, so a custom domain or a different browser-friendly frontend hosting entry is required for public H5 sharing.
+- The FC default domain remains useful as the API endpoint, but should no longer be treated as the final H5 page URL.
+- OSS static hosting is paused until a static website endpoint/custom domain strategy is used.
 - Platform search jumps still need real phone testing from the deployed H5 domain.
 
 ## Completed
