@@ -1,5 +1,5 @@
 import { equipmentCatalog, getEquipmentCard, type EquipmentCard } from '@gym-equipment-ai/shared';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CandidateList } from './components/CandidateList.js';
 import { EquipmentResult } from './components/EquipmentResult.js';
 import { UnsupportedResult } from './components/UnsupportedResult.js';
@@ -8,8 +8,12 @@ import { compressImageToBase64, ImageTooLargeError } from './utils/image.js';
 import { addHistoryItem, readHistory, recordWrongPrediction } from './utils/history.js';
 import { recognizeEquipmentImage } from './utils/api.js';
 import { isWeChatBrowser } from './utils/searchTargets.js';
-
-type AppView = 'home' | 'recognizing' | 'result' | 'unsupported' | 'equipment-list' | 'history';
+import {
+  getAppViewFromHistoryState,
+  pushAppViewToHistory,
+  replaceAppViewInHistory,
+  type AppView
+} from './utils/appNavigation.js';
 
 type ResultState = {
   payload: RecognitionPayload;
@@ -38,6 +42,26 @@ export function App() {
   );
   const inWeChat = isWeChatBrowser();
 
+  useEffect(() => {
+    replaceAppViewInHistory('home');
+
+    function handlePopState(event: PopStateEvent) {
+      setView(getAppViewFromHistoryState(event.state) ?? 'home');
+    }
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  function navigateTo(nextView: AppView, mode: 'push' | 'replace' = 'push') {
+    if (mode === 'replace') {
+      replaceAppViewInHistory(nextView);
+    } else {
+      pushAppViewToHistory(nextView);
+    }
+    setView(nextView);
+  }
+
   const filteredEquipment = useMemo(() => {
     const query = equipmentFilter.trim().toLowerCase();
     if (!query) {
@@ -60,30 +84,30 @@ export function App() {
       equipment
     });
     setHistoryItems(addHistoryItem(equipment, confidence));
-    setView('result');
+    navigateTo('result');
   }
 
   function handleRecognitionPayload(payload: RecognitionPayload, nextPreviewUrl: string) {
     if (payload.equipment && (payload.status === 'recognized' || payload.status === 'low_confidence')) {
       setResultState({ payload, equipment: payload.equipment, previewUrl: nextPreviewUrl });
       setHistoryItems(addHistoryItem(payload.equipment, payload.confidence));
-      setView('result');
+      navigateTo('result', 'replace');
       return;
     }
 
     if (payload.status === 'unsupported' || payload.status === 'low_confidence') {
       setResultState({ payload, previewUrl: nextPreviewUrl });
-      setView('unsupported');
+      navigateTo('unsupported', 'replace');
       return;
     }
 
     setNotice(payload.message ?? '识别失败，请重试。');
-    setView('home');
+    navigateTo('home', 'replace');
   }
 
   async function handleFile(file: File) {
     setNotice('');
-    setView('recognizing');
+    navigateTo('recognizing');
 
     try {
       const compressed = await compressImageToBase64(file);
@@ -93,7 +117,7 @@ export function App() {
       handleRecognitionPayload(payload, compressed.previewUrl);
     } catch (error) {
       setNotice(error instanceof ImageTooLargeError ? error.message : '图片处理失败，请换一张图片再试。');
-      setView('home');
+      navigateTo('home', 'replace');
     }
   }
 
@@ -125,9 +149,9 @@ export function App() {
         candidates={getSimilarCandidates(resultState.equipment)}
         confidence={resultState.payload.confidence}
         equipment={resultState.equipment}
-        onRetake={() => setView('home')}
+        onRetake={() => navigateTo('home', 'replace')}
         onSelectCandidate={selectCandidate}
-        onWrongPrediction={() => setView('equipment-list')}
+        onWrongPrediction={() => navigateTo('equipment-list')}
       />
     );
   }
@@ -137,7 +161,7 @@ export function App() {
       <UnsupportedResult
         candidates={getCandidates(resultState.payload.alternatives)}
         message={resultState.payload.message}
-        onRetake={() => setView('home')}
+        onRetake={() => navigateTo('home', 'replace')}
         onSelectCandidate={selectCandidate}
       />
     );
@@ -146,7 +170,7 @@ export function App() {
   if (view === 'equipment-list') {
     return (
       <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-5">
-        <button className="mb-4 text-sm font-bold text-fern" onClick={() => setView('home')} type="button">
+        <button className="mb-4 text-sm font-bold text-fern" onClick={() => navigateTo('home', 'replace')} type="button">
           返回首页
         </button>
         <h1 className="text-3xl font-black text-ink">支持识别的器械</h1>
@@ -166,7 +190,7 @@ export function App() {
   if (view === 'history') {
     return (
       <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-5">
-        <button className="mb-4 text-sm font-bold text-fern" onClick={() => setView('home')} type="button">
+        <button className="mb-4 text-sm font-bold text-fern" onClick={() => navigateTo('home', 'replace')} type="button">
           返回首页
         </button>
         <h1 className="text-3xl font-black text-ink">最近识别</h1>
@@ -256,7 +280,7 @@ export function App() {
         <div className="mt-3 grid grid-cols-2 gap-3">
           <button
             className="rounded-2xl bg-moss px-4 py-3 text-sm font-black text-fern"
-            onClick={() => setView('equipment-list')}
+            onClick={() => navigateTo('equipment-list')}
             type="button"
           >
             支持器械
@@ -265,7 +289,7 @@ export function App() {
             className="rounded-2xl bg-moss px-4 py-3 text-sm font-black text-fern"
             onClick={() => {
               setHistoryItems(readHistory());
-              setView('history');
+              navigateTo('history');
             }}
             type="button"
           >

@@ -1,9 +1,13 @@
 # Progress
 
-## Latest Update: Expanded Multi-Exercise Equipment Coverage
+## Latest Update: Browser Back Navigation For H5
 
 ## Completed
 
+- Added browser-history backed navigation for the H5 app so phone browser back buttons can move from result, unsupported, supported-equipment, and history views back through the product flow.
+- Added a small app-navigation utility that stores the current internal view in `window.history.state` and restores the view on `popstate`.
+- Replaced direct H5 `setView(...)` navigation calls with a `navigateTo(...)` wrapper, while keeping recognition success from leaving a stale `识别中` page in the browser back stack.
+- Added regression tests for app history-state parsing plus `pushState`/`replaceState` behavior.
 - Added a platform-wide `exerciseVariants` data model so one recognized machine can expose multiple training uses without asking the vision model to infer user intent.
 - Added two launch variants for `pec-deck-fly`: `蝴蝶机夹胸` for chest and `反向蝴蝶机飞鸟` for rear delts.
 - Expanded exercise variants to every obviously multi-use machine in the current 20-equipment launch catalog: `pec-deck-fly`, `lat-pulldown`, `seated-row`, `leg-press`, `back-extension-machine`, `assisted-pull-up-dip`, and `hack-squat-machine`.
@@ -66,6 +70,8 @@
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
 - [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
 - [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx)
+- [apps/web/src/utils/appNavigation.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/appNavigation.ts)
+- [apps/web/src/utils/appNavigation.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/appNavigation.test.ts)
 - [apps/web/src/components/EquipmentResult.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/EquipmentResult.tsx)
 - [apps/web/src/components/EquipmentResult.test.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/EquipmentResult.test.tsx)
 - [apps/web/src/components/PlatformSearchPanel.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/PlatformSearchPanel.tsx)
@@ -90,12 +96,13 @@
 - Deployment upload artifacts have been prepared locally:
   - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
-- `npm test` passes with `75` tests.
+- `npm test` passes with `77` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:web:vercel` is the current Vercel demo build command and should be used by Vercel.
 - `npm run build:web:vercel` passes after the multi-exercise result-page change.
 - `npm run build:web:vercel` passes after expanding all obvious multi-use equipment variants.
+- `npm run build:web:vercel` passes after the browser-history navigation fix.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run build:fc:fullstack` passes and emits a FC upload zip with root `index.js` and `public/` static files.
 - `npm run typecheck` passes across workspaces.

@@ -1,6 +1,22 @@
 # TODO
 
-## Current Phase: Expanded Multi-Exercise Equipment Coverage
+## Current Phase: Browser Back Navigation For H5
+
+- [x] Make the mobile browser back button work inside the H5 product flow.
+Acceptance:
+- Internal H5 views are stored in `window.history.state`.
+- Entering supported equipment, history, result, and unsupported views pushes or replaces browser history deliberately.
+- Recognition success replaces the temporary `识别中` entry, so browser back returns to the previous useful screen instead of a stale loading page.
+- `popstate` restores the app view from browser history and falls back to home for unknown states.
+- [apps/web/src/utils/appNavigation.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/appNavigation.test.ts) covers valid/invalid history states plus `pushState` and `replaceState`.
+
+- [x] Verify the H5 browser navigation fix.
+Acceptance:
+- `npm test` exits `0`.
+- `npm run typecheck` exits `0`.
+- `npm run build:web:vercel` exits `0`.
+
+## Previous Phase: Expanded Multi-Exercise Equipment Coverage
 
 - [x] Add a data model for multiple exercise variants on one equipment card.
 Acceptance:
