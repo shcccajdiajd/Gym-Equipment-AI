@@ -1,9 +1,18 @@
 # Progress
 
-## Latest Update: Anonymous MVP Analytics
+## Latest Update: Lightweight Training Records And Progress Curve
 
 ## Completed
 
+- Added a lightweight post-recognition training log to the H5 MVP without turning the product into a full fitness app.
+- Kept the home page recognition-first: `拍照识别` remains the primary CTA, while `我的训练记录` is a secondary entry.
+- Added `记录本次训练` on the equipment result page, passing the recognized equipment and selected/default exercise name into a local form.
+- Added a training record form for date, equipment name, exercise name, sets, reps, optional weight in kg, and optional note.
+- Stored training records in browser `localStorage` only, with no login, cloud sync, raw image storage, or backend dependency.
+- Added a training-records page with date-descending history, equipment filtering, single-record deletion, and click-through back to the related equipment detail.
+- Added a lightweight SVG progress curve for single-equipment weight trends, including latest weight, max weight, and improvement versus first weighted record.
+- Added empty-state guidance when fewer than two weighted records exist: `继续记录几次后即可看到进步曲线`.
+- Added tests for saving, reading, deleting, equipment filtering, progress-series generation, empty chart state, result-page training entry, and the home page CTA hierarchy.
 - Added anonymous H5 funnel analytics using a localStorage `visitorId` and `POST /api/events`.
 - Added tracked events for page open, upload start, recognition success, recognition error, platform search click, and copy-search-query actions.
 - Added a Fastify `POST /api/events` route that validates event names and logs structured `analyticsEvent` payloads without storing images, phone numbers, or login identity.
@@ -80,6 +89,11 @@
 - [services/api/src/routes/events.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/events.ts)
 - [services/api/src/routes/events.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/events.test.ts)
 - [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx)
+- [apps/web/src/components/TrainingRecordForm.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/TrainingRecordForm.tsx)
+- [apps/web/src/components/TrainingRecordsPage.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/TrainingRecordsPage.tsx)
+- [apps/web/src/components/TrainingRecordsPage.test.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/TrainingRecordsPage.test.tsx)
+- [apps/web/src/utils/trainingRecords.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/trainingRecords.ts)
+- [apps/web/src/utils/trainingRecords.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/trainingRecords.test.ts)
 - [apps/web/src/utils/analytics.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/analytics.ts)
 - [apps/web/src/utils/analytics.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/analytics.test.ts)
 - [apps/web/src/utils/appNavigation.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/appNavigation.ts)
@@ -108,7 +122,7 @@
 - Deployment upload artifacts have been prepared locally:
   - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
-- `npm test` passes with `83` tests.
+- `npm test` passes with `89` tests after adding lightweight training-record coverage.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:web:vercel` is the current Vercel demo build command and should be used by Vercel.

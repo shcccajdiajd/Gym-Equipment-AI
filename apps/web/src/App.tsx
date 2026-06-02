@@ -2,6 +2,8 @@ import { equipmentCatalog, getEquipmentCard, type EquipmentCard } from '@gym-equ
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CandidateList } from './components/CandidateList.js';
 import { EquipmentResult } from './components/EquipmentResult.js';
+import { TrainingRecordForm } from './components/TrainingRecordForm.js';
+import { TrainingRecordsPage } from './components/TrainingRecordsPage.js';
 import { UnsupportedResult } from './components/UnsupportedResult.js';
 import type { HistoryItem, RecognitionPayload } from './types.js';
 import { compressImageToBase64, ImageTooLargeError } from './utils/image.js';
@@ -22,6 +24,11 @@ type ResultState = {
   previewUrl?: string;
 };
 
+type TrainingTarget = {
+  equipment: EquipmentCard;
+  exerciseName: string;
+};
+
 function getCandidates(ids: string[] = []) {
   return ids.map((id) => getEquipmentCard(id)).filter((item): item is EquipmentCard => Boolean(item));
 }
@@ -35,6 +42,7 @@ export function App() {
   const albumInputRef = useRef<HTMLInputElement>(null);
   const [view, setView] = useState<AppView>('home');
   const [resultState, setResultState] = useState<ResultState>();
+  const [trainingTarget, setTrainingTarget] = useState<TrainingTarget>();
   const [previewUrl, setPreviewUrl] = useState('');
   const [notice, setNotice] = useState('');
   const [equipmentFilter, setEquipmentFilter] = useState('');
@@ -160,6 +168,11 @@ export function App() {
     openEquipment(equipment, resultState?.payload.confidence);
   }
 
+  function openTrainingForm(equipment: EquipmentCard, exerciseName: string) {
+    setTrainingTarget({ equipment, exerciseName });
+    navigateTo('training-form');
+  }
+
   if (view === 'recognizing') {
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
@@ -180,9 +193,30 @@ export function App() {
         candidates={getSimilarCandidates(resultState.equipment)}
         confidence={resultState.payload.confidence}
         equipment={resultState.equipment}
+        onOpenTrainingForm={openTrainingForm}
         onRetake={() => navigateTo('home', 'replace')}
         onSelectCandidate={selectCandidate}
         onWrongPrediction={() => navigateTo('equipment-list')}
+      />
+    );
+  }
+
+  if (view === 'training-form' && trainingTarget) {
+    return (
+      <TrainingRecordForm
+        defaultExerciseName={trainingTarget.exerciseName}
+        equipment={trainingTarget.equipment}
+        onCancel={() => navigateTo('result', 'replace')}
+        onSaved={() => navigateTo('training-records', 'replace')}
+      />
+    );
+  }
+
+  if (view === 'training-records') {
+    return (
+      <TrainingRecordsPage
+        onBack={() => navigateTo('home', 'replace')}
+        onOpenEquipment={(equipment) => openEquipment(equipment)}
       />
     );
   }
@@ -327,6 +361,13 @@ export function App() {
             最近识别
           </button>
         </div>
+        <button
+          className="mt-3 w-full rounded-2xl border border-fern/10 bg-white px-4 py-3 text-sm font-black text-fern shadow-soft"
+          onClick={() => navigateTo('training-records')}
+          type="button"
+        >
+          我的训练记录
+        </button>
       </section>
     </main>
   );

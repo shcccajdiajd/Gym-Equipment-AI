@@ -1,6 +1,41 @@
 # TODO
 
-## Current Phase: Anonymous MVP Analytics
+## Current Phase: Lightweight Training Records And Progress Curve
+
+- [x] Add local training-record storage.
+Acceptance:
+- Records are saved in `localStorage` with `id`, `equipmentId`, `equipmentName`, `exerciseName`, `date`, `sets`, `reps`, optional `weight`, `weightUnit`, optional `note`, and `createdAt`.
+- Records do not include raw images, login identity, or cloud-sync fields.
+- Tests cover saving, reading, deleting, and filtering by equipment.
+
+- [x] Add recognition-first training entry points.
+Acceptance:
+- Home still renders `拍照识别` before `我的训练记录`.
+- Result pages show `记录本次训练`.
+- The form defaults equipment name from the current result and exercise name from the selected/default exercise.
+
+- [x] Add the training-records page and progress curve.
+Acceptance:
+- Records render by date descending.
+- A record can be deleted.
+- A record can open the related equipment detail.
+- Users can filter records by equipment.
+- The progress module renders a single-equipment weight trend using lightweight SVG.
+- Fewer than two weighted records show `继续记录几次后即可看到进步曲线`.
+
+- [x] Verify the training-record H5 update locally.
+Acceptance:
+- `npm test` exits `0`.
+- `npm run typecheck` exits `0`.
+- `npm run build:web:vercel` exits `0`.
+- A git commit is created for this phase.
+
+- [ ] Deploy and smoke test the training-record H5 update.
+Acceptance:
+- Vercel redeploys the H5 frontend from `main`.
+- Phone smoke test confirms: result page can save a training record, home can open `我的训练记录`, filtering/deleting works, and the progress empty state appears before two weighted records.
+
+## Previous Phase: Anonymous MVP Analytics
 
 - [x] Add anonymous funnel analytics without login.
 Acceptance:

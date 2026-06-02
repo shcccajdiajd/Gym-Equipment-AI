@@ -7,6 +7,7 @@ type EquipmentResultProps = {
   equipment: EquipmentCard;
   confidence?: number;
   candidates: EquipmentCard[];
+  onOpenTrainingForm: (equipment: EquipmentCard, exerciseName: string) => void;
   onRetake: () => void;
   onSelectCandidate: (equipment: EquipmentCard) => void;
   onWrongPrediction: () => void;
@@ -47,6 +48,7 @@ export function EquipmentResult({
   equipment,
   confidence,
   candidates,
+  onOpenTrainingForm,
   onRetake,
   onSelectCandidate,
   onWrongPrediction
@@ -116,6 +118,18 @@ export function EquipmentResult({
       <div className="mt-4">
         <PlatformSearchPanel equipment={equipment} variant={selectedVariant} />
       </div>
+
+      <section className="mt-4 rounded-[2rem] bg-white p-5 shadow-soft">
+        <h2 className="text-xl font-black text-ink">练完了吗？</h2>
+        <p className="mt-2 text-sm leading-6 text-ink/60">顺手记一下组数、次数和重量，之后能看到自己的进步曲线。</p>
+        <button
+          className="mt-4 w-full rounded-3xl bg-fern px-5 py-4 text-base font-black text-white"
+          onClick={() => onOpenTrainingForm(equipment, teaching.zhName)}
+          type="button"
+        >
+          记录本次训练
+        </button>
+      </section>
 
       <section className="mt-4 rounded-[2rem] bg-white p-5 shadow-soft">
         <h2 className="text-lg font-black text-ink">主要训练肌群</h2>

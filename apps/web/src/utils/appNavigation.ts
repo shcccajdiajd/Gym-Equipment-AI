@@ -1,8 +1,25 @@
-export type AppView = 'home' | 'recognizing' | 'result' | 'unsupported' | 'equipment-list' | 'history';
+export type AppView =
+  | 'home'
+  | 'recognizing'
+  | 'result'
+  | 'unsupported'
+  | 'equipment-list'
+  | 'history'
+  | 'training-form'
+  | 'training-records';
 
 const APP_VIEW_STATE_KEY = 'gymEquipmentAiView';
 
-const appViews = new Set<AppView>(['home', 'recognizing', 'result', 'unsupported', 'equipment-list', 'history']);
+const appViews = new Set<AppView>([
+  'home',
+  'recognizing',
+  'result',
+  'unsupported',
+  'equipment-list',
+  'history',
+  'training-form',
+  'training-records'
+]);
 
 type AppHistoryState = {
   [APP_VIEW_STATE_KEY]?: AppView;

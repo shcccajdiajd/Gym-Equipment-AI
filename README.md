@@ -73,6 +73,18 @@ npm run build:fc:fullstack
 
 Upload [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) to Aliyun FC with Handler `index.handler`.
 
+## Lightweight Training Records
+
+The H5 MVP includes a small post-recognition training log. After an equipment result appears, users can tap `记录本次训练` and save date, equipment, exercise name, sets, reps, optional weight in kg, and an optional note. Records stay in browser `localStorage`; there is no login, cloud sync, raw image storage, training plan, or social feature.
+
+The home page keeps `拍照识别` as the primary CTA and exposes `我的训练记录` as a secondary entry. The training-records page can:
+
+- Show records by date descending.
+- Filter records by equipment.
+- Delete a single local record.
+- Open the related equipment detail from a record.
+- Render a single-equipment weight trend as a lightweight SVG chart when at least two weighted records exist.
+
 If you need to revisit the mini program later, sync the equipment catalog and open `apps/miniprogram` in WeChat Developer Tools:
 
 ```bash

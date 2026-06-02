@@ -12,6 +12,7 @@ describe('result rendering', () => {
         candidates={[]}
         confidence={0.88}
         equipment={equipment}
+        onOpenTrainingForm={() => undefined}
         onRetake={() => undefined}
         onSelectCandidate={() => undefined}
         onWrongPrediction={() => undefined}
@@ -26,6 +27,7 @@ describe('result rendering', () => {
     expect(html).toContain('直接去搜教程');
     expect(html).toContain('蝴蝶机夹胸 正确使用 教学');
     expect(html).toContain('B站搜索');
+    expect(html).toContain('记录本次训练');
     expect(html).toContain('识别错了？');
   });
 

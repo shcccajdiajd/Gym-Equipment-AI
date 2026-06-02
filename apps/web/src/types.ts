@@ -37,3 +37,30 @@ export type WrongPrediction = {
   correctedId: string;
   createdAt: string;
 };
+
+export type TrainingRecord = {
+  id: string;
+  equipmentId: string;
+  equipmentName: string;
+  exerciseName: string;
+  date: string;
+  sets: number;
+  reps: number;
+  weight?: number;
+  weightUnit: 'kg';
+  note?: string;
+  createdAt: string;
+};
+
+export type TrainingRecordInput = Omit<TrainingRecord, 'id' | 'createdAt'>;
+
+export type ProgressPoint = {
+  date: string;
+  weight: number;
+};
+
+export type ProgressSummary = {
+  latestWeight: number;
+  maxWeight: number;
+  improvement: number;
+};
