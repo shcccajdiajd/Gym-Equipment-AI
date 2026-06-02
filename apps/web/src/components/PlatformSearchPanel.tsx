@@ -43,27 +43,31 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
   }
 
   return (
-    <section className="rounded-[2rem] bg-ink p-5 text-white shadow-soft">
+    <section className="rounded-[1.9rem] bg-ink p-5 text-white shadow-lift">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-moss">Tutorial Search</p>
-          <h2 className="mt-1 text-2xl font-black">直接去搜教程</h2>
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-moss">Tutorial Search</p>
+          <h2 className="mt-1 text-[1.7rem] font-black tracking-[-0.04em]">直接去搜教程</h2>
+          <p className="mt-2 text-sm leading-6 text-moss/90">不用自己想关键词，选一个搜索词就能跳到内容平台。</p>
         </div>
-        <span className="rounded-full bg-white/12 px-3 py-1 text-xs text-moss">重点功能</span>
+        <span className="pill shrink-0 bg-white/12 text-moss">重点功能</span>
       </div>
 
       {inWeChat ? (
-        <p className="mb-4 rounded-2xl bg-clay/25 px-4 py-3 text-sm text-white">
+        <p className="mb-4 rounded-2xl bg-clay/25 px-4 py-3 text-sm font-bold leading-6 text-white">
           为了更好跳转 B站/抖音，请点击右上角，用浏览器打开。
         </p>
       ) : null}
 
-      <label className="mb-3 block text-sm text-moss" htmlFor="query-select">
-        选择搜索词
-      </label>
+      <div className="rounded-[1.35rem] border border-white/10 bg-white/10 p-4">
+        <p className="text-xs font-bold text-moss">当前搜索词</p>
+        <p className="mt-2 break-words text-xl font-black leading-snug text-white">{selectedQuery}</p>
+      </div>
+
+      <label className="sr-only" htmlFor="query-select">选择搜索词</label>
       <select
         id="query-select"
-        className="mb-4 w-full rounded-2xl border border-white/10 bg-white px-4 py-3 text-base font-bold text-ink"
+        className="mt-3 w-full rounded-[1.15rem] border border-white/10 bg-white px-4 py-3 text-base font-black text-ink"
         value={selectedQuery}
         onChange={(event) => setSelectedQuery(event.target.value)}
       >
@@ -74,10 +78,25 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
         ))}
       </select>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="mt-3 flex flex-wrap gap-2">
+        {queryOptions.map(([label, query]) => (
+          <button
+            className={`min-h-10 rounded-full px-3 py-2 text-xs font-black transition active:scale-[0.98] ${
+              selectedQuery === query ? 'bg-amber text-ink' : 'bg-white/10 text-moss'
+            }`}
+            key={`${label}-chip-${query}`}
+            onClick={() => setSelectedQuery(query)}
+            type="button"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-3">
         {targets.map((target) => (
           <a
-            className="rounded-2xl bg-white px-4 py-3 text-center text-sm font-black text-fern"
+            className="inline-flex min-h-12 items-center justify-center rounded-[1.1rem] bg-white px-4 py-3 text-center text-sm font-black text-fern shadow-press transition active:scale-[0.99]"
             href={target.url}
             key={target.id}
             onClick={() => {
@@ -100,14 +119,14 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
       </div>
 
       <button
-        className="mt-3 w-full rounded-2xl border border-white/20 px-4 py-3 text-sm font-black text-white"
+        className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-[1.1rem] border border-white/20 px-4 py-3 text-sm font-black text-white transition active:scale-[0.99]"
         onClick={copySearchQuery}
         type="button"
       >
         {copied ? '已复制搜索词' : '复制搜索词'}
       </button>
 
-      <p className="mt-3 text-xs leading-5 text-moss">如果无法打开，请复制搜索词到 App 内搜索。</p>
+      <p className="mt-3 text-xs leading-5 text-moss/90">如果无法打开，请复制搜索词到 App 内搜索。</p>
     </section>
   );
 }

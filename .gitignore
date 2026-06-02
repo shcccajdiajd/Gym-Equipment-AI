@@ -11,5 +11,6 @@ coverage
 .tmp-api-run
 services/api/.tmp-run
 deploy-artifacts
+tmp-ui-screens
 package-lock.json
 apps/miniprogram/project.private.config.json

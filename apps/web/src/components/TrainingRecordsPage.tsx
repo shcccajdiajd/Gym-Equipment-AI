@@ -38,7 +38,7 @@ function ProgressChart({ points }: { points: ProgressPoint[] }) {
   const line = chartPoints.map((point) => `${point.x},${point.y}`).join(' ');
 
   return (
-    <svg aria-label="单器械重量进步曲线" className="mt-4 w-full" role="img" viewBox={`0 0 ${width} ${height}`}>
+    <svg aria-label="单器械重量进步曲线" className="mt-4 w-full overflow-visible rounded-[1.25rem] bg-white/70 p-1" role="img" viewBox={`0 0 ${width} ${height}`}>
       <line stroke="#dce8d8" strokeWidth="2" x1={padding} x2={padding} y1={padding} y2={height - padding} />
       <line
         stroke="#dce8d8"
@@ -70,16 +70,16 @@ function ProgressChart({ points }: { points: ProgressPoint[] }) {
 function ProgressSummaryCards({ summary }: { summary: ProgressSummary }) {
   return (
     <div className="mt-4 grid grid-cols-3 gap-2">
-      <div className="rounded-2xl bg-moss p-3">
-        <p className="text-xs text-ink/55">最近重量</p>
+      <div className="rounded-[1.15rem] bg-moss p-3">
+        <p className="text-xs font-bold text-slate">最近重量</p>
         <p className="mt-1 text-lg font-black text-ink">{summary.latestWeight}kg</p>
       </div>
-      <div className="rounded-2xl bg-moss p-3">
-        <p className="text-xs text-ink/55">最高重量</p>
+      <div className="rounded-[1.15rem] bg-moss p-3">
+        <p className="text-xs font-bold text-slate">最高重量</p>
         <p className="mt-1 text-lg font-black text-ink">{summary.maxWeight}kg</p>
       </div>
-      <div className="rounded-2xl bg-moss p-3">
-        <p className="text-xs text-ink/55">较首次</p>
+      <div className="rounded-[1.15rem] bg-moss p-3">
+        <p className="text-xs font-bold text-slate">较首次</p>
         <p className="mt-1 text-lg font-black text-ink">{summary.improvement >= 0 ? '+' : ''}{summary.improvement}kg</p>
       </div>
     </div>
@@ -116,7 +116,7 @@ function DateRecordCard({
   const equipment = getEquipmentCard(record.equipmentId);
 
   return (
-    <article className="rounded-3xl bg-white p-4 shadow-soft">
+    <article className="rounded-[1.35rem] border border-line/70 bg-white p-4 shadow-press">
       <button
         className="w-full text-left"
         disabled={!equipment}
@@ -127,14 +127,14 @@ function DateRecordCard({
         }}
         type="button"
       >
-        <span className="block text-lg font-black text-ink">{record.equipmentName}</span>
-        <span className="mt-1 block text-sm text-ink/60">{record.exerciseName}</span>
-        <span className="mt-3 block rounded-2xl bg-moss px-3 py-2 text-sm font-bold text-fern">
+        <span className="block text-lg font-black tracking-[-0.02em] text-ink">{record.equipmentName}</span>
+        <span className="mt-1 block text-sm font-bold text-slate">{record.exerciseName}</span>
+        <span className="mt-3 inline-flex rounded-2xl bg-moss px-3 py-2 text-sm font-black text-fern">
           {record.sets} 组 x {record.reps} 次 · {formatWeight(record.weight)}
         </span>
-        {record.note ? <span className="mt-2 block text-sm text-ink/55">{record.note}</span> : null}
+        {record.note ? <span className="mt-3 block text-sm leading-6 text-slate">{record.note}</span> : null}
       </button>
-      <button className="mt-3 text-sm font-black text-clay" onClick={() => onDelete(record.id)} type="button">
+      <button className="mt-3 min-h-10 rounded-full bg-clay/10 px-3 text-sm font-black text-clay" onClick={() => onDelete(record.id)} type="button">
         删除记录
       </button>
     </article>
@@ -170,25 +170,25 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-5">
-      <button className="mb-4 text-sm font-bold text-fern" onClick={onBack} type="button">
+    <main className="screen">
+      <button className="top-link" onClick={onBack} type="button">
         返回首页
       </button>
-      <h1 className="text-3xl font-black text-ink">我的训练记录</h1>
-      <p className="mt-2 text-sm leading-6 text-ink/60">轻量记录器械训练，看看重量有没有一点点往上走。</p>
+      <h1 className="page-title">我的训练记录</h1>
+      <p className="mt-3 text-sm leading-6 text-slate">轻量记录器械训练，看看重量有没有一点点往上走。</p>
 
-      <section className="mt-4 rounded-[2rem] bg-white p-5 shadow-soft">
+      <section className="surface-card mt-5">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-fern">Training Log</p>
-            <h2 className="mt-1 text-2xl font-black text-ink">训练日志</h2>
-            <p className="mt-1 text-sm text-ink/55">按日期查看</p>
+            <p className="eyebrow">Training Log</p>
+            <h2 className="section-title mt-1">训练日志</h2>
+            <p className="mt-1 text-sm font-bold text-slate">按日期查看</p>
           </div>
-          <button className="text-sm font-black text-fern" onClick={() => setSelectedDate('')} type="button">
+          <button className="min-h-11 shrink-0 rounded-full bg-moss px-4 text-sm font-black text-fern" onClick={() => setSelectedDate('')} type="button">
             全部日期
           </button>
         </div>
-        <div className="mt-3 grid grid-cols-7 gap-2">
+        <div className="mt-4 grid grid-cols-7 gap-1.5 rounded-[1.35rem] bg-oat/80 p-2">
           {weekDays.map((day) => {
             const selected = day.date === selectedDate;
             const hasRecord = recordDates.has(day.date);
@@ -196,16 +196,16 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
             return (
               <button
                 aria-label={`${day.weekday} ${day.dayLabel}`}
-                className="flex flex-col items-center gap-1"
+                className="flex min-h-[4.6rem] flex-col items-center gap-1 rounded-2xl py-2 transition active:scale-[0.98]"
                 data-selected-date={selected ? day.date : undefined}
                 key={day.date}
                 onClick={() => setSelectedDate(day.date)}
                 type="button"
               >
-                <span className="text-[0.68rem] font-bold text-ink/45">{day.weekday}</span>
+                <span className="text-[0.68rem] font-black text-slate">{day.weekday}</span>
                 <span
                   className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-black ${
-                    selected ? 'bg-fern text-white' : 'bg-moss text-fern'
+                    selected ? 'bg-fern text-white shadow-press' : 'bg-white text-fern'
                   }`}
                 >
                   {day.dayLabel.split('/')[1]}
@@ -218,18 +218,18 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
 
         <div className="mt-5 space-y-3">
           {selectedDate && visibleRecords.length === 0 ? (
-            <div className="rounded-3xl bg-moss p-5">
+            <div className="rounded-[1.35rem] bg-moss p-5">
               <p className="text-lg font-black text-ink">这一天还没有训练记录</p>
-              <p className="mt-2 text-sm leading-6 text-ink/60">识别器械后点击‘记录本次训练’开始记录</p>
+              <p className="mt-2 text-sm leading-6 text-slate">识别器械后点击‘记录本次训练’开始记录</p>
             </div>
           ) : visibleRecords.length === 0 ? (
-            <p className="rounded-3xl bg-moss p-4 text-ink/65">还没有训练记录。识别器械后可以记录本次训练。</p>
+            <p className="rounded-[1.35rem] bg-moss p-4 text-sm font-bold leading-6 text-slate">还没有训练记录。识别器械后可以记录本次训练。</p>
           ) : (
             groupedRecords.map((group) => (
               <section className="space-y-3" key={group.date}>
                 <div className="flex items-center justify-between px-1">
-                  <h3 className="text-sm font-black text-ink/65">{getDateGroupLabel(group.date)}</h3>
-                  <span className="text-xs font-bold text-ink/45">{group.records.length} 条记录</span>
+                  <h3 className="text-sm font-black text-slate">{getDateGroupLabel(group.date)}</h3>
+                  <span className="rounded-full bg-moss px-2 py-1 text-xs font-black text-fern">{group.records.length} 条记录</span>
                 </div>
                 {group.records.map((record) => (
                   <DateRecordCard
@@ -245,14 +245,14 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
         </div>
       </section>
 
-      <section className="mt-4 rounded-[2rem] bg-white p-5 shadow-soft">
+      <section className="surface-card mt-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-fern">Progress</p>
-            <h2 className="mt-1 text-2xl font-black text-ink">进步曲线</h2>
+            <p className="eyebrow">Progress</p>
+            <h2 className="section-title mt-1">进步曲线</h2>
           </div>
           <select
-            className="max-w-36 rounded-2xl bg-moss px-3 py-2 text-sm font-bold text-fern outline-none"
+            className="min-h-11 max-w-36 rounded-2xl bg-moss px-3 py-2 text-sm font-black text-fern outline-none"
             onChange={(event) => setEquipmentFilter(event.target.value)}
             value={equipmentFilter}
           >
@@ -271,7 +271,7 @@ export function TrainingRecordsPage({ initialSelectedDate = '', onBack, onOpenEq
             <ProgressChart points={progress.points} />
           </>
         ) : (
-          <p className="mt-4 rounded-3xl bg-moss p-4 text-sm font-bold text-fern">
+          <p className="mt-4 rounded-[1.35rem] bg-moss p-4 text-sm font-bold leading-6 text-fern">
             记录同一器械 2 次以上，即可看到重量变化曲线
           </p>
         )}

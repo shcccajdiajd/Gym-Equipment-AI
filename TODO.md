@@ -1,6 +1,45 @@
 # TODO
 
-## Current Phase: Training Records Information Architecture
+## Current Phase: H5 Mobile UI/UX Polish
+
+- [x] Improve the recognition-first home page hierarchy.
+Acceptance:
+- `拍照识别` remains the primary CTA and appears before secondary entries.
+- `从相册上传`, `支持器械`, `最近识别`, and `我的训练记录` remain available.
+- The first screen communicates `拍器械 -> 认名称 -> 去搜索`.
+- Training records stay visually secondary.
+
+- [x] Make the result page easier to scan and search-first.
+Acceptance:
+- Equipment name, English name, confidence/manual state, summary, and muscle chips are visible in a clean result card.
+- Multi-action equipment still shows `你想用它练哪里？`, but the selector is compact enough that the tutorial search module appears earlier.
+- `直接去搜教程` remains prominent and shows the selected search query before platform buttons.
+- Teaching content remains available but is broken into clearer cards.
+
+- [x] Polish platform search, candidate, unsupported, and training surfaces.
+Acceptance:
+- Search query selection, platform buttons, and copy fallback all keep touch targets at least 44px.
+- Candidate and unsupported flows match the new visual system.
+- `我的训练记录`, `训练日志`, `进步曲线`, and `记录本次训练` remain lightweight and do not introduce plan-system wording.
+- Form inputs are mobile-friendly and keep visible labels.
+
+- [x] Verify mobile layout and commit.
+Acceptance:
+- `npm test` exits `0`.
+- `npm run typecheck` exits `0`.
+- `npm run build:web` exits `0`.
+- Browser checks cover `375x812`, `390x844`, and `430x932`.
+- No horizontal overflow is observed in the checked home, result/search, training-records, or training-form views.
+- `PROGRESS.md` and `TODO.md` are updated.
+- A git commit is created for this phase.
+
+- [ ] Redeploy and phone smoke test the polished H5.
+Acceptance:
+- GitHub contains the UI polish commit.
+- Vercel production deployment rebuilds from `main`.
+- Phone smoke test confirms upload/recognition still works, search buttons are tappable, and the polished layout looks correct on real mobile browsers.
+
+## Previous Phase: Training Records Information Architecture
 
 - [x] Move date filtering and history into one `训练日志` module.
 Acceptance:

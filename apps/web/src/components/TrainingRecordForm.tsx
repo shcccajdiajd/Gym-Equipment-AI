@@ -34,20 +34,20 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-5">
-      <button className="mb-4 text-sm font-bold text-fern" onClick={onCancel} type="button">
+    <main className="screen">
+      <button className="top-link" onClick={onCancel} type="button">
         返回结果
       </button>
-      <form className="rounded-[2rem] bg-white p-5 shadow-soft" onSubmit={handleSubmit}>
-        <p className="text-xs font-black uppercase tracking-[0.24em] text-fern">Training Log</p>
-        <h1 className="mt-1 text-3xl font-black text-ink">记录本次训练</h1>
-        <p className="mt-2 text-sm text-ink/60">只记录这次器械训练，不做复杂计划。</p>
+      <form className="surface-card" onSubmit={handleSubmit}>
+        <p className="eyebrow">Training Log</p>
+        <h1 className="mt-1 text-3xl font-black tracking-[-0.04em] text-ink">记录本次训练</h1>
+        <p className="mt-2 text-sm leading-6 text-slate">只记录这次器械训练，不做复杂计划。</p>
 
         <label className="mt-5 block text-sm font-black text-ink" htmlFor="training-date">
           日期
         </label>
         <input
-          className="mt-2 w-full rounded-2xl bg-moss px-4 py-3 text-base font-bold text-ink outline-none"
+          className="input-soft mt-2"
           id="training-date"
           onChange={(event) => setDate(event.target.value)}
           required
@@ -59,7 +59,7 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
           器械名称
         </label>
         <input
-          className="mt-2 w-full rounded-2xl bg-moss px-4 py-3 text-base font-bold text-ink outline-none"
+          className="input-soft mt-2 font-bold"
           id="training-equipment"
           readOnly
           value={equipment.zhName}
@@ -69,7 +69,7 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
           动作名称
         </label>
         <input
-          className="mt-2 w-full rounded-2xl bg-moss px-4 py-3 text-base font-bold text-ink outline-none"
+          className="input-soft mt-2 font-bold"
           id="training-exercise"
           onChange={(event) => setExerciseName(event.target.value)}
           required
@@ -80,7 +80,7 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
           <label className="block text-sm font-black text-ink" htmlFor="training-sets">
             组数
             <input
-              className="mt-2 w-full rounded-2xl bg-moss px-4 py-3 text-base font-bold text-ink outline-none"
+              className="input-soft mt-2 font-bold"
               id="training-sets"
               min="1"
               onChange={(event) => setSets(event.target.value)}
@@ -92,7 +92,7 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
           <label className="block text-sm font-black text-ink" htmlFor="training-reps">
             每组次数
             <input
-              className="mt-2 w-full rounded-2xl bg-moss px-4 py-3 text-base font-bold text-ink outline-none"
+              className="input-soft mt-2 font-bold"
               id="training-reps"
               min="1"
               onChange={(event) => setReps(event.target.value)}
@@ -107,7 +107,7 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
           重量 kg（选填）
         </label>
         <input
-          className="mt-2 w-full rounded-2xl bg-moss px-4 py-3 text-base font-bold text-ink outline-none"
+          className="input-soft mt-2 font-bold"
           id="training-weight"
           min="0"
           onChange={(event) => setWeight(event.target.value)}
@@ -120,14 +120,14 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
           备注（选填）
         </label>
         <textarea
-          className="mt-2 min-h-24 w-full rounded-2xl bg-moss px-4 py-3 text-base text-ink outline-none"
+          className="input-soft mt-2 min-h-24"
           id="training-note"
           onChange={(event) => setNote(event.target.value)}
           placeholder="比如：动作更稳、重量略轻、肩膀感觉正常"
           value={note}
         />
 
-        <button className="mt-5 w-full rounded-3xl bg-fern px-5 py-4 text-lg font-black text-white" type="submit">
+        <button className="btn-primary mt-5 text-lg" type="submit">
           保存训练记录
         </button>
       </form>

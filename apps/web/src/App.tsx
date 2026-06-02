@@ -67,6 +67,13 @@ export function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [inWeChat]);
 
+  useEffect(() => {
+    window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+    });
+  }, [view]);
+
   function navigateTo(nextView: AppView, mode: 'push' | 'replace' = 'push') {
     if (mode === 'replace') {
       replaceAppViewInHistory(nextView);
@@ -175,13 +182,18 @@ export function App() {
 
   if (view === 'recognizing') {
     return (
-      <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
-        <section className="rounded-[2rem] bg-white p-5 text-center shadow-soft">
-          {previewUrl ? <img alt="待识别器械预览" className="mb-4 rounded-3xl" src={previewUrl} /> : null}
+      <main className="screen-center">
+        <section className="surface-card text-center">
+          {previewUrl ? (
+            <img alt="待识别器械预览" className="mb-4 max-h-[22rem] w-full rounded-[1.5rem] object-cover" src={previewUrl} />
+          ) : null}
           <p className="text-sm font-bold uppercase tracking-[0.24em] text-fern">Recognizing</p>
-          <h1 className="mt-2 text-3xl font-black text-ink">正在识别器械</h1>
-          <p className="mt-3 text-ink/65">正在生成正确搜索入口，通常几秒内完成。</p>
-          {notice ? <p className="mt-3 rounded-2xl bg-moss px-4 py-3 text-sm text-fern">{notice}</p> : null}
+          <h1 className="mt-2 text-3xl font-black tracking-[-0.04em] text-ink">正在识别器械</h1>
+          <div className="mx-auto mt-5 h-2 w-28 overflow-hidden rounded-full bg-moss">
+            <span className="block h-full w-2/3 animate-pulse rounded-full bg-fern" />
+          </div>
+          <p className="mt-4 text-sm leading-6 text-slate">正在判断器械名称，并准备适合新手的教程搜索词。</p>
+          {notice ? <p className="mt-3 rounded-2xl bg-moss px-4 py-3 text-sm font-bold text-fern">{notice}</p> : null}
         </section>
       </main>
     );
@@ -234,13 +246,14 @@ export function App() {
 
   if (view === 'equipment-list') {
     return (
-      <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-5">
-        <button className="mb-4 text-sm font-bold text-fern" onClick={() => navigateTo('home', 'replace')} type="button">
+      <main className="screen">
+        <button className="top-link" onClick={() => navigateTo('home', 'replace')} type="button">
           返回首页
         </button>
-        <h1 className="text-3xl font-black text-ink">支持识别的器械</h1>
+        <h1 className="page-title">支持识别的器械</h1>
+        <p className="mt-3 text-sm leading-6 text-slate">当前 MVP 先覆盖固定器械。也可以直接点开器械详情，查看教程搜索入口。</p>
         <input
-          className="mt-4 w-full rounded-2xl border-0 bg-white px-4 py-3 shadow-soft outline-none"
+          className="input-soft mt-5 bg-white shadow-press"
           onChange={(event) => setEquipmentFilter(event.target.value)}
           placeholder="搜索器械名称 / 英文 / 分类"
           value={equipmentFilter}
@@ -254,18 +267,19 @@ export function App() {
 
   if (view === 'history') {
     return (
-      <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-5">
-        <button className="mb-4 text-sm font-bold text-fern" onClick={() => navigateTo('home', 'replace')} type="button">
+      <main className="screen">
+        <button className="top-link" onClick={() => navigateTo('home', 'replace')} type="button">
           返回首页
         </button>
-        <h1 className="text-3xl font-black text-ink">最近识别</h1>
+        <h1 className="page-title">最近识别</h1>
+        <p className="mt-3 text-sm leading-6 text-slate">不用重新拍，也能快速回到之前看过的器械教程入口。</p>
         <div className="mt-4 space-y-3">
           {historyItems.length === 0 ? (
-            <p className="rounded-3xl bg-white p-4 text-ink/65">还没有历史记录。</p>
+            <p className="surface-card text-slate">还没有历史记录。</p>
           ) : (
             historyItems.map((item) => (
               <button
-                className="w-full rounded-3xl bg-white p-4 text-left shadow-soft"
+                className="list-card"
                 key={`${item.id}-${item.createdAt}`}
                 onClick={() => {
                   const equipment = getEquipmentCard(item.id);
@@ -286,88 +300,85 @@ export function App() {
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-8">
-      <section className="rounded-[2.4rem] bg-white/90 p-6 shadow-soft">
-        <p className="text-xs font-black uppercase tracking-[0.28em] text-fern">Gym Equipment AI</p>
-        <h1 className="mt-4 text-4xl font-black leading-tight text-ink">拍一下，马上知道器械怎么搜</h1>
-        <p className="mt-4 text-base leading-7 text-ink/70">
+    <main className="screen pt-8">
+      <section className="hero-card">
+        <div className="relative">
+          <p className="eyebrow">Gym Equipment AI</p>
+          <h1 className="mt-4 text-[2.8rem] font-black leading-[1.03] tracking-[-0.06em] text-ink">
+            拍一下，马上知道器械怎么搜
+          </h1>
+          <p className="mt-5 text-[1.05rem] leading-8 text-slate">
           面向健身新手的器械识别入口。识别器械后，直接生成 B站、抖音、小红书和百度的教程搜索词。
-        </p>
-        {inWeChat ? (
-          <p className="mt-4 rounded-2xl bg-clay/15 px-4 py-3 text-sm font-bold text-clay">
-            为了更好跳转 B站/抖音，请点击右上角，用浏览器打开。
           </p>
-        ) : null}
-        {notice ? <p className="mt-4 rounded-2xl bg-moss px-4 py-3 text-sm text-fern">{notice}</p> : null}
-        <input
-          accept="image/*"
-          aria-label="拍照识别器械"
-          capture="environment"
-          className="hidden"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            if (file) {
-              void handleFile(file, 'camera');
-            }
-            event.currentTarget.value = '';
-          }}
-          ref={cameraInputRef}
-          type="file"
-        />
-        <input
-          accept="image/*"
-          aria-label="从相册上传器械图片"
-          className="hidden"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            if (file) {
-              void handleFile(file, 'album');
-            }
-            event.currentTarget.value = '';
-          }}
-          ref={albumInputRef}
-          type="file"
-        />
-        <button
-          className="mt-6 w-full rounded-3xl bg-fern px-5 py-4 text-lg font-black text-white shadow-soft"
-          onClick={() => cameraInputRef.current?.click()}
-          type="button"
-        >
-          拍照识别
-        </button>
-        <button
-          className="mt-3 w-full rounded-3xl bg-moss px-5 py-4 text-base font-black text-fern shadow-soft"
-          onClick={() => albumInputRef.current?.click()}
-          type="button"
-        >
-          从相册上传
-        </button>
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          <button
-            className="rounded-2xl bg-moss px-4 py-3 text-sm font-black text-fern"
-            onClick={() => navigateTo('equipment-list')}
-            type="button"
-          >
-            支持器械
-          </button>
-          <button
-            className="rounded-2xl bg-moss px-4 py-3 text-sm font-black text-fern"
-            onClick={() => {
-              setHistoryItems(readHistory());
-              navigateTo('history');
+          <div className="mt-5 grid grid-cols-3 gap-2 text-center text-xs font-black text-fern">
+            <span className="rounded-2xl bg-moss px-2 py-2">拍器械</span>
+            <span className="rounded-2xl bg-moss px-2 py-2">认名称</span>
+            <span className="rounded-2xl bg-moss px-2 py-2">去搜索</span>
+          </div>
+          {inWeChat ? (
+            <p className="mt-4 rounded-2xl bg-clay/15 px-4 py-3 text-sm font-bold text-clay">
+              为了更好跳转 B站/抖音，请点击右上角，用浏览器打开。
+            </p>
+          ) : null}
+          {notice ? <p className="mt-4 rounded-2xl bg-moss px-4 py-3 text-sm font-bold text-fern">{notice}</p> : null}
+          <input
+            accept="image/*"
+            aria-label="拍照识别器械"
+            capture="environment"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) {
+                void handleFile(file, 'camera');
+              }
+              event.currentTarget.value = '';
             }}
+            ref={cameraInputRef}
+            type="file"
+          />
+          <input
+            accept="image/*"
+            aria-label="从相册上传器械图片"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) {
+                void handleFile(file, 'album');
+              }
+              event.currentTarget.value = '';
+            }}
+            ref={albumInputRef}
+            type="file"
+          />
+          <button className="btn-primary mt-7 text-lg" onClick={() => cameraInputRef.current?.click()} type="button">
+            拍照识别
+          </button>
+          <button className="btn-secondary mt-3" onClick={() => albumInputRef.current?.click()} type="button">
+            从相册上传
+          </button>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <button className="btn-ghost" onClick={() => navigateTo('equipment-list')} type="button">
+              支持器械
+            </button>
+            <button
+              className="btn-ghost"
+              onClick={() => {
+                setHistoryItems(readHistory());
+                navigateTo('history');
+              }}
+              type="button"
+            >
+              最近识别
+            </button>
+          </div>
+          <button
+            className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-[1.15rem] bg-white/55 px-4 py-3 text-sm font-black text-fern"
+            onClick={() => navigateTo('training-records')}
             type="button"
           >
-            最近识别
+            我的训练记录
           </button>
         </div>
-        <button
-          className="mt-3 w-full rounded-2xl border border-fern/10 bg-white px-4 py-3 text-sm font-black text-fern shadow-soft"
-          onClick={() => navigateTo('training-records')}
-          type="button"
-        >
-          我的训练记录
-        </button>
       </section>
     </main>
   );

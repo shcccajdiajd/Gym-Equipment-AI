@@ -1,9 +1,20 @@
 # Progress
 
-## Latest Update: Lightweight Training Records And Progress Curve
+## Latest Update: H5 Mobile UI/UX Polish
 
 ## Completed
 
+- Refined the H5 visual system for a more beginner-friendly, trustworthy, mobile-first product feel.
+- Added reusable UI primitives and tokens in [apps/web/src/styles.css](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/styles.css) and [apps/web/tailwind.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/tailwind.config.ts), including warmer surfaces, clearer cards, stronger button states, safer focus rings, and safe-area-aware screen shells.
+- Improved the home page hierarchy so the first screen clearly communicates `拍器械 -> 认名称 -> 去搜索`, keeps `拍照识别` as the dominant CTA, and pushes `我的训练记录` into a lighter secondary position.
+- Improved the recognition loading state with image preview containment, a simple progress cue, and clearer copy about generating tutorial search terms.
+- Improved the result page information hierarchy so the recognized equipment summary is scannable, multi-action selection is more compact, and the tutorial search module appears earlier and more prominently.
+- Redesigned the tutorial search panel to emphasize the current search query, query-type chips, platform search buttons, and copy fallback.
+- Improved teaching sections with numbered step chips, safety/error cards, and calmer text density so the page reads less like a manual.
+- Improved the lightweight training-record surfaces, including the training log page, progress curve cards, and record form inputs, while keeping training secondary to recognition/search.
+- Added view-change scroll reset in [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx) so internal navigation and browser back do not inherit awkward scroll positions.
+- Checked mobile UI in browser-sized frames for `375x812`, `390x844`, and `430x932`; no horizontal overflow was observed in the home, result, search, training-records, or training-form flows.
+- Added `tmp-ui-screens` to [.gitignore](/Users/shc/Documents/Codex/2026-05-24/ai/.gitignore) so local UI check screenshots are not accidentally committed.
 - Reworked the H5 training-records information architecture so the page now reads as `按日期查看 -> 当天训练记录` followed by `按器械查看 -> 重量进步曲线`.
 - Moved the current-week selector and history list into a first card titled `训练日志`.
 - Renamed the selector copy from `本周快速筛选` to `按日期查看`, while keeping `全部日期` as the reset action.
@@ -79,6 +90,7 @@
 
 ## Modified Files In This Phase
 
+- [.gitignore](/Users/shc/Documents/Codex/2026-05-24/ai/.gitignore)
 - [README.md](/Users/shc/Documents/Codex/2026-05-24/ai/README.md)
 - [PROGRESS.md](/Users/shc/Documents/Codex/2026-05-24/ai/PROGRESS.md)
 - [TODO.md](/Users/shc/Documents/Codex/2026-05-24/ai/TODO.md)
@@ -101,6 +113,10 @@
 - [services/api/src/routes/events.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/events.ts)
 - [services/api/src/routes/events.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/events.test.ts)
 - [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx)
+- [apps/web/src/styles.css](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/styles.css)
+- [apps/web/tailwind.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/tailwind.config.ts)
+- [apps/web/src/components/CandidateList.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/CandidateList.tsx)
+- [apps/web/src/components/UnsupportedResult.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/UnsupportedResult.tsx)
 - [apps/web/src/components/TrainingRecordForm.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/TrainingRecordForm.tsx)
 - [apps/web/src/components/TrainingRecordsPage.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/TrainingRecordsPage.tsx)
 - [apps/web/src/components/TrainingRecordsPage.test.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/TrainingRecordsPage.test.tsx)
@@ -134,8 +150,9 @@
 - Deployment upload artifacts have been prepared locally:
   - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
-- `npm test` passes with `89` tests after adding lightweight training-record coverage.
+- `npm test` passes with `92` tests after the H5 mobile UI/UX polish.
 - `npm run build:web` passes and emits `apps/web/dist`.
+- `npm run typecheck` passes across workspaces after the H5 mobile UI/UX polish.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:web:vercel` is the current Vercel demo build command and should be used by Vercel.
 - `npm run build:web:vercel` passes after the multi-exercise result-page change.
