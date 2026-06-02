@@ -157,6 +157,24 @@ describe('aliyunFcRecognition adapter', () => {
     });
   });
 
+  it('accepts anonymous analytics events from the FC handler', async () => {
+    const response = await handler(aliyunHttpEvent({
+      method: 'POST',
+      path: '/api/events',
+      body: JSON.stringify({
+        visitorId: 'visitor_123',
+        eventName: 'page_open',
+        timestamp: '2026-06-02T08:00:00.000Z',
+        properties: {
+          inWeChat: false
+        }
+      })
+    }));
+
+    expect(response?.statusCode).toBe(202);
+    expect(JSON.parse(response?.body ?? '')).toEqual({ status: 'ok' });
+  });
+
   it('returns INVALID_REQUEST for malformed handler event JSON', async () => {
     const response = await handler(Buffer.from('{not-json'));
 

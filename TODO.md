@@ -1,6 +1,44 @@
 # TODO
 
-## Current Phase: Browser Back Navigation For H5
+## Current Phase: Anonymous MVP Analytics
+
+- [x] Add anonymous funnel analytics without login.
+Acceptance:
+- The H5 frontend creates and reuses an anonymous `visitorId` in `localStorage`.
+- The frontend sends `page_open`, `upload_start`, `recognition_success`, `recognition_error`, `search_click`, and `copy_query` events.
+- Event payloads do not include image base64, phone numbers, login identity, or AI provider keys.
+- Analytics failures are silent and do not block upload, recognition, search, or copy flows.
+
+- [x] Add backend event ingestion for local API and Aliyun FC.
+Acceptance:
+- Local Fastify exposes `POST /api/events`.
+- Aliyun FC handler accepts `POST /api/events`.
+- Unknown event names return `INVALID_EVENT`.
+- Accepted events are logged as structured `analyticsEvent` payloads with message `analytics event received`.
+
+- [x] Document where to view MVP analytics.
+Acceptance:
+- README explains the anonymous analytics flow and event names.
+- [docs/deployment/vercel-h5-demo.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/vercel-h5-demo.md) explains how to view data in Aliyun FC logs.
+- The docs state that production analytics require re-uploading the rebuilt FC zip after `/api/events` changes.
+
+- [x] Rebuild the Aliyun FC package for production analytics.
+Acceptance:
+- `npm run build:fc:fullstack` exits `0`.
+- [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the new `/api/events` handler.
+
+- [ ] Upload the Aliyun FC package for production analytics.
+Acceptance:
+- The zip is uploaded to Aliyun FC with Handler `index.handler`.
+- A real phone page open creates an `analytics event received` log entry in Aliyun FC.
+
+- [ ] Redeploy the Vercel H5 frontend after analytics instrumentation.
+Acceptance:
+- GitHub contains the analytics commit.
+- Vercel production deployment is rebuilt from `main`.
+- The deployed frontend sends events to `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/api/events`.
+
+## Previous Phase: Browser Back Navigation For H5
 
 - [x] Make the mobile browser back button work inside the H5 product flow.
 Acceptance:

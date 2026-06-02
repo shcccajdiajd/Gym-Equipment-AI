@@ -1,9 +1,16 @@
 # Progress
 
-## Latest Update: Browser Back Navigation For H5
+## Latest Update: Anonymous MVP Analytics
 
 ## Completed
 
+- Added anonymous H5 funnel analytics using a localStorage `visitorId` and `POST /api/events`.
+- Added tracked events for page open, upload start, recognition success, recognition error, platform search click, and copy-search-query actions.
+- Added a Fastify `POST /api/events` route that validates event names and logs structured `analyticsEvent` payloads without storing images, phone numbers, or login identity.
+- Added Aliyun FC `/api/events` support so the deployed Vercel H5 can send analytics to the existing FC backend.
+- Added web analytics utilities and tests for visitor id reuse, event endpoint generation, and event posting.
+- Updated README and Vercel deployment docs with the current data-viewing path: Aliyun FC logs filtered by `analytics event received`.
+- Regenerated [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) with `/api/events` support for Aliyun FC upload.
 - Added browser-history backed navigation for the H5 app so phone browser back buttons can move from result, unsupported, supported-equipment, and history views back through the product flow.
 - Added a small app-navigation utility that stores the current internal view in `window.history.state` and restores the view on `popstate`.
 - Replaced direct H5 `setView(...)` navigation calls with a `navigateTo(...)` wrapper, while keeping recognition success from leaving a stale `识别中` page in the browser back stack.
@@ -61,6 +68,7 @@
 - [docs/deployment/aliyun-oss-fc.md](/Users/shc/Documents/Codex/2026-05-24/ai/docs/deployment/aliyun-oss-fc.md)
 - [services/api/package.json](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/package.json)
 - [services/api/src/app.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/app.ts)
+- [services/api/src/core/analyticsEvents.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/analyticsEvents.ts)
 - [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts)
 - [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts)
 - [services/api/src/core/recognizeEquipment.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.test.ts)
@@ -69,7 +77,11 @@
 - [services/api/src/lib/recognizers/types.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/lib/recognizers/types.ts)
 - [services/api/src/routes/recognitions.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.ts)
 - [services/api/src/routes/recognitions.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/recognitions.test.ts)
+- [services/api/src/routes/events.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/events.ts)
+- [services/api/src/routes/events.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/routes/events.test.ts)
 - [apps/web/src/App.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/App.tsx)
+- [apps/web/src/utils/analytics.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/analytics.ts)
+- [apps/web/src/utils/analytics.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/analytics.test.ts)
 - [apps/web/src/utils/appNavigation.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/appNavigation.ts)
 - [apps/web/src/utils/appNavigation.test.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/utils/appNavigation.test.ts)
 - [apps/web/src/components/EquipmentResult.tsx](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/components/EquipmentResult.tsx)
@@ -96,13 +108,15 @@
 - Deployment upload artifacts have been prepared locally:
   - [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) contains the FC handler bundle at archive root.
   - [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) contains the OSS static website files to upload.
-- `npm test` passes with `77` tests.
+- `npm test` passes with `83` tests.
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:web:vercel` is the current Vercel demo build command and should be used by Vercel.
 - `npm run build:web:vercel` passes after the multi-exercise result-page change.
 - `npm run build:web:vercel` passes after expanding all obvious multi-use equipment variants.
 - `npm run build:web:vercel` passes after the browser-history navigation fix.
+- `npm run build:web:vercel` passes after anonymous analytics instrumentation.
+- `npm run build:fc:fullstack` passes after adding `/api/events` and regenerates the FC upload zip.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
 - `npm run build:fc:fullstack` passes and emits a FC upload zip with root `index.js` and `public/` static files.
 - `npm run typecheck` passes across workspaces.
@@ -121,6 +135,7 @@
 - The Aliyun FC package must be rebuilt and re-uploaded after the CORS deduplication change before Vercel recognition can be retested.
 - The Vercel frontend needs to redeploy from GitHub after the multi-exercise result-page commit before testers can see the new "练哪里" module.
 - Platform search jumps still need real phone testing from the deployed Vercel H5 domain.
+- The regenerated FC zip must be uploaded to Aliyun FC before production analytics events appear in FC logs.
 
 ## Completed
 

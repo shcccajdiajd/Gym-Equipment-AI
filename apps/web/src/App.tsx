@@ -14,6 +14,7 @@ import {
   replaceAppViewInHistory,
   type AppView
 } from './utils/appNavigation.js';
+import { trackEvent } from './utils/analytics.js';
 
 type ResultState = {
   payload: RecognitionPayload;
@@ -44,6 +45,11 @@ export function App() {
 
   useEffect(() => {
     replaceAppViewInHistory('home');
+    void trackEvent('page_open', {
+      properties: {
+        inWeChat
+      }
+    });
 
     function handlePopState(event: PopStateEvent) {
       setView(getAppViewFromHistoryState(event.state) ?? 'home');
@@ -51,7 +57,7 @@ export function App() {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [inWeChat]);
 
   function navigateTo(nextView: AppView, mode: 'push' | 'replace' = 'push') {
     if (mode === 'replace') {
@@ -105,18 +111,43 @@ export function App() {
     navigateTo('home', 'replace');
   }
 
-  async function handleFile(file: File) {
+  async function handleFile(file: File, source: 'camera' | 'album') {
     setNotice('');
     navigateTo('recognizing');
+    void trackEvent('upload_start', {
+      properties: {
+        source,
+        fileType: file.type || 'unknown',
+        fileSize: file.size
+      }
+    });
 
     try {
       const compressed = await compressImageToBase64(file);
       setPreviewUrl(compressed.previewUrl);
       setNotice(compressed.warning);
-      const payload = await recognizeEquipmentImage(compressed.base64, 'album');
+      const payload = await recognizeEquipmentImage(compressed.base64, source);
+      void trackEvent(payload.equipment && (payload.status === 'recognized' || payload.status === 'low_confidence')
+        ? 'recognition_success'
+        : 'recognition_error', {
+        properties: {
+          source,
+          status: payload.status,
+          equipmentId: payload.equipment?.id ?? null,
+          confidence: payload.confidence ?? null,
+          errorCode: payload.errorCode ?? null
+        }
+      });
       handleRecognitionPayload(payload, compressed.previewUrl);
     } catch (error) {
       setNotice(error instanceof ImageTooLargeError ? error.message : '图片处理失败，请换一张图片再试。');
+      void trackEvent('recognition_error', {
+        properties: {
+          source,
+          status: 'image_processing_error',
+          errorCode: error instanceof ImageTooLargeError ? 'IMAGE_TOO_LARGE' : 'IMAGE_PROCESSING_FAILED'
+        }
+      });
       navigateTo('home', 'replace');
     }
   }
@@ -242,7 +273,7 @@ export function App() {
           onChange={(event) => {
             const file = event.target.files?.[0];
             if (file) {
-              void handleFile(file);
+              void handleFile(file, 'camera');
             }
             event.currentTarget.value = '';
           }}
@@ -256,7 +287,7 @@ export function App() {
           onChange={(event) => {
             const file = event.target.files?.[0];
             if (file) {
-              void handleFile(file);
+              void handleFile(file, 'album');
             }
             event.currentTarget.value = '';
           }}

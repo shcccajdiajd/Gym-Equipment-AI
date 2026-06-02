@@ -45,6 +45,34 @@ VITE_API_PROXY_TARGET=http://127.0.0.1:3001
 
 Leaving `VITE_API_BASE_URL` empty lets the browser call `/api/recognitions`, which Vite proxies to the local API during development.
 
+## Anonymous MVP Analytics
+
+The H5 MVP uses a lightweight anonymous analytics flow. The frontend creates a `visitorId` in `localStorage` and sends small event payloads to `POST /api/events`. It does not send photos, phone numbers, login identity, or provider API keys.
+
+Tracked events:
+
+- `page_open`: a browser opened the H5 page.
+- `upload_start`: a user selected camera or album upload.
+- `recognition_success`: the recognition flow returned a matched or low-confidence equipment result.
+- `recognition_error`: recognition failed, timed out, or returned unsupported.
+- `search_click`: a user clicked B站, 抖音, 小红书, or 百度 search.
+- `copy_query`: a user copied a tutorial search term.
+
+For the current Vercel + Aliyun FC demo, view these events in the Aliyun Function Compute logs:
+
+1. Open the Aliyun FC function used by `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run`.
+2. Go to `日志`.
+3. Search for `analytics event received`.
+4. Count or filter by `analyticsEvent.eventName` and de-duplicate by `analyticsEvent.visitorId` when you want approximate user counts.
+
+After changing analytics backend code, rebuild and upload the FC package so `/api/events` exists in production:
+
+```bash
+npm run build:fc:fullstack
+```
+
+Upload [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) to Aliyun FC with Handler `index.handler`.
+
 If you need to revisit the mini program later, sync the equipment catalog and open `apps/miniprogram` in WeChat Developer Tools:
 
 ```bash

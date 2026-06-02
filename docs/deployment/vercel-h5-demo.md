@@ -67,6 +67,26 @@ After Vercel gives a `*.vercel.app` URL:
 5. Tap B站, 抖音, 小红书, and 百度 search actions.
 6. Try the same link inside WeChat and confirm the browser-open guidance appears.
 
+## Viewing MVP Funnel Data
+
+The Vercel frontend sends anonymous events to the Aliyun FC backend at `POST /api/events`. No images or phone numbers are included.
+
+Where to view data:
+
+1. Open the Aliyun Function Compute function behind `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run`.
+2. Open `日志`.
+3. Search `analytics event received`.
+4. Use `analyticsEvent.eventName` to count funnel steps:
+   - `page_open`
+   - `upload_start`
+   - `recognition_success`
+   - `recognition_error`
+   - `search_click`
+   - `copy_query`
+5. Use `analyticsEvent.visitorId` to estimate unique anonymous browser users.
+
+Important: if `/api/events` was added or changed, rebuild and upload [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) to Aliyun FC before expecting production analytics to appear.
+
 ## Known Tradeoffs
 
 - Vercel is only the temporary public demo entry.

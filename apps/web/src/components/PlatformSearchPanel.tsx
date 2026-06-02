@@ -2,6 +2,7 @@ import type { EquipmentCard, EquipmentExerciseVariant } from '@gym-equipment-ai/
 import { useEffect, useMemo, useState } from 'react';
 import { buildSearchTargets, isWeChatBrowser } from '../utils/searchTargets.js';
 import { buildTutorialSearchQueries, getPrimarySearchQuery } from '../utils/searchQueries.js';
+import { trackEvent } from '../utils/analytics.js';
 
 type PlatformSearchPanelProps = {
   equipment: EquipmentCard;
@@ -31,6 +32,13 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
 
   async function copySearchQuery() {
     await navigator.clipboard?.writeText(selectedQuery);
+    void trackEvent('copy_query', {
+      properties: {
+        equipmentId: equipment.id,
+        variantId: variant?.id ?? null,
+        query: selectedQuery
+      }
+    });
     setCopied(true);
   }
 
@@ -72,6 +80,16 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
             className="rounded-2xl bg-white px-4 py-3 text-center text-sm font-black text-fern"
             href={target.url}
             key={target.id}
+            onClick={() => {
+              void trackEvent('search_click', {
+                properties: {
+                  equipmentId: equipment.id,
+                  variantId: variant?.id ?? null,
+                  platform: target.id,
+                  query: selectedQuery
+                }
+              });
+            }}
             rel="noreferrer"
             target="_blank"
             title={target.fallbackText}

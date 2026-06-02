@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, resolve, sep } from 'node:path';
 import { createDefaultRecognizer } from '../core/defaultRecognizer.js';
+import { parseAnalyticsEvent } from '../core/analyticsEvents.js';
 import { recognizeEquipment } from '../core/recognizeEquipment.js';
 import type { RecognitionCoreResponse } from '../core/recognizeEquipment.js';
 import type { Recognizer } from '../lib/recognizers/types.js';
@@ -175,6 +176,10 @@ function isRecognitionApiPath(path: string) {
   return path === '/api/recognitions' || path.startsWith('/api/recognitions?');
 }
 
+function isEventApiPath(path: string) {
+  return path === '/api/events' || path.startsWith('/api/events?');
+}
+
 function getStaticRoot() {
   return resolve(process.env.ALIYUN_FC_STATIC_ROOT ?? 'public');
 }
@@ -255,6 +260,48 @@ export async function aliyunFcRecognition(
   return json(statusCodeForResponse(payload), compactResponse(payload));
 }
 
+export async function aliyunFcEvent(event: FcEvent): Promise<FcResponse> {
+  const method = getMethod(event);
+  if (method === 'OPTIONS') {
+    return json(204, {});
+  }
+
+  if (method !== 'POST') {
+    return json(405, {
+      status: 'error',
+      message: '只支持 POST 请求。',
+      errorCode: 'METHOD_NOT_ALLOWED'
+    });
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = parseBody(event);
+  } catch {
+    return json(400, {
+      status: 'invalid_request',
+      message: '请求 JSON 解析失败。',
+      errorCode: 'INVALID_REQUEST'
+    });
+  }
+
+  const parsedEvent = parseAnalyticsEvent(body);
+  if (!parsedEvent.success) {
+    return json(400, {
+      status: 'invalid_request',
+      message: '事件参数不合法。',
+      errorCode: 'INVALID_EVENT'
+    });
+  }
+
+  console.info(JSON.stringify({
+    msg: 'analytics event received',
+    analyticsEvent: parsedEvent.data
+  }));
+
+  return json(202, { status: 'ok' });
+}
+
 export async function handler(request: FcHttpRequest | Buffer | string, response?: unknown) {
   let event: FcEvent;
   try {
@@ -298,7 +345,7 @@ export async function handler(request: FcHttpRequest | Buffer | string, response
     return;
   }
 
-  const result = await aliyunFcRecognition(event);
+  const result = isEventApiPath(path) ? await aliyunFcEvent(event) : await aliyunFcRecognition(event);
 
   if (!hasHttpResponseMethods(response)) {
     return result;
