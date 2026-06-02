@@ -1,4 +1,7 @@
 import { Buffer } from 'node:buffer';
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import type { Recognizer } from '../lib/recognizers/types.js';
 import { aliyunFcRecognition, handler } from './aliyunFcRecognition.js';
@@ -15,12 +18,15 @@ const successRecognizer: Recognizer = {
 
 function aliyunHttpEvent(input: {
   method: string;
+  path?: string;
   body?: string;
   isBase64Encoded?: boolean;
 }) {
+  const path = input.path ?? '/api/recognitions';
+
   return Buffer.from(JSON.stringify({
     version: 'v1',
-    rawPath: '/api/recognitions',
+    rawPath: path,
     headers: {
       'content-type': 'application/json'
     },
@@ -30,14 +36,59 @@ function aliyunHttpEvent(input: {
     requestContext: {
       http: {
         method: input.method,
-        path: '/api/recognitions',
+        path,
         protocol: 'HTTP/1.1'
       }
     }
   }));
 }
 
+function withStaticFixture<T>(callback: (staticRoot: string) => Promise<T>) {
+  const staticRoot = mkdtempSync(join(tmpdir(), 'gym-equipment-fc-static-'));
+  mkdirSync(join(staticRoot, 'assets'));
+  writeFileSync(join(staticRoot, 'index.html'), '<!doctype html><div id="root">Gym Equipment AI</div>');
+  writeFileSync(join(staticRoot, 'assets', 'app.js'), 'console.log("gym equipment ai");');
+
+  const previous = process.env.ALIYUN_FC_STATIC_ROOT;
+  process.env.ALIYUN_FC_STATIC_ROOT = staticRoot;
+
+  return callback(staticRoot).finally(() => {
+    if (previous === undefined) {
+      delete process.env.ALIYUN_FC_STATIC_ROOT;
+    } else {
+      process.env.ALIYUN_FC_STATIC_ROOT = previous;
+    }
+  });
+}
+
 describe('aliyunFcRecognition adapter', () => {
+  it('serves the web index from the FC handler root path', async () => {
+    await withStaticFixture(async () => {
+      const response = await handler(aliyunHttpEvent({
+        method: 'GET',
+        path: '/'
+      }));
+
+      expect(response?.statusCode).toBe(200);
+      expect(response?.headers['content-type']).toContain('text/html');
+      expect(response?.headers['content-disposition']).toBe('inline');
+      expect(response?.body).toContain('Gym Equipment AI');
+    });
+  });
+
+  it('serves web static assets from the FC handler', async () => {
+    await withStaticFixture(async () => {
+      const response = await handler(aliyunHttpEvent({
+        method: 'GET',
+        path: '/assets/app.js'
+      }));
+
+      expect(response?.statusCode).toBe(200);
+      expect(response?.headers['content-type']).toContain('javascript');
+      expect(response?.body).toContain('gym equipment ai');
+    });
+  });
+
   it('answers CORS preflight from the real Aliyun HTTP event shape', async () => {
     const response = await handler(aliyunHttpEvent({
       method: 'OPTIONS'

@@ -6,6 +6,12 @@ The production direction for the H5 MVP is now a China-friendly Aliyun deploymen
 - Recognition runs in Aliyun Function Compute (FC), using the same core code as local `services/api`.
 - DashScope / Alibaba Model Studio stays server-side. Never put `ALIYUN_API_KEY` in any `VITE_` frontend variable.
 
+Current MVP shortcut:
+
+- Because OSS default object URLs can force-download `index.html`, the quickest public test path is FC-only hosting.
+- The same FC function can serve `GET /` and `GET /assets/...` for the H5 frontend, while `POST /api/recognitions` continues to run recognition.
+- Build this package with `npm run build:fc:fullstack`, then upload [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip) to FC.
+
 Official references:
 
 - OSS static website hosting: https://help.aliyun.com/zh/oss/static-website-hosting-overview
@@ -14,6 +20,36 @@ Official references:
 - FC programming model: https://help.aliyun.com/zh/functioncompute/fc/user-guide/basics
 
 ## Build The Frontend
+
+### Option A: FC-only public beta
+
+This is the recommended path for the current MVP test because it avoids OSS default-domain forced downloads.
+
+```bash
+npm run build:fc:fullstack
+```
+
+Build output:
+
+```text
+deploy-artifacts/aliyun-fc-recognitions.zip
+```
+
+Upload that zip to the existing FC function and keep Handler:
+
+```text
+index.handler
+```
+
+After upload, open the FC HTTP Trigger root URL:
+
+```text
+https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/
+```
+
+The frontend in this package calls `/api/recognitions` on the same origin.
+
+### Option B: OSS static website plus FC API
 
 Set the frontend API base URL before building. Use the FC HTTP trigger base URL if the trigger path is `/api/recognitions`, or use the full trigger URL ending in `/api/recognitions`.
 

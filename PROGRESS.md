@@ -11,6 +11,9 @@
 - Verified the uploaded Aliyun FC function through the public HTTP Trigger URL: `GET` returns structured `METHOD_NOT_ALLOWED`, empty `POST` returns structured `IMAGE_REQUIRED`, `OPTIONS` returns `204`, and the real `ims.webp` sample returns `pec-deck-fly` with `0.92` confidence.
 - Added `npm run build:web:aliyun` so the H5 frontend can be built directly against the verified FC base URL `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run`.
 - Rebuilt [apps/web/dist](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/dist) with the verified Aliyun FC API base URL for OSS upload.
+- Added FC-only H5 hosting as the current MVP shortcut because OSS default object URLs force-download `index.html`.
+- Updated the Aliyun FC handler so `GET /` and `GET /assets/...` serve the H5 frontend from bundled `public/` files, while `POST /api/recognitions` continues to call the shared recognition API.
+- Added `npm run build:fc:fullstack`, which builds the H5 app for same-origin `/api/recognitions`, bundles the FC handler, and packages `index.js` plus `public/` into [deploy-artifacts/aliyun-fc-recognitions.zip](/Users/shc/Documents/Codex/2026-05-24/ai/deploy-artifacts/aliyun-fc-recognitions.zip).
 - Switched the active deployment direction away from Vercel/Render and toward Aliyun OSS static website hosting plus Aliyun Function Compute.
 - Extracted platform-neutral recognition logic into [services/api/src/core/recognizeEquipment.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/recognizeEquipment.ts).
 - Added [services/api/src/core/defaultRecognizer.ts](/Users/shc/Documents/Codex/2026-05-24/ai/services/api/src/core/defaultRecognizer.ts) so local Fastify and FC can share the same provider selection without duplicating code.
@@ -59,16 +62,19 @@
 - `npm run build:web` passes and emits `apps/web/dist`.
 - `npm run build:web:aliyun` passes and emits `apps/web/dist` wired to the verified FC base URL.
 - `npm run build:fc` passes and emits `dist/aliyun-fc/index.js`.
+- `npm run build:fc:fullstack` passes and emits a FC upload zip with root `index.js` and `public/` static files.
 - `npm run typecheck` passes across workspaces.
 - The generated FC bundle can be imported by Node and exposes `aliyunFcRecognition` plus the deployable `handler`.
 - A local Node smoke test using an Aliyun-style Buffer event reaches `index.handler` and returns structured JSON instead of crashing.
 - The deployed Aliyun FC HTTP Trigger at `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/api/recognitions` can process a real image request and call DashScope successfully.
+- A local Node smoke test using the packaged static root confirms `GET /` returns inline HTML, `GET /assets/...` returns JavaScript, and `POST /api/recognitions` still returns API JSON.
 
 ## Current Problems
 
-- The Aliyun-targeted H5 build is ready in `apps/web/dist`, but it still needs to be uploaded to OSS.
-- OSS frontend deployment still needs final deployed-phone testing after upload.
-- Platform search jumps still need real phone testing from the OSS domain.
+- The FC-only fullstack zip still needs to be uploaded to Aliyun FC.
+- The FC root URL still needs final deployed-phone testing after upload.
+- OSS static hosting is paused because the default OSS object URL forces HTML downloads unless a static website endpoint/custom domain strategy is used.
+- Platform search jumps still need real phone testing from the deployed H5 domain.
 
 ## Completed
 

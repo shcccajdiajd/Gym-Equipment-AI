@@ -10,10 +10,13 @@
   "scripts": {
     "build": "npm run build:web",
     "build:fc": "npm run build:fc --workspace @gym-equipment-ai/api",
+    "build:fc:fullstack": "npm run build:web:fc && npm run build:fc && npm run package:fc:fullstack",
     "build:web": "npm run build --workspace @gym-equipment-ai/web",
     "build:web:aliyun": "VITE_API_BASE_URL=https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run npm run build:web",
+    "build:web:fc": "VITE_API_BASE_URL= npm run build:web",
     "dev:api": "npm run dev --workspace @gym-equipment-ai/api",
     "dev:web": "npm run dev --workspace @gym-equipment-ai/web",
+    "package:fc:fullstack": "node scripts/package-aliyun-fc-fullstack.mjs",
     "start:api": "npm run start --workspace @gym-equipment-ai/api",
     "sync:catalog": "node --import tsx scripts/sync-catalog.ts",
     "test": "vitest run",

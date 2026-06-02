@@ -77,16 +77,26 @@ Acceptance:
 - `npm run build:web:aliyun` exits `0`.
 - The generated `apps/web/dist` bundle contains the verified FC base URL `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run`.
 
-- [ ] Deploy to Aliyun OSS and FC.
+- [x] Add FC-only H5 hosting as the current public beta shortcut.
 Acceptance:
-- `apps/web/dist` is uploaded to OSS static website hosting. Current status: build is ready locally, upload still pending.
-- `deploy-artifacts/aliyun-fc-recognitions.zip` or `dist/aliyun-fc/index.js` is uploaded to FC. Current status: done and verified.
+- `GET /` from the FC handler serves `index.html` from bundled static files.
+- `GET /assets/...` from the FC handler serves frontend assets with browser-friendly content types.
+- Static HTML responses include `content-disposition: inline` to avoid the download behavior seen with OSS default object URLs.
+- `POST /api/recognitions` keeps using the same shared recognition API.
+- `npm run build:fc:fullstack` exits `0` and packages root `index.js` plus `public/` into `deploy-artifacts/aliyun-fc-recognitions.zip`.
+
+- [ ] Deploy the FC-only fullstack package.
+Acceptance:
+- `deploy-artifacts/aliyun-fc-recognitions.zip` is uploaded to the existing Aliyun FC function.
+- Handler remains `index.handler`.
+- Opening `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/` returns the H5 page instead of downloading a file.
+- Opening `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/assets/...` returns JS/CSS assets.
 - FC has `RECOGNIZER_PROVIDER=aliyun`, `ALIYUN_API_KEY`, `ALIYUN_BASE_URL`, and `ALIYUN_MODEL=qwen3-vl-plus`. Current status: enough is configured for live recognition to succeed.
-- The OSS build uses `VITE_API_BASE_URL` pointing to the FC HTTP Trigger. Current status: local `apps/web/dist` is ready for OSS upload.
+- The H5 frontend calls same-origin `/api/recognitions`.
 
 - [ ] Run deployed phone smoke test.
 Acceptance:
-- A phone opens the OSS static website URL outside local-only networking.
+- A phone opens the FC root URL outside local-only networking.
 - Uploading an image reaches FC and returns recognized, low-confidence, unsupported, or clear error state.
 - B站/抖音/小红书/百度 buttons are clickable and copy-search fallback works.
 - WeChat in-app browser shows the “用浏览器打开” guidance.

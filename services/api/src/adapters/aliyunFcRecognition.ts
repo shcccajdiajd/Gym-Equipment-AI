@@ -1,3 +1,5 @@
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { extname, resolve, sep } from 'node:path';
 import { createDefaultRecognizer } from '../core/defaultRecognizer.js';
 import { recognizeEquipment } from '../core/recognizeEquipment.js';
 import type { RecognitionCoreResponse } from '../core/recognizeEquipment.js';
@@ -43,6 +45,25 @@ const JSON_HEADERS = {
   'access-control-allow-headers': 'content-type,authorization'
 };
 
+const STATIC_HEADERS = {
+  'access-control-allow-origin': '*',
+  'content-disposition': 'inline'
+};
+
+const STATIC_CONTENT_TYPES: Record<string, string> = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.ico': 'image/x-icon'
+};
+
 function compactResponse(payload: RecognitionCoreResponse) {
   return {
     status: payload.status,
@@ -75,6 +96,17 @@ function json(statusCode: number, payload: Record<string, unknown>): FcResponse 
     statusCode,
     headers: JSON_HEADERS,
     body: JSON.stringify(payload)
+  };
+}
+
+function text(statusCode: number, body: string, contentType: string): FcResponse {
+  return {
+    statusCode,
+    headers: {
+      ...STATIC_HEADERS,
+      'content-type': contentType
+    },
+    body
   };
 }
 
@@ -139,6 +171,52 @@ function getMethod(event: FcEvent) {
     'GET').toUpperCase();
 }
 
+function getPath(event: FcEvent) {
+  return event.rawPath ?? event.requestContext?.http?.path ?? '/';
+}
+
+function isRecognitionApiPath(path: string) {
+  return path === '/api/recognitions' || path.startsWith('/api/recognitions?');
+}
+
+function getStaticRoot() {
+  return resolve(process.env.ALIYUN_FC_STATIC_ROOT ?? 'public');
+}
+
+function getStaticFilePath(path: string, staticRoot = getStaticRoot()) {
+  const pathname = decodeURIComponent(path.split('?')[0] || '/');
+  const relativePath = pathname === '/' ? '/index.html' : pathname;
+  const candidate = resolve(staticRoot, `.${relativePath}`);
+  const rootPrefix = staticRoot.endsWith(sep) ? staticRoot : `${staticRoot}${sep}`;
+
+  if (candidate !== staticRoot && !candidate.startsWith(rootPrefix)) {
+    return undefined;
+  }
+
+  return candidate;
+}
+
+function serveStaticAsset(path: string): FcResponse {
+  const requestedFile = getStaticFilePath(path);
+
+  if (requestedFile && existsSync(requestedFile) && statSync(requestedFile).isFile()) {
+    return text(
+      200,
+      readFileSync(requestedFile, 'utf8'),
+      STATIC_CONTENT_TYPES[extname(requestedFile)] ?? 'application/octet-stream'
+    );
+  }
+
+  if (!path.startsWith('/assets/')) {
+    const indexFile = getStaticFilePath('/');
+    if (indexFile && existsSync(indexFile) && statSync(indexFile).isFile()) {
+      return text(200, readFileSync(indexFile, 'utf8'), STATIC_CONTENT_TYPES['.html']);
+    }
+  }
+
+  return text(404, 'Not Found', 'text/plain; charset=utf-8');
+}
+
 export async function aliyunFcRecognition(
   event: FcEvent,
   options: { recognizer?: Recognizer } = {}
@@ -191,6 +269,26 @@ export async function handler(request: FcHttpRequest | Buffer | string, response
       message: '请求 JSON 解析失败。',
       errorCode: 'INVALID_REQUEST'
     });
+
+    if (!hasHttpResponseMethods(response)) {
+      return result;
+    }
+
+    response.setStatusCode(result.statusCode);
+    for (const [name, value] of Object.entries(result.headers)) {
+      response.setHeader(name, value);
+    }
+    response.send(result.body);
+    return;
+  }
+
+  const method = getMethod(event);
+  const path = getPath(event);
+  if ((method === 'GET' || method === 'HEAD') && !isRecognitionApiPath(path)) {
+    const result = serveStaticAsset(path);
+    if (method === 'HEAD') {
+      result.body = '';
+    }
 
     if (!hasHttpResponseMethods(response)) {
       return result;
