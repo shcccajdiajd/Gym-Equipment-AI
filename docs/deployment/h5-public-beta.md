@@ -109,4 +109,4 @@ For the full Aliyun guide, see [docs/deployment/aliyun-oss-fc.md](/Users/shc/Doc
 - No login and no cloud user history.
 - Correction feedback is stored in localStorage only.
 - Platform search URLs are best-effort and may behave differently across mobile browsers.
-- CORS is currently permissive for fast MVP testing; tighten it before a broader public launch.
+- CORS is managed at the Aliyun FC HTTP Trigger layer for fast MVP testing; avoid also returning CORS headers from the function code, because duplicate CORS headers can make mobile browsers reject recognition requests.

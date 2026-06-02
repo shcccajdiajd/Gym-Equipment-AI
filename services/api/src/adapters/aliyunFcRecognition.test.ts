@@ -95,7 +95,8 @@ describe('aliyunFcRecognition adapter', () => {
     }));
 
     expect(response?.statusCode).toBe(204);
-    expect(response?.headers['access-control-allow-methods']).toContain('POST');
+    expect(response?.headers['content-type']).toContain('application/json');
+    expect(response?.headers['access-control-allow-origin']).toBeUndefined();
   });
 
   it('rejects GET from the real Aliyun HTTP event shape', async () => {

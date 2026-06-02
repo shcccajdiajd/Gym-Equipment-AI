@@ -39,14 +39,10 @@ type FcHttpResponse = {
 };
 
 const JSON_HEADERS = {
-  'content-type': 'application/json; charset=utf-8',
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'POST, OPTIONS',
-  'access-control-allow-headers': 'content-type,authorization'
+  'content-type': 'application/json; charset=utf-8'
 };
 
 const STATIC_HEADERS = {
-  'access-control-allow-origin': '*',
   'content-disposition': 'inline'
 };
 

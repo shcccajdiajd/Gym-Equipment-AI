@@ -109,6 +109,13 @@ Acceptance:
 - Vercel returns a `*.vercel.app` URL that opens the H5 page directly without downloading.
 - The built frontend calls `https://gym-equgnitions-uvamokegso.cn-beijing.fcapp.run/api/recognitions`.
 
+- [ ] Fix Aliyun FC duplicate CORS headers for Vercel recognition.
+Acceptance:
+- The FC function response does not return its own `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods`, or `Access-Control-Allow-Headers` headers.
+- The Aliyun HTTP Trigger remains responsible for CORS.
+- `OPTIONS /api/recognitions` from the Vercel origin returns only one effective `Access-Control-Allow-Origin` value.
+- `POST /api/recognitions` from the Vercel H5 page is no longer blocked by browser CORS.
+
 - [ ] Revisit Aliyun custom-domain deployment after the quick demo link is live.
 Acceptance:
 - Bind a custom domain to OSS static website hosting or FC.

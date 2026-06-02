@@ -134,13 +134,13 @@ LOG_LEVEL=info
 
 Do not configure `ALIYUN_API_KEY` in OSS, Vite, or any frontend environment variable.
 
-If FC trigger-level CORS is available in the console, allow:
+Configure CORS at the FC HTTP Trigger level:
 
 - Origin: your OSS static website domain
 - Methods: `POST, OPTIONS`
 - Headers: `content-type`
 
-The handler also returns CORS headers, so the deployment remains testable if trigger-level CORS is not configured yet.
+Do not also add CORS headers in the function response. Duplicate `Access-Control-Allow-Origin` headers can cause mobile browsers to reject the request before it reaches the API response parser.
 
 ## Configure The Web App
 

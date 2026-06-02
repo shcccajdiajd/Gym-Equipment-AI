@@ -4,6 +4,9 @@
 
 ## Completed
 
+- Investigated the deployed Vercel H5 recognition failure and found the FC preflight response included duplicate CORS headers from both the Aliyun HTTP Trigger and the function response.
+- Removed function-level CORS headers from the Aliyun FC adapter so the deployed HTTP Trigger can be the single CORS authority.
+- Updated the Aliyun deployment docs to warn that duplicate `Access-Control-Allow-Origin` headers can make mobile browsers show a generic connection failure.
 - Used a temporary FC debug handler to inspect Aliyun's real runtime input shape from console logs.
 - Confirmed the deployed HTTP trigger passes the first handler argument as a `Buffer` containing a v1 JSON event, with the request method at `requestContext.http.method`.
 - Replaced the temporary debug handler with a final FC adapter that parses Buffer/string/object inputs, supports Aliyun v1 HTTP events, decodes base64-encoded request bodies, returns proxy-style responses when no response helper is present, and keeps the shared recognition core path.
@@ -85,6 +88,7 @@
 - The FC default domain remains useful as the API endpoint, but should no longer be treated as the final H5 page URL.
 - OSS static hosting is paused until a static website endpoint/custom domain strategy is used.
 - Vercel's default domain may be slow or unstable for some mainland-China users, so it needs real phone testing before sharing widely.
+- The Aliyun FC package must be rebuilt and re-uploaded after the CORS deduplication change before Vercel recognition can be retested.
 - Platform search jumps still need real phone testing from the deployed Vercel H5 domain.
 
 ## Completed
