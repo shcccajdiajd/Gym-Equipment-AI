@@ -43,12 +43,12 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
   }
 
   return (
-    <section className="rounded-[1.9rem] bg-ink p-5 text-white shadow-lift">
+    <section className="search-shell">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-moss">Tutorial Search</p>
-          <h2 className="mt-1 text-[1.7rem] font-black tracking-[-0.04em]">直接去搜教程</h2>
-          <p className="mt-2 text-sm leading-6 text-moss/90">不用自己想关键词，选一个搜索词就能跳到内容平台。</p>
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-moss">Search Brief</p>
+          <h2 className="mt-1 text-[1.72rem] font-black leading-tight tracking-[-0.045em]">把器械变成可搜索的问题</h2>
+          <p className="mt-2 text-sm leading-6 text-moss/90">不用猜关键词，直接拿这句话去内容平台找教程。</p>
         </div>
         <span className="pill shrink-0 bg-white/12 text-moss">重点功能</span>
       </div>
@@ -59,9 +59,12 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
         </p>
       ) : null}
 
-      <div className="rounded-[1.35rem] border border-white/10 bg-white/10 p-4">
-        <p className="text-xs font-bold text-moss">当前搜索词</p>
-        <p className="mt-2 break-words text-xl font-black leading-snug text-white">{selectedQuery}</p>
+      <div className="query-card">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-moss">Current Query</p>
+          <span className="rounded-full bg-amber px-2.5 py-1 text-[0.68rem] font-black text-ink">新手推荐</span>
+        </div>
+        <p className="mt-2 break-words text-[1.35rem] font-black leading-snug tracking-[-0.025em] text-white">{selectedQuery}</p>
       </div>
 
       <label className="sr-only" htmlFor="query-select">选择搜索词</label>
@@ -93,10 +96,11 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
         ))}
       </div>
 
+      <p className="mt-4 text-xs font-black uppercase tracking-[0.18em] text-moss">Choose Platform</p>
       <div className="mt-4 grid grid-cols-2 gap-3">
         {targets.map((target) => (
           <a
-            className="inline-flex min-h-12 items-center justify-center rounded-[1.1rem] bg-white px-4 py-3 text-center text-sm font-black text-fern shadow-press transition active:scale-[0.99]"
+            className="platform-button"
             href={target.url}
             key={target.id}
             onClick={() => {
@@ -119,7 +123,7 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
       </div>
 
       <button
-        className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-[1.1rem] border border-white/20 px-4 py-3 text-sm font-black text-white transition active:scale-[0.99]"
+        className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-[1rem] border border-white/20 bg-white/[0.04] px-4 py-3 text-sm font-black text-white transition active:scale-[0.99]"
         onClick={copySearchQuery}
         type="button"
       >

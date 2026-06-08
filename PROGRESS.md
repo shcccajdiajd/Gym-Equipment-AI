@@ -1,9 +1,20 @@
 # Progress
 
-## Latest Update: H5 Mobile UI/UX Polish
+## Latest Update: H5 Anti-Slop Visual Refinement
 
 ## Completed
 
+- Applied the newly installed `design-taste-frontend` guidance to reduce generic AI-template UI patterns while preserving the current H5 recognition, search, history, and training-record flows.
+- Refined the home page copy and first-screen structure so the product reads as a clear utility: `不认识器械 -> 认名称 -> 搜对教程`.
+- Replaced the generic three-chip explanation with a numbered `拍器械 / 认名称 / 去搜索` step rail and added a trust strip that explains the B站、抖音、小红书、百度 search handoff.
+- Reworked the result-page search module from a generic dark card into a `Search Brief` panel that foregrounds the generated query before platform choices.
+- Adjusted the multi-action selector copy from generic `你想用它练哪里？` to the more contextual `这台器械想练哪里？`, while keeping variant behavior unchanged.
+- Converted result-page muscle display into scannable chips and tightened safety/error cards so the page is easier to skim on mobile.
+- Quieted the training-record surfaces with softer card radii and muted cards so training remains an auxiliary habit loop instead of competing with recognition/search.
+- Added subtle background texture and more consistent component radius rules in [apps/web/src/styles.css](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/styles.css) without adding new dependencies.
+- Updated component tests for the refined result/search copy and made the selected-date training-record test resilient to the current calendar week.
+- Verified the anti-slop refinement with `npm test`, `npm run typecheck`, and `npm run build:web`.
+- Browser-checked `375x812`, `390x844`, and `430x932` viewport sizes for home, result/search, and training-record views; no horizontal overflow was observed.
 - Refined the H5 visual system for a more beginner-friendly, trustworthy, mobile-first product feel.
 - Added reusable UI primitives and tokens in [apps/web/src/styles.css](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/src/styles.css) and [apps/web/tailwind.config.ts](/Users/shc/Documents/Codex/2026-05-24/ai/apps/web/tailwind.config.ts), including warmer surfaces, clearer cards, stronger button states, safer focus rings, and safe-area-aware screen shells.
 - Improved the home page hierarchy so the first screen clearly communicates `拍器械 -> 认名称 -> 去搜索`, keeps `拍照识别` as the dominant CTA, and pushes `我的训练记录` into a lighter secondary position.

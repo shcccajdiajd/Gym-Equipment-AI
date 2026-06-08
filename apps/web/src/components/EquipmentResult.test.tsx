@@ -21,10 +21,10 @@ describe('result rendering', () => {
 
     expect(html).toContain(equipment.zhName);
     expect(html).toContain('Pec Deck Chest Fly');
-    expect(html).toContain('你想用它练哪里？');
+    expect(html).toContain('这台器械想练哪里？');
     expect(html).toContain('data-exercise-variant-id="pec-deck-chest-fly"');
     expect(html).toContain('data-exercise-variant-id="pec-deck-rear-delt-fly"');
-    expect(html).toContain('直接去搜教程');
+    expect(html).toContain('把器械变成可搜索的问题');
     expect(html).toContain('蝴蝶机夹胸 正确使用 教学');
     expect(html).toContain('B站搜索');
     expect(html).toContain('记录本次训练');

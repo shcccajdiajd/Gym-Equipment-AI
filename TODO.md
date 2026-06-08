@@ -1,19 +1,25 @@
 # TODO
 
-## Current Phase: H5 Mobile UI/UX Polish
+## Current Phase: H5 Anti-Slop Visual Refinement
+
+- [x] Reduce generic AI-template feel while preserving the current product flow.
+Acceptance:
+- The H5 still supports camera upload, album upload, supported-equipment list, recent recognition, result pages, search buttons, correction candidates, and training records.
+- No backend recognition logic, API provider logic, or mini-program code is rewritten.
+- The visual changes use existing React/Tailwind patterns and add no heavy dependency.
 
 - [x] Improve the recognition-first home page hierarchy.
 Acceptance:
-- `拍照识别` remains the primary CTA and appears before secondary entries.
+- `拍照识别器械` remains the primary CTA and appears before secondary entries.
 - `从相册上传`, `支持器械`, `最近识别`, and `我的训练记录` remain available.
-- The first screen communicates `拍器械 -> 认名称 -> 去搜索`.
+- The first screen communicates `不认识器械 -> 认名称 -> 搜对教程`.
 - Training records stay visually secondary.
 
 - [x] Make the result page easier to scan and search-first.
 Acceptance:
 - Equipment name, English name, confidence/manual state, summary, and muscle chips are visible in a clean result card.
-- Multi-action equipment still shows `你想用它练哪里？`, but the selector is compact enough that the tutorial search module appears earlier.
-- `直接去搜教程` remains prominent and shows the selected search query before platform buttons.
+- Multi-action equipment still shows a compact `这台器械想练哪里？` selector before the tutorial search module.
+- `把器械变成可搜索的问题` remains prominent and shows the selected search query before platform buttons.
 - Teaching content remains available but is broken into clearer cards.
 
 - [x] Polish platform search, candidate, unsupported, and training surfaces.
@@ -29,7 +35,7 @@ Acceptance:
 - `npm run typecheck` exits `0`.
 - `npm run build:web` exits `0`.
 - Browser checks cover `375x812`, `390x844`, and `430x932`.
-- No horizontal overflow is observed in the checked home, result/search, training-records, or training-form views.
+- No horizontal overflow is observed in the checked home, result/search, or training-records views.
 - `PROGRESS.md` and `TODO.md` are updated.
 - A git commit is created for this phase.
 

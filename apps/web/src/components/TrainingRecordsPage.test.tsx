@@ -2,7 +2,7 @@ import { equipmentCatalog } from '@gym-equipment-ai/shared';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createFakeStorage } from '../test/fakeStorage.js';
-import { saveTrainingRecord } from '../utils/trainingRecords.js';
+import { getCurrentWeekDays, saveTrainingRecord } from '../utils/trainingRecords.js';
 import { TrainingRecordsPage } from './TrainingRecordsPage.js';
 
 describe('training records page', () => {
@@ -68,15 +68,16 @@ describe('training records page', () => {
     );
     vi.stubGlobal('localStorage', storage);
 
+    const selectedDate = getCurrentWeekDays()[2].date;
     const html = renderToStaticMarkup(
       <TrainingRecordsPage
-        initialSelectedDate="2026-06-03"
+        initialSelectedDate={selectedDate}
         onBack={() => undefined}
         onOpenEquipment={() => undefined}
       />
     );
 
-    expect(html).toContain('data-selected-date="2026-06-03"');
+    expect(html).toContain(`data-selected-date="${selectedDate}"`);
     expect(html).toContain('这一天还没有训练记录');
     expect(html).toContain('识别器械后点击‘记录本次训练’开始记录');
     expect(html).not.toContain('3 组 x 10 次 · 20 kg');

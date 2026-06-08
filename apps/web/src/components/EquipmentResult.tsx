@@ -29,7 +29,7 @@ function ConfidenceBadge({ confidence }: { confidence?: number }) {
 function TeachingCard({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="surface-card mt-4">
-      <h2 className="text-lg font-black tracking-[-0.02em] text-ink">{title}</h2>
+      <h2 className="text-lg font-black tracking-[-0.025em] text-ink">{title}</h2>
       <div className="mt-3">{children}</div>
     </section>
   );
@@ -81,7 +81,7 @@ export function EquipmentResult({
         <div className="flex items-start justify-between gap-3">
           <div className="relative min-w-0">
             <p className="eyebrow">识别结果</p>
-            <h1 className="mt-2 text-[2rem] font-black leading-tight tracking-[-0.05em] text-ink">{teaching.zhName}</h1>
+            <h1 className="mt-2 text-[2.05rem] font-black leading-tight tracking-[-0.055em] text-ink">{teaching.zhName}</h1>
             <p className="mt-1 break-words text-base font-black text-slate">{teaching.enName}</p>
           </div>
           <ConfidenceBadge confidence={confidence} />
@@ -93,23 +93,23 @@ export function EquipmentResult({
           ))}
         </div>
         {selectedVariant ? (
-          <p className="relative mt-4 rounded-2xl border border-fern/10 bg-white/75 px-4 py-3 text-sm font-bold leading-6 text-fern">
-            已识别到器械：{equipment.zhName}。如果这台器械有多种练法，可以先选你想练的部位。
+          <p className="trust-strip relative mt-4">
+            先确认器械和练法，再用下方搜索词去找对应教程。
           </p>
         ) : null}
       </section>
 
       {equipment.exerciseVariants && equipment.exerciseVariants.length > 1 ? (
-        <section className="surface-card mt-4 p-4">
-          <p className="eyebrow">Exercise Choice</p>
-          <h2 className="mt-1 text-xl font-black tracking-[-0.03em] text-ink">你想用它练哪里？</h2>
+        <section className="surface-card-muted mt-4 p-4">
+          <p className="eyebrow">Action Choice</p>
+          <h2 className="mt-1 text-xl font-black tracking-[-0.03em] text-ink">这台器械想练哪里？</h2>
           <div className="mt-3 grid gap-2">
             {equipment.exerciseVariants.map((variant) => {
               const selected = variant.id === selectedVariant?.id;
 
               return (
                 <button
-                  className={`min-h-[4.25rem] rounded-[1.25rem] border px-4 py-2.5 text-left transition active:scale-[0.99] ${
+                  className={`min-h-[4.25rem] rounded-[1.15rem] border px-4 py-2.5 text-left transition active:scale-[0.99] ${
                     selected
                       ? 'border-fern bg-fern text-white shadow-press'
                       : 'border-line/60 bg-white text-ink shadow-press'
@@ -153,9 +153,11 @@ export function EquipmentResult({
       </section>
 
       <TeachingCard title="主要训练肌群">
-        <p className="body-copy">
-          {[...teaching.primaryMuscles, ...teaching.secondaryMuscles].join('、')}
-        </p>
+        <div className="flex flex-wrap gap-2">
+          {[...teaching.primaryMuscles, ...teaching.secondaryMuscles].map((muscle) => (
+            <span className="pill bg-moss text-fern" key={muscle}>{muscle}</span>
+          ))}
+        </div>
       </TeachingCard>
 
       <TeachingCard title="怎么调">
@@ -178,7 +180,7 @@ export function EquipmentResult({
       <TeachingCard title="安全注意">
         <ul className="space-y-2">
           {teaching.safety.map((item) => (
-            <li className="rounded-2xl bg-moss/70 px-4 py-3 text-sm font-bold leading-6 text-ink" key={item}>
+            <li className="rounded-[1.05rem] bg-moss/70 px-4 py-3 text-sm font-bold leading-6 text-ink" key={item}>
               {item}
             </li>
           ))}
@@ -188,7 +190,7 @@ export function EquipmentResult({
       <TeachingCard title="常见错误">
         <ul className="space-y-2">
           {teaching.commonErrors.map((item) => (
-            <li className="rounded-2xl bg-clay/10 px-4 py-3 text-sm font-bold leading-6 text-ink" key={item}>
+            <li className="rounded-[1.05rem] bg-clay/10 px-4 py-3 text-sm font-bold leading-6 text-ink" key={item}>
               {item}
             </li>
           ))}

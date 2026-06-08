@@ -300,20 +300,27 @@ export function App() {
   }
 
   return (
-    <main className="screen pt-8">
+    <main className="screen pt-7">
       <section className="hero-card">
         <div className="relative">
           <p className="eyebrow">Gym Equipment AI</p>
-          <h1 className="mt-4 text-[2.8rem] font-black leading-[1.03] tracking-[-0.06em] text-ink">
-            拍一下，马上知道器械怎么搜
+          <h1 className="mt-4 text-[2.75rem] font-black leading-[1.02] tracking-[-0.065em] text-ink">
+            不认识器械，也能马上搜对教程
           </h1>
-          <p className="mt-5 text-[1.05rem] leading-8 text-slate">
-          面向健身新手的器械识别入口。识别器械后，直接生成 B站、抖音、小红书和百度的教程搜索词。
+          <p className="mt-5 text-[1.03rem] leading-8 text-slate">
+            在健身房拍一下器械，先认出它叫什么，再生成适合新手的教程搜索词。
           </p>
-          <div className="mt-5 grid grid-cols-3 gap-2 text-center text-xs font-black text-fern">
-            <span className="rounded-2xl bg-moss px-2 py-2">拍器械</span>
-            <span className="rounded-2xl bg-moss px-2 py-2">认名称</span>
-            <span className="rounded-2xl bg-moss px-2 py-2">去搜索</span>
+          <div className="step-rail mt-5">
+            {[
+              ['01', '拍器械'],
+              ['02', '认名称'],
+              ['03', '去搜索']
+            ].map(([number, label]) => (
+              <span className="step-chip" key={label}>
+                <span className="text-[0.68rem] font-black text-fern/55">{number}</span>
+                <span className="mt-1 text-xs font-black text-fern">{label}</span>
+              </span>
+            ))}
           </div>
           {inWeChat ? (
             <p className="mt-4 rounded-2xl bg-clay/15 px-4 py-3 text-sm font-bold text-clay">
@@ -351,11 +358,14 @@ export function App() {
             type="file"
           />
           <button className="btn-primary mt-7 text-lg" onClick={() => cameraInputRef.current?.click()} type="button">
-            拍照识别
+            拍照识别器械
           </button>
           <button className="btn-secondary mt-3" onClick={() => albumInputRef.current?.click()} type="button">
             从相册上传
           </button>
+          <p className="trust-strip mt-4">
+            识别后重点给你“怎么搜”：B站、抖音、小红书、百度都能一键跳转或复制搜索词。
+          </p>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <button className="btn-ghost" onClick={() => navigateTo('equipment-list')} type="button">
               支持器械
@@ -372,7 +382,7 @@ export function App() {
             </button>
           </div>
           <button
-            className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-[1.15rem] bg-white/55 px-4 py-3 text-sm font-black text-fern"
+            className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-[1.05rem] border border-line/60 bg-white/55 px-4 py-3 text-sm font-black text-fern"
             onClick={() => navigateTo('training-records')}
             type="button"
           >
