@@ -1,12 +1,18 @@
 # TODO
 
-## Current Phase: H5 Anti-Slop Visual Refinement
+## Current Phase: H5 V2-A Visual Direction
 
 - [x] Reduce generic AI-template feel while preserving the current product flow.
 Acceptance:
 - The H5 still supports camera upload, album upload, supported-equipment list, recent recognition, result pages, search buttons, correction candidates, and training records.
 - No backend recognition logic, API provider logic, or mini-program code is rewritten.
 - The visual changes use existing React/Tailwind patterns and add no heavy dependency.
+
+- [x] Apply the selected Open Design v2-A direction as a visual-only pass.
+Acceptance:
+- Home, result, tutorial-search, and training-record surfaces adopt the v2-A trustworthy recognition-tool style.
+- Existing camera upload, album upload, supported-equipment list, result page, platform search, correction, multi-action selector, history, analytics, and training-record behavior are preserved.
+- No API endpoint, provider key handling, catalog schema, search target generation, or localStorage data model is changed.
 
 - [x] Improve the recognition-first home page hierarchy.
 Acceptance:
@@ -34,8 +40,10 @@ Acceptance:
 - `npm test` exits `0`.
 - `npm run typecheck` exits `0`.
 - `npm run build:web` exits `0`.
-- Browser checks cover `375x812`, `390x844`, and `430x932`.
-- No horizontal overflow is observed in the checked home, result/search, or training-records views.
+- `git diff --check` exits `0`.
+- Browser checks cover the home page at `375x812`, `390x844`, and `430x932`.
+- Browser checks cover result/search and training-records at `390x844`.
+- No horizontal overflow is observed in the checked views.
 - `PROGRESS.md` and `TODO.md` are updated.
 - A git commit is created for this phase.
 

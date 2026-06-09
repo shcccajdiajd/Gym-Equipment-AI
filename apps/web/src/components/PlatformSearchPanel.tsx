@@ -46,9 +46,9 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
     <section className="search-shell">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-moss">Search Brief</p>
-          <h2 className="mt-1 text-[1.72rem] font-black leading-tight tracking-[-0.045em]">把器械变成可搜索的问题</h2>
-          <p className="mt-2 text-sm leading-6 text-moss/90">不用猜关键词，直接拿这句话去内容平台找教程。</p>
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-moss">Tutorial Query</p>
+          <h2 className="mt-1 text-[1.75rem] font-black leading-tight tracking-[-0.05em]">直接拿去搜教程</h2>
+          <p className="mt-2 text-sm leading-6 text-moss/90">把器械变成可搜索的问题，不用猜关键词，直接拿这句话去内容平台找教程。</p>
         </div>
         <span className="pill shrink-0 bg-white/12 text-moss">重点功能</span>
       </div>
@@ -61,10 +61,10 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
 
       <div className="query-card">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-moss">Current Query</p>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-moss">Recommended</p>
           <span className="rounded-full bg-amber px-2.5 py-1 text-[0.68rem] font-black text-ink">新手推荐</span>
         </div>
-        <p className="mt-2 break-words text-[1.35rem] font-black leading-snug tracking-[-0.025em] text-white">{selectedQuery}</p>
+        <p className="mt-3 break-words text-[1.42rem] font-black leading-snug tracking-[-0.03em] text-white">{selectedQuery}</p>
       </div>
 
       <label className="sr-only" htmlFor="query-select">选择搜索词</label>
@@ -96,7 +96,7 @@ export function PlatformSearchPanel({ equipment, variant }: PlatformSearchPanelP
         ))}
       </div>
 
-      <p className="mt-4 text-xs font-black uppercase tracking-[0.18em] text-moss">Choose Platform</p>
+      <p className="mt-4 text-xs font-black uppercase tracking-[0.18em] text-moss">Search Platform</p>
       <div className="mt-4 grid grid-cols-2 gap-3">
         {targets.map((target) => (
           <a

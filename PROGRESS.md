@@ -1,9 +1,16 @@
 # Progress
 
-## Latest Update: H5 Anti-Slop Visual Refinement
+## Latest Update: H5 V2-A Visual Direction Applied
 
 ## Completed
 
+- Applied the selected Open Design v2-A direction to the real H5 product as a visual-only refinement, without changing recognition, search, correction, multi-action, history, analytics, or training-record flows.
+- Added a cleaner recognition-tool visual language on the home page, including a scanner preview block that reinforces `对准器械 -> 生成教程入口`.
+- Reworked the result page hero, muscle summary, safety notes, and common-error cards for clearer mobile scanning while preserving all teaching sections.
+- Reworked the tutorial search module into a darker, higher-emphasis `Tutorial Query` panel so generated search terms and platform search buttons remain the visual focus.
+- Verified `npm test`, `npm run typecheck`, `npm run build:web`, and `git diff --check` after the v2-A changes.
+- Browser-checked the home page at `375x812`, `390x844`, and `430x932`; no horizontal overflow was observed.
+- Browser-checked result/search and training-record views at `390x844`; no horizontal overflow was observed. A second automated cross-size matrix was blocked by the in-app browser safety policy, so it was not forced through another browser surface.
 - Applied the newly installed `design-taste-frontend` guidance to reduce generic AI-template UI patterns while preserving the current H5 recognition, search, history, and training-record flows.
 - Refined the home page copy and first-screen structure so the product reads as a clear utility: `不认识器械 -> 认名称 -> 搜对教程`.
 - Replaced the generic three-chip explanation with a numbered `拍器械 / 认名称 / 去搜索` step rail and added a trust strip that explains the B站、抖音、小红书、百度 search handoff.

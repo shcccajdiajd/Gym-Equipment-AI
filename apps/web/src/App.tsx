@@ -310,6 +310,13 @@ export function App() {
           <p className="mt-5 text-[1.03rem] leading-8 text-slate">
             在健身房拍一下器械，先认出它叫什么，再生成适合新手的教程搜索词。
           </p>
+          <div className="scanner-preview">
+            <span className="scanner-badge">AI 识别</span>
+            <div className="scanner-core">
+              <span>对准器械</span>
+              <span>生成教程入口</span>
+            </div>
+          </div>
           <div className="step-rail mt-5">
             {[
               ['01', '拍器械'],

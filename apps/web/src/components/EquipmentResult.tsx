@@ -29,7 +29,7 @@ function ConfidenceBadge({ confidence }: { confidence?: number }) {
 function TeachingCard({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="surface-card mt-4">
-      <h2 className="text-lg font-black tracking-[-0.025em] text-ink">{title}</h2>
+      <h2 className="text-lg font-black tracking-[-0.03em] text-ink">{title}</h2>
       <div className="mt-3">{children}</div>
     </section>
   );
@@ -87,10 +87,13 @@ export function EquipmentResult({
           <ConfidenceBadge confidence={confidence} />
         </div>
         <p className="relative mt-4 text-base leading-7 text-slate">{teaching.summary}</p>
-        <div className="relative mt-4 flex flex-wrap gap-2">
-          {teaching.primaryMuscles.slice(0, 3).map((muscle) => (
-            <span className="pill bg-moss text-fern" key={muscle}>{muscle}</span>
-          ))}
+        <div className="result-summary relative mt-4">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-fern">Quick Check</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {teaching.primaryMuscles.slice(0, 3).map((muscle) => (
+              <span className="pill bg-moss text-fern" key={muscle}>{muscle}</span>
+            ))}
+          </div>
         </div>
         {selectedVariant ? (
           <p className="trust-strip relative mt-4">
@@ -180,7 +183,7 @@ export function EquipmentResult({
       <TeachingCard title="安全注意">
         <ul className="space-y-2">
           {teaching.safety.map((item) => (
-            <li className="rounded-[1.05rem] bg-moss/70 px-4 py-3 text-sm font-bold leading-6 text-ink" key={item}>
+            <li className="rounded-[1.05rem] border border-fern/10 bg-moss/70 px-4 py-3 text-sm font-bold leading-6 text-ink shadow-press" key={item}>
               {item}
             </li>
           ))}
@@ -190,7 +193,7 @@ export function EquipmentResult({
       <TeachingCard title="常见错误">
         <ul className="space-y-2">
           {teaching.commonErrors.map((item) => (
-            <li className="rounded-[1.05rem] bg-clay/10 px-4 py-3 text-sm font-bold leading-6 text-ink" key={item}>
+            <li className="rounded-[1.05rem] border border-clay/10 bg-clay/10 px-4 py-3 text-sm font-bold leading-6 text-ink shadow-press" key={item}>
               {item}
             </li>
           ))}

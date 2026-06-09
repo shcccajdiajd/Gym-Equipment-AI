@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color: #13251d;
-  background: #f3ecdf;
+  color: #10221a;
+  background: #f4efe4;
   font-family: "Avenir Next", Avenir, "PingFang SC", "Hiragino Sans GB", sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -16,7 +16,7 @@
 
 html {
   min-width: 320px;
-  background: #f3ecdf;
+  background: #f4efe4;
 }
 
 body {
@@ -24,10 +24,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 8% -4%, rgba(209, 119, 74, 0.16), transparent 20rem),
-    radial-gradient(circle at 100% 2%, rgba(31, 111, 74, 0.11), transparent 25rem),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.54), rgba(244, 238, 226, 0) 28rem),
-    #f3ecdf;
+    radial-gradient(circle at 8% -8%, rgba(217, 125, 84, 0.14), transparent 19rem),
+    radial-gradient(circle at 96% 0%, rgba(31, 111, 74, 0.16), transparent 24rem),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.72), rgba(244, 239, 228, 0) 28rem),
+    #f4efe4;
   overflow-x: hidden;
   color: #13251d;
 }
@@ -38,10 +38,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(19, 37, 29, 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(19, 37, 29, 0.02) 1px, transparent 1px);
-  background-size: 34px 34px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.38), transparent 70%);
+    linear-gradient(rgba(16, 34, 26, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 34, 26, 0.018) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 66%);
 }
 
 button,
@@ -86,7 +86,7 @@ button {
   }
 
   .hero-card {
-    @apply relative overflow-hidden rounded-[2rem] border border-white/80 bg-cream/95 p-6 shadow-lift;
+    @apply relative overflow-hidden rounded-[2.15rem] border border-white/85 bg-cream/95 p-6 shadow-lift;
   }
 
   .hero-card::before {
@@ -96,7 +96,7 @@ button {
     width: 10rem;
     height: 10rem;
     border-radius: 999px;
-    background: rgba(47, 138, 91, 0.11);
+    background: rgba(47, 138, 91, 0.12);
     transform: translate(28%, -42%);
     pointer-events: none;
   }
@@ -107,25 +107,25 @@ button {
     inset: auto -1rem -4rem 38%;
     height: 9rem;
     border-radius: 999px;
-    background: rgba(217, 125, 84, 0.12);
+    background: rgba(217, 125, 84, 0.1);
     filter: blur(1px);
     pointer-events: none;
   }
 
   .surface-card {
-    @apply rounded-[1.6rem] border border-white/80 bg-cream/95 p-5 shadow-soft;
+    @apply rounded-[1.65rem] border border-white/85 bg-cream/95 p-5 shadow-soft;
   }
 
   .surface-card-muted {
-    @apply rounded-[1.6rem] border border-line/70 bg-white/70 p-5 shadow-press;
+    @apply rounded-[1.65rem] border border-line/70 bg-white/75 p-5 shadow-press;
   }
 
   .eyebrow {
-    @apply text-xs font-black uppercase tracking-[0.22em] text-fern;
+    @apply text-xs font-black uppercase tracking-[0.24em] text-fern;
   }
 
   .page-title {
-    @apply text-[2.35rem] font-black leading-[1.08] tracking-[-0.05em] text-ink;
+    @apply text-[2.45rem] font-black leading-[1.04] tracking-[-0.06em] text-ink;
   }
 
   .section-title {
@@ -137,19 +137,20 @@ button {
   }
 
   .top-link {
-    @apply mb-4 inline-flex min-h-11 items-center rounded-full bg-white/75 px-4 text-sm font-black text-fern shadow-press transition active:scale-[0.98];
+    @apply mb-4 inline-flex min-h-11 items-center rounded-full border border-white/75 bg-white/80 px-4 text-sm font-black text-fern shadow-press transition active:scale-[0.98];
   }
 
   .btn-primary {
-    @apply inline-flex min-h-14 w-full items-center justify-center rounded-[1.25rem] bg-fern px-5 py-4 text-base font-black text-white shadow-soft transition active:scale-[0.99];
+    @apply inline-flex min-h-14 w-full items-center justify-center rounded-[1.28rem] bg-fern px-5 py-4 text-base font-black text-white shadow-soft transition active:scale-[0.99];
+    background-image: linear-gradient(135deg, #238052, #125936);
   }
 
   .btn-secondary {
-    @apply inline-flex min-h-14 w-full items-center justify-center rounded-[1.25rem] bg-moss px-5 py-4 text-base font-black text-fern transition active:scale-[0.99];
+    @apply inline-flex min-h-14 w-full items-center justify-center rounded-[1.28rem] border border-fern/10 bg-moss px-5 py-4 text-base font-black text-fern transition active:scale-[0.99];
   }
 
   .btn-ghost {
-    @apply inline-flex min-h-12 items-center justify-center rounded-[1.05rem] border border-line/80 bg-white/80 px-4 py-3 text-sm font-black text-fern transition active:scale-[0.99];
+    @apply inline-flex min-h-12 items-center justify-center rounded-[1.08rem] border border-line/80 bg-white/85 px-4 py-3 text-sm font-black text-fern shadow-press transition active:scale-[0.99];
   }
 
   .pill {
@@ -169,7 +170,7 @@ button {
   }
 
   .step-rail {
-    @apply grid grid-cols-3 gap-2 rounded-[1.35rem] border border-line/60 bg-white/70 p-2;
+    @apply grid grid-cols-3 gap-2 rounded-[1.35rem] border border-line/60 bg-white/75 p-2 shadow-press;
   }
 
   .step-chip {
@@ -177,18 +178,58 @@ button {
   }
 
   .trust-strip {
-    @apply rounded-[1.25rem] border border-fern/10 bg-white/70 px-4 py-3 text-sm font-bold leading-6 text-slate;
+    @apply rounded-[1.25rem] border border-fern/10 bg-white/75 px-4 py-3 text-sm font-bold leading-6 text-slate shadow-press;
   }
 
   .search-shell {
-    @apply rounded-[1.75rem] bg-ink p-5 text-white shadow-lift;
+    @apply rounded-[1.85rem] bg-ink p-5 text-white shadow-lift;
+    background:
+      radial-gradient(circle at 90% 0%, rgba(242, 179, 109, 0.22), transparent 10rem),
+      linear-gradient(145deg, #10221a, #13251d 58%, #0c1712);
   }
 
   .query-card {
-    @apply rounded-[1.3rem] border border-white/10 bg-white/[0.09] p-4 shadow-press;
+    @apply rounded-[1.35rem] border border-white/10 bg-white/[0.1] p-4 shadow-press;
   }
 
   .platform-button {
     @apply inline-flex min-h-12 items-center justify-center rounded-[1rem] bg-white px-4 py-3 text-center text-sm font-black text-fern shadow-press transition active:scale-[0.99];
   }
+
+  .scanner-preview {
+    @apply relative mt-5 grid min-h-48 place-items-center overflow-hidden rounded-[1.65rem] border border-fern/10 bg-moss/70 shadow-press;
+  }
+
+  .scanner-preview::before {
+    content: "";
+    position: absolute;
+    inset: 1.2rem;
+    border: 2px dashed rgba(31, 111, 74, 0.3);
+    border-radius: 1.35rem;
+  }
+
+  .scanner-preview::after {
+    content: "";
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    top: 32%;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(31, 111, 74, 0.65), transparent);
+    box-shadow: 0 0 22px rgba(31, 111, 74, 0.28);
+  }
+
+  .scanner-core {
+    @apply relative z-10 flex h-28 w-28 flex-col items-center justify-center rounded-[1.55rem] border border-white/80 bg-white/80 text-center text-sm font-black leading-5 text-fern shadow-press;
+  }
+
+  .scanner-badge {
+    @apply absolute right-4 top-4 z-10 rounded-full bg-fern px-3 py-1.5 text-xs font-black text-white shadow-press;
+  }
+
+  .result-summary {
+    @apply rounded-[1.45rem] border border-line/70 bg-white/75 p-4 shadow-press;
+  }
+
 }
