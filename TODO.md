@@ -1,25 +1,20 @@
 # TODO
 
-## Current Phase: H5 V2-A Visual Direction
+## Current Phase: Lovart H5 UI Reference
 
-- [x] Reduce generic AI-template feel while preserving the current product flow.
+- [x] Apply the Lovart annotated UI direction while preserving the current product flow.
 Acceptance:
-- The H5 still supports camera upload, album upload, supported-equipment list, recent recognition, result pages, search buttons, correction candidates, and training records.
-- No backend recognition logic, API provider logic, or mini-program code is rewritten.
-- The visual changes use existing React/Tailwind patterns and add no heavy dependency.
+- Home, recognizing, result/search, low-confidence/unsupported, supported-equipment, recent-history, training-records, and training-form views follow the Lovart deep-green plus acid-green mobile visual system.
+- The H5 still supports camera upload, album upload, supported-equipment list, recent recognition, result pages, search buttons, correction candidates, multi-action selector, analytics, and training records.
+- No backend recognition logic, API provider logic, catalog schema, AI key handling, search target generation, or mini-program code is rewritten.
+- The implementation uses existing React/Tailwind patterns and adds no heavy dependency.
 
-- [x] Apply the selected Open Design v2-A direction as a visual-only pass.
+- [x] Keep the recognition/search value proposition visually dominant.
 Acceptance:
-- Home, result, tutorial-search, and training-record surfaces adopt the v2-A trustworthy recognition-tool style.
-- Existing camera upload, album upload, supported-equipment list, result page, platform search, correction, multi-action selector, history, analytics, and training-record behavior are preserved.
-- No API endpoint, provider key handling, catalog schema, search target generation, or localStorage data model is changed.
-
-- [x] Improve the recognition-first home page hierarchy.
-Acceptance:
-- `拍照识别器械` remains the primary CTA and appears before secondary entries.
-- `从相册上传`, `支持器械`, `最近识别`, and `我的训练记录` remain available.
-- The first screen communicates `不认识器械 -> 认名称 -> 搜对教程`.
-- Training records stay visually secondary.
+- Home first screen clearly communicates `拍一下器械 -> 知道叫什么、练哪里、怎么搜教程`.
+- `拍照识别器械` remains the main flow, while `从相册上传`, `支持器械`, `最近识别`, and `我的训练记录` stay available but secondary.
+- The result page puts `搜教程` and generated search queries ahead of long teaching text.
+- Training records remain a lightweight auxiliary loop and do not become a full fitness app.
 
 - [x] Make the result page easier to scan and search-first.
 Acceptance:

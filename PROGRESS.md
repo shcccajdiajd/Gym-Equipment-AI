@@ -1,9 +1,17 @@
 # Progress
 
-## Latest Update: H5 V2-A Visual Direction Applied
+## Latest Update: Lovart H5 UI Reference Applied
 
 ## Completed
 
+- Applied the Lovart annotated visual direction to the real H5 product while preserving the existing recognition, search, correction, multi-action, history, analytics, and training-record flows.
+- Rebuilt the H5 visual system around the Lovart palette: deep forest green `#1F4D2E`, acid green `#C4FF3D`, warm off-white `#FAFAF7`, white cards, and neutral gray text.
+- Reworked the home page into a scanner-first layout with a dark brand bar, large `拍一下器械` headline, bordered camera target, album fallback, supported-equipment entry, recent recognition tiles, and a secondary training-record entry.
+- Reworked the recognition loading state into a dark green scan screen with preview image containment, neon scan line, corner markers, loading card, progress bar, retry hint, and cancel action.
+- Reworked the result page so the tutorial search module is the visual center: generated query first, query chips, platform search buttons, copy fallback, quick-start card, teaching panels, correction entry, and sticky training-record CTA.
+- Reworked low-confidence, unsupported, supported-equipment, recent-history, training-records, and training-form surfaces to match the same mobile UI system.
+- Verified real mobile viewport metrics at `375x812`, `390x844`, and `430x932`; checked home, supported-equipment, result/search, and training-record views with no horizontal overflow.
+- Verified `npm test`, `npm run typecheck`, `npm run build:web`, and `git diff --check` after the Lovart UI implementation.
 - Applied the selected Open Design v2-A direction to the real H5 product as a visual-only refinement, without changing recognition, search, correction, multi-action, history, analytics, or training-record flows.
 - Added a cleaner recognition-tool visual language on the home page, including a scanner preview block that reinforces `对准器械 -> 生成教程入口`.
 - Reworked the result page hero, muscle summary, safety notes, and common-error cards for clearer mobile scanning while preserving all teaching sections.

@@ -3,8 +3,19 @@
 @tailwind utilities;
 
 :root {
-  color: #10221a;
-  background: #f4efe4;
+  --gym-primary: #1f4d2e;
+  --gym-primary-2: #153822;
+  --gym-acid: #c4ff3d;
+  --gym-bg: #fafaf7;
+  --gym-surface: #ffffff;
+  --gym-text: #0b0f0d;
+  --gym-muted: #6b7280;
+  --gym-tertiary: #9ca3af;
+  --gym-line: #e5e7eb;
+  --gym-error: #ef4444;
+  --gym-info: #3b82f6;
+  color: var(--gym-text);
+  background: var(--gym-bg);
   font-family: "Avenir Next", Avenir, "PingFang SC", "Hiragino Sans GB", sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -16,32 +27,19 @@
 
 html {
   min-width: 320px;
-  background: #f4efe4;
+  background: var(--gym-bg);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 8% -8%, rgba(217, 125, 84, 0.14), transparent 19rem),
-    radial-gradient(circle at 96% 0%, rgba(31, 111, 74, 0.16), transparent 24rem),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.72), rgba(244, 239, 228, 0) 28rem),
-    #f4efe4;
   overflow-x: hidden;
-  color: #13251d;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(16, 34, 26, 0.026) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 34, 26, 0.018) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 66%);
+  color: var(--gym-text);
+  background:
+    radial-gradient(circle at 12% -10%, rgba(196, 255, 61, 0.18), transparent 18rem),
+    radial-gradient(circle at 105% 4%, rgba(31, 77, 46, 0.12), transparent 22rem),
+    linear-gradient(180deg, #fbfbf8 0%, #f6f5ef 100%);
 }
 
 button,
@@ -64,7 +62,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid rgba(31, 111, 74, 0.32);
+  outline: 3px solid rgba(196, 255, 61, 0.7);
   outline-offset: 3px;
 }
 
@@ -74,50 +72,59 @@ button {
 
 @layer components {
   .screen {
-    @apply mx-auto min-h-dvh w-full max-w-md px-4 pb-10 pt-5;
-    padding-top: max(1.25rem, env(safe-area-inset-top));
-    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+    @apply mx-auto min-h-dvh w-full max-w-[430px] px-4 pb-10 pt-4;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(2.125rem, env(safe-area-inset-bottom));
   }
 
   .screen-center {
-    @apply mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4;
-    padding-top: max(1.25rem, env(safe-area-inset-top));
-    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+    @apply mx-auto flex min-h-dvh w-full max-w-[430px] flex-col px-0;
+    padding-top: max(0rem, env(safe-area-inset-top));
+    padding-bottom: max(2.125rem, env(safe-area-inset-bottom));
+  }
+
+  .app-topbar {
+    @apply sticky top-0 z-20 -mx-4 mb-4 flex h-[3.5rem] items-center justify-between border-b border-line/70 bg-oat/95 px-4 backdrop-blur;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .app-topbar-title {
+    @apply absolute left-1/2 -translate-x-1/2 text-lg font-black tracking-[-0.03em] text-carbon;
+  }
+
+  .icon-button {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-2xl font-black leading-none text-fern transition active:scale-95;
+  }
+
+  .brand-alert {
+    @apply flex min-h-11 w-full items-center justify-center bg-amber/25 px-4 text-center text-sm font-black leading-5 text-[#92400e];
+  }
+
+  .brand-bar {
+    @apply flex h-14 w-full items-center justify-between bg-fern px-4 text-white shadow-soft;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(196, 255, 61, 0.16), transparent 9rem),
+      linear-gradient(135deg, #1f4d2e, #12351f);
+  }
+
+  .brand-mark {
+    @apply inline-flex items-center gap-2 text-2xl font-black tracking-[-0.03em];
+  }
+
+  .brand-bracket {
+    @apply text-[2rem] font-black leading-none text-acid;
   }
 
   .hero-card {
-    @apply relative overflow-hidden rounded-[2.15rem] border border-white/85 bg-cream/95 p-6 shadow-lift;
-  }
-
-  .hero-card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto auto;
-    width: 10rem;
-    height: 10rem;
-    border-radius: 999px;
-    background: rgba(47, 138, 91, 0.12);
-    transform: translate(28%, -42%);
-    pointer-events: none;
-  }
-
-  .hero-card::after {
-    content: "";
-    position: absolute;
-    inset: auto -1rem -4rem 38%;
-    height: 9rem;
-    border-radius: 999px;
-    background: rgba(217, 125, 84, 0.1);
-    filter: blur(1px);
-    pointer-events: none;
+    @apply relative overflow-hidden rounded-[2rem] border border-white bg-white/90 p-5 shadow-lift;
   }
 
   .surface-card {
-    @apply rounded-[1.65rem] border border-white/85 bg-cream/95 p-5 shadow-soft;
+    @apply rounded-[1.25rem] border border-line/75 bg-white p-4 shadow-soft;
   }
 
   .surface-card-muted {
-    @apply rounded-[1.65rem] border border-line/70 bg-white/75 p-5 shadow-press;
+    @apply rounded-[1.25rem] border border-line/70 bg-white/90 p-4 shadow-press;
   }
 
   .eyebrow {
@@ -125,11 +132,11 @@ button {
   }
 
   .page-title {
-    @apply text-[2.45rem] font-black leading-[1.04] tracking-[-0.06em] text-ink;
+    @apply text-[2.35rem] font-black leading-[1.04] tracking-[-0.065em] text-fern;
   }
 
   .section-title {
-    @apply text-2xl font-black tracking-[-0.035em] text-ink;
+    @apply text-2xl font-black tracking-[-0.045em] text-fern;
   }
 
   .body-copy {
@@ -137,20 +144,20 @@ button {
   }
 
   .top-link {
-    @apply mb-4 inline-flex min-h-11 items-center rounded-full border border-white/75 bg-white/80 px-4 text-sm font-black text-fern shadow-press transition active:scale-[0.98];
+    @apply inline-flex h-11 min-w-11 items-center justify-center rounded-full text-sm font-black text-fern transition active:scale-[0.98];
   }
 
-  .btn-primary {
-    @apply inline-flex min-h-14 w-full items-center justify-center rounded-[1.28rem] bg-fern px-5 py-4 text-base font-black text-white shadow-soft transition active:scale-[0.99];
-    background-image: linear-gradient(135deg, #238052, #125936);
+  .btn-primary,
+  .btn-acid {
+    @apply inline-flex min-h-[3.25rem] w-full items-center justify-center rounded-full bg-acid px-5 py-3 text-base font-black text-carbon shadow-acid transition active:scale-[0.99];
   }
 
   .btn-secondary {
-    @apply inline-flex min-h-14 w-full items-center justify-center rounded-[1.28rem] border border-fern/10 bg-moss px-5 py-4 text-base font-black text-fern transition active:scale-[0.99];
+    @apply inline-flex min-h-[3.25rem] w-full items-center justify-center rounded-full border-2 border-fern bg-white px-5 py-3 text-base font-black text-fern transition active:scale-[0.99];
   }
 
   .btn-ghost {
-    @apply inline-flex min-h-12 items-center justify-center rounded-[1.08rem] border border-line/80 bg-white/85 px-4 py-3 text-sm font-black text-fern shadow-press transition active:scale-[0.99];
+    @apply inline-flex min-h-[3rem] items-center justify-center rounded-full border border-line bg-white px-4 py-3 text-sm font-black text-fern shadow-press transition active:scale-[0.99];
   }
 
   .pill {
@@ -158,78 +165,310 @@ button {
   }
 
   .input-soft {
-    @apply w-full rounded-[1.15rem] border border-transparent bg-moss px-4 py-3 text-base text-ink outline-none transition focus:border-fern/25 focus:bg-white;
+    @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-carbon shadow-press outline-none transition placeholder:text-tertiary focus:border-fern/60;
   }
 
   .list-card {
-    @apply w-full rounded-[1.35rem] border border-white/80 bg-white p-4 text-left shadow-press transition active:scale-[0.99];
+    @apply w-full rounded-[1.1rem] border border-line bg-white p-4 text-left shadow-press transition active:scale-[0.99];
   }
 
   .safe-stack {
     @apply space-y-4;
   }
 
-  .step-rail {
-    @apply grid grid-cols-3 gap-2 rounded-[1.35rem] border border-line/60 bg-white/75 p-2 shadow-press;
+  .upload-stage {
+    @apply min-h-dvh bg-oat;
   }
 
-  .step-chip {
-    @apply flex min-h-16 flex-col justify-center rounded-[1rem] bg-moss px-2 py-2 text-center;
+  .upload-title {
+    @apply mt-8 text-[3.05rem] font-black leading-[1.05] tracking-[-0.075em] text-fern;
   }
 
-  .trust-strip {
-    @apply rounded-[1.25rem] border border-fern/10 bg-white/75 px-4 py-3 text-sm font-bold leading-6 text-slate shadow-press;
+  .upload-subtitle {
+    @apply mt-2 text-lg font-medium leading-8 text-carbon/80;
   }
 
-  .search-shell {
-    @apply rounded-[1.85rem] bg-ink p-5 text-white shadow-lift;
-    background:
-      radial-gradient(circle at 90% 0%, rgba(242, 179, 109, 0.22), transparent 10rem),
-      linear-gradient(145deg, #10221a, #13251d 58%, #0c1712);
+  .upload-zone {
+    @apply relative mt-8 flex min-h-[26.25rem] w-full flex-col items-center justify-center rounded-[1.1rem] border-2 border-fern bg-white shadow-soft;
   }
 
-  .query-card {
-    @apply rounded-[1.35rem] border border-white/10 bg-white/[0.1] p-4 shadow-press;
+  .upload-corner {
+    @apply pointer-events-none absolute h-9 w-9 border-4 border-fern;
   }
 
-  .platform-button {
-    @apply inline-flex min-h-12 items-center justify-center rounded-[1rem] bg-white px-4 py-3 text-center text-sm font-black text-fern shadow-press transition active:scale-[0.99];
+  .upload-corner-tl {
+    @apply left-5 top-5 rounded-tl-xl border-b-0 border-r-0;
+  }
+
+  .upload-corner-tr {
+    @apply right-5 top-5 rounded-tr-xl border-b-0 border-l-0;
+  }
+
+  .upload-corner-bl {
+    @apply bottom-5 left-5 rounded-bl-xl border-r-0 border-t-0;
+  }
+
+  .upload-corner-br {
+    @apply bottom-5 right-5 rounded-br-xl border-l-0 border-t-0;
+  }
+
+  .camera-orb {
+    @apply relative flex h-[7.5rem] w-[7.5rem] items-center justify-center rounded-full bg-acid shadow-acid;
+  }
+
+  .camera-symbol {
+    @apply relative h-12 w-14 rounded-xl bg-carbon;
+  }
+
+  .camera-symbol::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.65rem;
+    height: 1.65rem;
+    border: 0.32rem solid var(--gym-acid);
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+  }
+
+  .camera-symbol::after {
+    content: "";
+    position: absolute;
+    right: 0.45rem;
+    top: 0.55rem;
+    width: 0.32rem;
+    height: 0.32rem;
+    border-radius: 999px;
+    background: var(--gym-acid);
+  }
+
+  .album-link {
+    @apply mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-4 text-base font-black text-fern transition active:scale-[0.98];
+  }
+
+  .recent-tile {
+    @apply min-w-[5.25rem] rounded-xl border border-line bg-white p-2 text-center shadow-press;
+  }
+
+  .equipment-thumb {
+    @apply grid h-16 w-full place-items-center rounded-lg bg-moss text-2xl font-black text-fern;
   }
 
   .scanner-preview {
     @apply relative mt-5 grid min-h-48 place-items-center overflow-hidden rounded-[1.65rem] border border-fern/10 bg-moss/70 shadow-press;
   }
 
-  .scanner-preview::before {
-    content: "";
-    position: absolute;
-    inset: 1.2rem;
-    border: 2px dashed rgba(31, 111, 74, 0.3);
-    border-radius: 1.35rem;
-  }
-
-  .scanner-preview::after {
-    content: "";
-    position: absolute;
-    left: 1.5rem;
-    right: 1.5rem;
-    top: 32%;
-    height: 3px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, transparent, rgba(31, 111, 74, 0.65), transparent);
-    box-shadow: 0 0 22px rgba(31, 111, 74, 0.28);
+  .scanner-badge {
+    @apply absolute right-4 top-4 z-10 rounded-full bg-fern px-3 py-1.5 text-xs font-black text-white shadow-press;
   }
 
   .scanner-core {
     @apply relative z-10 flex h-28 w-28 flex-col items-center justify-center rounded-[1.55rem] border border-white/80 bg-white/80 text-center text-sm font-black leading-5 text-fern shadow-press;
   }
 
-  .scanner-badge {
-    @apply absolute right-4 top-4 z-10 rounded-full bg-fern px-3 py-1.5 text-xs font-black text-white shadow-press;
+  .recognition-page {
+    @apply min-h-dvh bg-fern text-white;
+    background:
+      radial-gradient(circle at 50% 28%, rgba(196, 255, 61, 0.16), transparent 12rem),
+      linear-gradient(180deg, #1f4d2e 0%, #0f2b1a 100%);
   }
 
-  .result-summary {
-    @apply rounded-[1.45rem] border border-line/70 bg-white/75 p-4 shadow-press;
+  .recognition-frame {
+    @apply relative mt-10 overflow-hidden rounded-[1.25rem] border border-white/10 bg-carbon shadow-lift;
+    min-height: min(32.5rem, calc(100dvh - 13rem));
   }
 
+  .recognition-frame img {
+    @apply h-full w-full object-cover opacity-70;
+  }
+
+  .recognition-overlay {
+    @apply absolute inset-x-6 top-1/2 -translate-y-1/2 rounded-[1.25rem] bg-carbon/75 p-6 text-center shadow-lift backdrop-blur;
+  }
+
+  .scan-line {
+    @apply absolute left-0 right-0 top-[32%] h-1 bg-acid shadow-acid;
+  }
+
+  .spinner {
+    @apply mx-auto h-16 w-16 rounded-full border-4 border-acid/25 border-t-acid;
+    animation: spin 0.9s linear infinite;
+  }
+
+  .progress-track {
+    @apply mt-6 h-3 w-full overflow-hidden rounded-full bg-slate/60;
+  }
+
+  .progress-fill {
+    @apply block h-full rounded-full bg-acid shadow-acid;
+    animation: progress-wave 1.8s ease-in-out infinite;
+  }
+
+  .result-top-card {
+    @apply rounded-[1.1rem] border border-line bg-white p-3 shadow-soft;
+  }
+
+  .equipment-photo {
+    @apply grid h-[5.6rem] w-[7.5rem] shrink-0 place-items-center rounded-xl bg-moss text-3xl font-black text-fern;
+  }
+
+  .action-chip {
+    @apply inline-flex min-h-9 items-center rounded-full bg-[#f2f2ec] px-4 py-1 text-sm font-black text-carbon;
+  }
+
+  .action-chip-selected {
+    @apply bg-acid text-carbon shadow-acid;
+  }
+
+  .search-shell {
+    @apply rounded-[1.25rem] bg-acid p-4 text-carbon shadow-acid;
+  }
+
+  .query-card {
+    @apply rounded-[1rem] bg-white p-4 shadow-press;
+  }
+
+  .query-chip {
+    @apply inline-flex min-h-9 shrink-0 items-center rounded-full bg-white px-3 py-1 text-sm font-black text-carbon shadow-press;
+  }
+
+  .platform-button {
+    @apply inline-flex min-h-[4.5rem] items-center justify-start gap-3 rounded-[1rem] bg-white px-4 py-3 text-lg font-black text-carbon shadow-press transition active:scale-[0.99];
+  }
+
+  .platform-icon {
+    @apply grid h-10 w-10 shrink-0 place-items-center rounded-xl text-sm font-black text-white;
+  }
+
+  .help-strip {
+    @apply rounded-full bg-white/80 px-4 py-3 text-center text-sm font-black text-carbon shadow-press;
+  }
+
+  .teaching-panel {
+    @apply overflow-hidden rounded-[1.25rem] border border-line bg-white shadow-press;
+  }
+
+  .teaching-panel-header {
+    @apply flex min-h-14 items-center justify-between gap-3 border-b border-line px-4 py-3;
+  }
+
+  .bottom-cta-shell {
+    @apply sticky bottom-0 z-20 -mx-4 mt-5 bg-white/90 px-4 pb-4 pt-3 shadow-[0_-18px_36px_rgba(31,77,46,0.08)] backdrop-blur;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .candidate-card {
+    @apply flex min-h-[5.25rem] w-full items-center gap-3 rounded-[1rem] border-2 border-line bg-white p-3 text-left shadow-press transition active:scale-[0.99];
+  }
+
+  .candidate-card-selected {
+    @apply border-acid shadow-acid;
+  }
+
+  .candidate-thumb {
+    @apply grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-moss text-xl font-black text-fern;
+  }
+
+  .unknown-hero {
+    @apply grid place-items-center py-8 text-center;
+  }
+
+  .unknown-illustration {
+    @apply relative grid h-[12.5rem] w-[12.5rem] place-items-center text-[8rem] font-black leading-none text-acid;
+  }
+
+  .unknown-illustration::before {
+    content: "";
+    position: absolute;
+    inset: 1.1rem;
+    border: 2px dashed rgba(31, 77, 46, 0.45);
+    border-radius: 1.25rem;
+    transform: rotate(-8deg);
+  }
+
+  .correction-overlay {
+    @apply fixed inset-0 z-50 flex items-end justify-center bg-black/50 px-0;
+  }
+
+  .correction-sheet {
+    @apply max-h-[86dvh] w-full max-w-[430px] overflow-hidden rounded-t-[1.75rem] bg-white shadow-lift;
+  }
+
+  .sheet-drag {
+    @apply mx-auto mt-2 h-1 w-10 rounded-full bg-line;
+  }
+
+  .log-date-card {
+    @apply flex min-h-[4.55rem] min-w-[4.1rem] flex-col items-center justify-center rounded-2xl border border-line bg-white px-3 py-2 shadow-press transition active:scale-[0.98];
+  }
+
+  .log-date-card-selected {
+    @apply border-acid bg-acid text-carbon shadow-acid;
+  }
+
+  .record-card {
+    @apply relative rounded-[1.15rem] border border-line bg-white p-4 pl-5 shadow-press;
+  }
+
+  .record-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 0.32rem;
+    border-radius: 999px;
+    background: var(--gym-acid);
+  }
+
+  .summary-metric {
+    @apply border-r border-line px-3 text-center last:border-r-0;
+  }
+
+  .form-card {
+    @apply rounded-[1.25rem] bg-white p-5 shadow-lift;
+  }
+
+  .field-block {
+    @apply border-b border-line py-4 last:border-b-0;
+  }
+
+  .field-label {
+    @apply text-sm font-black text-fern;
+  }
+
+  .stepper {
+    @apply inline-grid h-[3.25rem] grid-cols-3 overflow-hidden rounded-xl border border-tertiary/70 bg-white;
+  }
+
+  .stepper-button {
+    @apply grid h-full w-12 place-items-center bg-oat text-2xl font-medium text-fern transition active:bg-acid;
+  }
+
+  .stepper-value {
+    @apply grid h-full min-w-14 place-items-center border-x border-line text-xl font-medium text-carbon;
+  }
+
+  .error-banner {
+    @apply rounded-xl border border-clay bg-clay/10 px-4 py-3 text-sm font-black text-clay;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes progress-wave {
+  0% {
+    width: 24%;
+  }
+  50% {
+    width: 82%;
+  }
+  100% {
+    width: 52%;
+  }
 }

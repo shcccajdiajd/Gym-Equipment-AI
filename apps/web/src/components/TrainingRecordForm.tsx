@@ -1,5 +1,5 @@
 import type { EquipmentCard } from '@gym-equipment-ai/shared';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { getTodayDate, saveTrainingRecord } from '../utils/trainingRecords.js';
 
 type TrainingRecordFormProps = {
@@ -16,9 +16,19 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
   const [reps, setReps] = useState('');
   const [weight, setWeight] = useState('');
   const [note, setNote] = useState('');
+  const [error, setError] = useState('');
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function updateNumericValue(value: string, nextValue: number) {
+    return String(Math.max(1, Number(value || 0) + nextValue));
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!sets || !reps || Number(sets) <= 0 || Number(reps) <= 0) {
+      setError('请填写组数和次数');
+      return;
+    }
+
     saveTrainingRecord({
       equipmentId: equipment.id,
       equipmentName: equipment.zhName,
@@ -35,100 +45,127 @@ export function TrainingRecordForm({ equipment, defaultExerciseName, onCancel, o
 
   return (
     <main className="screen">
-      <button className="top-link" onClick={onCancel} type="button">
-        返回结果
-      </button>
-      <form className="surface-card" onSubmit={handleSubmit}>
-        <p className="eyebrow">Training Log</p>
-        <h1 className="mt-1 text-3xl font-black tracking-[-0.04em] text-ink">记录本次训练</h1>
-        <p className="mt-2 text-sm leading-6 text-slate">只记录这次器械训练，不做复杂计划。</p>
-
-        <label className="mt-5 block text-sm font-black text-ink" htmlFor="training-date">
-          日期
+      <div className="app-topbar">
+        <button className="icon-button" onClick={onCancel} type="button" aria-label="取消记录">
+          ×
+        </button>
+        <h1 className="app-topbar-title">记录本次训练</h1>
+        <button className="h-11 rounded-full px-2 text-base font-black text-fern" form="training-record-form" type="submit">
+          保存
+        </button>
+      </div>
+      <form className="form-card" id="training-record-form" onSubmit={handleSubmit}>
+        <label className="field-block block" htmlFor="training-date">
+          <span className="field-label">日期</span>
+          <input
+            className="mt-1 w-full bg-transparent text-2xl font-medium text-carbon outline-none"
+            id="training-date"
+            onChange={(event) => setDate(event.target.value)}
+            required
+            type="date"
+            value={date}
+          />
         </label>
-        <input
-          className="input-soft mt-2"
-          id="training-date"
-          onChange={(event) => setDate(event.target.value)}
-          required
-          type="date"
-          value={date}
-        />
 
-        <label className="mt-4 block text-sm font-black text-ink" htmlFor="training-equipment">
-          器械名称
+        <label className="field-block block" htmlFor="training-equipment">
+          <span className="field-label">器械</span>
+          <input
+            className="mt-2 w-full rounded-xl bg-line px-3 py-3 text-xl font-black text-carbon outline-none"
+            id="training-equipment"
+            readOnly
+            value={equipment.zhName}
+          />
         </label>
-        <input
-          className="input-soft mt-2 font-bold"
-          id="training-equipment"
-          readOnly
-          value={equipment.zhName}
-        />
 
-        <label className="mt-4 block text-sm font-black text-ink" htmlFor="training-exercise">
-          动作名称
-        </label>
-        <input
-          className="input-soft mt-2 font-bold"
-          id="training-exercise"
-          onChange={(event) => setExerciseName(event.target.value)}
-          required
-          value={exerciseName}
-        />
-
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <label className="block text-sm font-black text-ink" htmlFor="training-sets">
-            组数
+        <label className="field-block flex items-center justify-between gap-4" htmlFor="training-exercise">
+          <span>
+            <span className="field-label">动作</span>
             <input
-              className="input-soft mt-2 font-bold"
-              id="training-sets"
-              min="1"
-              onChange={(event) => setSets(event.target.value)}
+              className="mt-1 w-full bg-transparent text-xl font-medium text-carbon outline-none"
+              id="training-exercise"
+              onChange={(event) => setExerciseName(event.target.value)}
               required
-              type="number"
-              value={sets}
+              value={exerciseName}
             />
-          </label>
-          <label className="block text-sm font-black text-ink" htmlFor="training-reps">
-            每组次数
-            <input
-              className="input-soft mt-2 font-bold"
-              id="training-reps"
-              min="1"
-              onChange={(event) => setReps(event.target.value)}
-              required
-              type="number"
-              value={reps}
-            />
-          </label>
+          </span>
+          <span className="text-2xl text-fern">✎</span>
+        </label>
+
+        <div className="field-block space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <label className="text-xl font-black text-carbon" htmlFor="training-sets">
+              <span className="block text-sm font-medium text-carbon">Sets <span className="font-black text-clay">(REQUIRED)</span></span>
+              组数 <span className="text-clay">*</span>
+            </label>
+            <div className="stepper">
+              <button className="stepper-button" onClick={() => setSets(updateNumericValue(sets, -1))} type="button">−</button>
+              <input
+                className="stepper-value w-14 bg-white text-center outline-none"
+                id="training-sets"
+                min="1"
+                onChange={(event) => setSets(event.target.value)}
+                required
+                type="number"
+                value={sets}
+              />
+              <button className="stepper-button" onClick={() => setSets(updateNumericValue(sets, 1))} type="button">+</button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <label className="text-xl font-black text-carbon" htmlFor="training-reps">
+              <span className="block text-sm font-medium text-carbon">Reps <span className="font-black text-clay">(REQUIRED)</span></span>
+              每组次数 <span className="text-clay">*</span>
+            </label>
+            <div className="stepper">
+              <button className="stepper-button" onClick={() => setReps(updateNumericValue(reps, -1))} type="button">−</button>
+              <input
+                className="stepper-value w-14 bg-white text-center outline-none"
+                id="training-reps"
+                min="1"
+                onChange={(event) => setReps(event.target.value)}
+                required
+                type="number"
+                value={reps}
+              />
+              <button className="stepper-button" onClick={() => setReps(updateNumericValue(reps, 1))} type="button">+</button>
+            </div>
+          </div>
         </div>
 
-        <label className="mt-4 block text-sm font-black text-ink" htmlFor="training-weight">
-          重量 kg（选填）
+        <label className="field-block flex items-center justify-between gap-4" htmlFor="training-weight">
+          <span className="text-xl font-black text-carbon">重量</span>
+          <span className="inline-flex h-[3.25rem] items-center overflow-hidden rounded-xl border border-tertiary/70 bg-white">
+            <input
+              className="h-full w-20 px-3 text-xl font-medium outline-none"
+              id="training-weight"
+              min="0"
+              onChange={(event) => setWeight(event.target.value)}
+              step="0.5"
+              type="number"
+              value={weight}
+            />
+            <span className="px-3 text-xl font-medium text-slate">kg</span>
+          </span>
         </label>
-        <input
-          className="input-soft mt-2 font-bold"
-          id="training-weight"
-          min="0"
-          onChange={(event) => setWeight(event.target.value)}
-          step="0.5"
-          type="number"
-          value={weight}
-        />
 
-        <label className="mt-4 block text-sm font-black text-ink" htmlFor="training-note">
-          备注（选填）
+        <label className="field-block block" htmlFor="training-note">
+          <span className="text-xl font-black text-carbon">备注</span>
+          <textarea
+            className="mt-2 min-h-28 w-full rounded-xl border border-tertiary/70 bg-white px-4 py-3 text-base text-carbon outline-none placeholder:text-tertiary"
+            id="training-note"
+            onChange={(event) => setNote(event.target.value)}
+            placeholder="例如：今天胸肌发力感很好..."
+            value={note}
+          />
         </label>
-        <textarea
-          className="input-soft mt-2 min-h-24"
-          id="training-note"
-          onChange={(event) => setNote(event.target.value)}
-          placeholder="比如：动作更稳、重量略轻、肩膀感觉正常"
-          value={note}
-        />
 
-        <button className="btn-primary mt-5 text-lg" type="submit">
+        {error ? <p className="error-banner mt-4">{error}</p> : null}
+
+        <button className="btn-acid mt-6 text-lg" type="submit">
           保存训练记录
+        </button>
+        <button className="mt-4 min-h-11 w-full text-base font-black text-slate" onClick={onCancel} type="button">
+          稍后再记
         </button>
       </form>
     </main>

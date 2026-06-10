@@ -5,21 +5,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        fern: '#1f6f4a',
-        leaf: '#2f8a5b',
-        ink: '#13251d',
-        slate: '#5d6c62',
-        oat: '#f4efe4',
-        cream: '#fbfaf5',
-        clay: '#d97d54',
-        amber: '#f2b36d',
-        moss: '#dbe8d7',
-        line: '#e7dfd2'
+        fern: '#1F4D2E',
+        leaf: '#2E7D4E',
+        acid: '#C4FF3D',
+        ink: '#1F4D2E',
+        carbon: '#0B0F0D',
+        slate: '#6B7280',
+        tertiary: '#9CA3AF',
+        oat: '#FAFAF7',
+        cream: '#FFFFFF',
+        clay: '#EF4444',
+        amber: '#FBBF24',
+        orange: '#F97316',
+        moss: '#EFF8E7',
+        line: '#E5E7EB',
+        info: '#3B82F6'
       },
       boxShadow: {
-        soft: '0 18px 48px rgba(19, 37, 29, 0.14)',
-        lift: '0 22px 60px rgba(19, 37, 29, 0.16)',
-        press: '0 8px 24px rgba(19, 37, 29, 0.10)'
+        soft: '0 16px 34px rgba(31, 77, 46, 0.10)',
+        lift: '0 24px 56px rgba(31, 77, 46, 0.14)',
+        press: '0 8px 20px rgba(31, 77, 46, 0.08)',
+        acid: '0 10px 28px rgba(196, 255, 61, 0.35)'
       },
       fontFamily: {
         display: ['Avenir Next', 'PingFang SC', 'Hiragino Sans GB', 'sans-serif'],

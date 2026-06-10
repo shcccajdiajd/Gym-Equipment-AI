@@ -29,6 +29,10 @@ type TrainingTarget = {
   exerciseName: string;
 };
 
+function getEquipmentInitial(equipment: Pick<EquipmentCard, 'zhName'>) {
+  return equipment.zhName.slice(0, 1);
+}
+
 function getCandidates(ids: string[] = []) {
   return ids.map((id) => getEquipmentCard(id)).filter((item): item is EquipmentCard => Boolean(item));
 }
@@ -46,6 +50,7 @@ export function App() {
   const [previewUrl, setPreviewUrl] = useState('');
   const [notice, setNotice] = useState('');
   const [equipmentFilter, setEquipmentFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('全部');
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>(() =>
     typeof localStorage === 'undefined' ? [] : readHistory()
   );
@@ -85,14 +90,31 @@ export function App() {
 
   const filteredEquipment = useMemo(() => {
     const query = equipmentFilter.trim().toLowerCase();
+    const categoryMatched = (equipment: EquipmentCard) => categoryFilter === '全部' || equipment.category === categoryFilter;
     if (!query) {
-      return equipmentCatalog;
+      return equipmentCatalog.filter(categoryMatched);
     }
 
     return equipmentCatalog.filter((equipment) =>
-      [equipment.zhName, equipment.enName, equipment.category].join(' ').toLowerCase().includes(query)
+      categoryMatched(equipment)
+      && [equipment.zhName, equipment.enName, equipment.category].join(' ').toLowerCase().includes(query)
     );
-  }, [equipmentFilter]);
+  }, [categoryFilter, equipmentFilter]);
+
+  const categories = useMemo(() => {
+    return ['全部', ...Array.from(new Set(equipmentCatalog.map((equipment) => equipment.category)))];
+  }, []);
+
+  const recentHistory = useMemo(() => {
+    if (historyItems.length === 0) {
+      return equipmentCatalog;
+    }
+
+    return historyItems
+      .map((item) => getEquipmentCard(item.id))
+      .filter((item): item is EquipmentCard => Boolean(item))
+      .slice(0, 4);
+  }, [historyItems]);
 
   function openEquipment(equipment: EquipmentCard, confidence?: number) {
     setResultState({
@@ -182,18 +204,47 @@ export function App() {
 
   if (view === 'recognizing') {
     return (
-      <main className="screen-center">
-        <section className="surface-card text-center">
-          {previewUrl ? (
-            <img alt="待识别器械预览" className="mb-4 max-h-[22rem] w-full rounded-[1.5rem] object-cover" src={previewUrl} />
-          ) : null}
-          <p className="text-sm font-bold uppercase tracking-[0.24em] text-fern">Recognizing</p>
-          <h1 className="mt-2 text-3xl font-black tracking-[-0.04em] text-ink">正在识别器械</h1>
-          <div className="mx-auto mt-5 h-2 w-28 overflow-hidden rounded-full bg-moss">
-            <span className="block h-full w-2/3 animate-pulse rounded-full bg-fern" />
+      <main className="recognition-page">
+        <div className="app-topbar bg-white text-carbon">
+          <button className="icon-button" onClick={() => navigateTo('home', 'replace')} type="button" aria-label="返回首页">
+            ‹
+          </button>
+          <h1 className="app-topbar-title">识别中</h1>
+          <button className="h-11 rounded-full px-2 text-base font-black text-slate" onClick={() => navigateTo('home', 'replace')} type="button">
+            取消
+          </button>
+        </div>
+        <section className="screen px-4 pt-0">
+          <div className="recognition-frame">
+            {previewUrl ? (
+              <img alt="待识别器械预览" src={previewUrl} />
+            ) : (
+              <div className="grid h-full min-h-[32rem] place-items-center bg-fern text-white/70">等待图片预览</div>
+            )}
+            <span className="scan-line" />
+            <span className="pointer-events-none absolute left-4 top-4 h-9 w-9 rounded-tl-xl border-l-4 border-t-4 border-acid" />
+            <span className="pointer-events-none absolute right-4 top-4 h-9 w-9 rounded-tr-xl border-r-4 border-t-4 border-acid" />
+            <span className="pointer-events-none absolute bottom-4 left-4 h-9 w-9 rounded-bl-xl border-b-4 border-l-4 border-acid" />
+            <span className="pointer-events-none absolute bottom-4 right-4 h-9 w-9 rounded-br-xl border-b-4 border-r-4 border-acid" />
+            <div className="recognition-overlay">
+              <div className="spinner" />
+              <h2 className="mt-5 text-3xl font-black tracking-[-0.04em]">正在识别器械...</h2>
+              <p className="mt-3 text-sm leading-6 text-white/70">请稍候，AI 正在分析图片特征</p>
+              <div className="progress-track">
+                <span className="progress-fill" />
+              </div>
+              <p className="mt-5 text-sm leading-6 text-white/60">
+                识别时间较长时，请检查网络
+                <button className="ml-3 font-black text-acid" onClick={() => navigateTo('home', 'replace')} type="button">
+                  重新尝试
+                </button>
+              </p>
+              {notice ? <p className="mt-3 text-xs leading-5 text-acid">{notice}</p> : null}
+            </div>
           </div>
-          <p className="mt-4 text-sm leading-6 text-slate">正在判断器械名称，并准备适合新手的教程搜索词。</p>
-          {notice ? <p className="mt-3 rounded-2xl bg-moss px-4 py-3 text-sm font-bold text-fern">{notice}</p> : null}
+          <button className="btn-secondary mt-8 border-white bg-transparent text-white" onClick={() => navigateTo('home', 'replace')} type="button">
+            取消识别
+          </button>
         </section>
       </main>
     );
@@ -247,18 +298,34 @@ export function App() {
   if (view === 'equipment-list') {
     return (
       <main className="screen">
-        <button className="top-link" onClick={() => navigateTo('home', 'replace')} type="button">
-          返回首页
-        </button>
-        <h1 className="page-title">支持识别的器械</h1>
-        <p className="mt-3 text-sm leading-6 text-slate">当前 MVP 先覆盖固定器械。也可以直接点开器械详情，查看教程搜索入口。</p>
+        <div className="app-topbar">
+          <button className="icon-button" onClick={() => navigateTo('home', 'replace')} type="button" aria-label="返回首页">
+            ‹
+          </button>
+          <h1 className="app-topbar-title">支持器械</h1>
+          <span className="h-11 w-11" />
+        </div>
         <input
-          className="input-soft mt-5 bg-white shadow-press"
+          className="input-soft"
           onChange={(event) => setEquipmentFilter(event.target.value)}
           placeholder="搜索器械名称 / 英文 / 分类"
           value={equipmentFilter}
         />
-        <section className="mt-4">
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {categories.map((category) => (
+            <button
+              className={`min-h-10 shrink-0 rounded-full border px-4 text-sm font-black transition active:scale-[0.98] ${
+                categoryFilter === category ? 'border-acid bg-acid text-carbon shadow-acid' : 'border-fern bg-white text-fern'
+              }`}
+              key={category}
+              onClick={() => setCategoryFilter(category)}
+              type="button"
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+        <section className="mt-3">
           <CandidateList candidates={filteredEquipment} onSelect={(equipment) => openEquipment(equipment)} />
         </section>
       </main>
@@ -268,18 +335,22 @@ export function App() {
   if (view === 'history') {
     return (
       <main className="screen">
-        <button className="top-link" onClick={() => navigateTo('home', 'replace')} type="button">
-          返回首页
-        </button>
-        <h1 className="page-title">最近识别</h1>
-        <p className="mt-3 text-sm leading-6 text-slate">不用重新拍，也能快速回到之前看过的器械教程入口。</p>
+        <div className="app-topbar">
+          <button className="icon-button" onClick={() => navigateTo('home', 'replace')} type="button" aria-label="返回首页">
+            ‹
+          </button>
+          <h1 className="app-topbar-title">最近识别</h1>
+          <button className="icon-button" onClick={() => navigateTo('home', 'replace')} type="button" aria-label="关闭">
+            ×
+          </button>
+        </div>
         <div className="mt-4 space-y-3">
           {historyItems.length === 0 ? (
-            <p className="surface-card text-slate">还没有历史记录。</p>
+            <p className="surface-card text-slate">还没有历史记录。识别结果只保存器械名称和搜索词，不保存原始图片。</p>
           ) : (
             historyItems.map((item) => (
               <button
-                className="list-card"
+                className="candidate-card"
                 key={`${item.id}-${item.createdAt}`}
                 onClick={() => {
                   const equipment = getEquipmentCard(item.id);
@@ -289,8 +360,13 @@ export function App() {
                 }}
                 type="button"
               >
-                <span className="block text-lg font-black">{item.zhName}</span>
-                <span className="block text-sm text-ink/55">{item.searchQuery}</span>
+                <span className="candidate-thumb">{item.zhName.slice(0, 1)}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-lg font-black tracking-[-0.03em] text-carbon">{item.zhName}</span>
+                  <span className="mt-1 block text-sm font-bold text-slate">{Math.round((item.confidence ?? 0) * 100)}% 置信度</span>
+                  <span className="mt-1 block truncate text-xs text-tertiary">{item.searchQuery}</span>
+                </span>
+                <span className="text-2xl text-tertiary">□</span>
               </button>
             ))
           )}
@@ -300,41 +376,29 @@ export function App() {
   }
 
   return (
-    <main className="screen pt-7">
-      <section className="hero-card">
-        <div className="relative">
-          <p className="eyebrow">Gym Equipment AI</p>
-          <h1 className="mt-4 text-[2.75rem] font-black leading-[1.02] tracking-[-0.065em] text-ink">
-            不认识器械，也能马上搜对教程
-          </h1>
-          <p className="mt-5 text-[1.03rem] leading-8 text-slate">
-            在健身房拍一下器械，先认出它叫什么，再生成适合新手的教程搜索词。
-          </p>
-          <div className="scanner-preview">
-            <span className="scanner-badge">AI 识别</span>
-            <div className="scanner-core">
-              <span>对准器械</span>
-              <span>生成教程入口</span>
-            </div>
-          </div>
-          <div className="step-rail mt-5">
-            {[
-              ['01', '拍器械'],
-              ['02', '认名称'],
-              ['03', '去搜索']
-            ].map(([number, label]) => (
-              <span className="step-chip" key={label}>
-                <span className="text-[0.68rem] font-black text-fern/55">{number}</span>
-                <span className="mt-1 text-xs font-black text-fern">{label}</span>
-              </span>
-            ))}
-          </div>
-          {inWeChat ? (
-            <p className="mt-4 rounded-2xl bg-clay/15 px-4 py-3 text-sm font-bold text-clay">
-              为了更好跳转 B站/抖音，请点击右上角，用浏览器打开。
-            </p>
-          ) : null}
-          {notice ? <p className="mt-4 rounded-2xl bg-moss px-4 py-3 text-sm font-bold text-fern">{notice}</p> : null}
+    <main className="upload-stage">
+      {inWeChat ? (
+        <p className="brand-alert">为了更好跳转 B站/抖音，请点击右上角，用浏览器打开</p>
+      ) : null}
+      <div className="brand-bar">
+        <span className="brand-mark">
+          <span className="brand-bracket">[ ]</span>
+          GYM.AI
+        </span>
+        <span className="flex gap-1">
+          <button className="inline-flex h-11 w-11 items-center justify-center rounded-full text-lg font-black text-white transition active:scale-95" onClick={() => navigateTo('history')} type="button" aria-label="最近识别">
+            ↻
+          </button>
+          <button className="inline-flex h-11 w-11 items-center justify-center rounded-full text-lg font-black text-white transition active:scale-95" onClick={() => navigateTo('equipment-list')} type="button" aria-label="支持器械">
+            ⚙
+          </button>
+        </span>
+      </div>
+      <section className="screen pt-7">
+        <div>
+          <h1 className="upload-title">拍一下器械</h1>
+          <p className="upload-subtitle">就知道它叫什么、练哪里、怎么搜教程</p>
+          {notice ? <p className="mt-4 rounded-xl bg-moss px-4 py-3 text-sm font-black text-fern">{notice}</p> : null}
           <input
             accept="image/*"
             aria-label="拍照识别器械"
@@ -364,35 +428,47 @@ export function App() {
             ref={albumInputRef}
             type="file"
           />
-          <button className="btn-primary mt-7 text-lg" onClick={() => cameraInputRef.current?.click()} type="button">
-            拍照识别器械
+          <button className="upload-zone" onClick={() => cameraInputRef.current?.click()} type="button">
+            <span className="upload-corner upload-corner-tl" />
+            <span className="upload-corner upload-corner-tr" />
+            <span className="upload-corner upload-corner-bl" />
+            <span className="upload-corner upload-corner-br" />
+            <span className="camera-orb">
+              <span className="camera-symbol" />
+            </span>
+            <span className="mt-5 text-3xl font-black tracking-[-0.04em] text-fern">拍一下</span>
+            <span className="mt-1 text-base font-medium text-slate">或上传图片</span>
           </button>
-          <button className="btn-secondary mt-3" onClick={() => albumInputRef.current?.click()} type="button">
+          <button className="album-link mx-auto flex" onClick={() => albumInputRef.current?.click()} type="button">
+            <span className="text-2xl leading-none">↥</span>
             从相册上传
           </button>
-          <p className="trust-strip mt-4">
-            识别后重点给你“怎么搜”：B站、抖音、小红书、百度都能一键跳转或复制搜索词。
-          </p>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            <button className="btn-ghost" onClick={() => navigateTo('equipment-list')} type="button">
-              支持器械
-            </button>
-            <button
-              className="btn-ghost"
-              onClick={() => {
-                setHistoryItems(readHistory());
-                navigateTo('history');
-              }}
-              type="button"
-            >
-              最近识别
-            </button>
+          <button className="btn-secondary mt-4" onClick={() => navigateTo('equipment-list')} type="button">
+            查看支持的器械
+          </button>
+
+          <div className="mt-5 border-t border-line pt-4">
+            <h2 className="text-lg font-black tracking-[-0.03em] text-fern">最近识别</h2>
+            <div className="mt-3 flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {recentHistory.slice(0, 4).map((equipment) => (
+                <button
+                  className="recent-tile"
+                  key={equipment.id}
+                  onClick={() => openEquipment(equipment)}
+                  type="button"
+                >
+                  <span className="equipment-thumb">{getEquipmentInitial(equipment)}</span>
+                  <span className="mt-2 block truncate text-sm font-black text-fern">{equipment.zhName}</span>
+                </button>
+              ))}
+            </div>
           </div>
           <button
-            className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-[1.05rem] border border-line/60 bg-white/55 px-4 py-3 text-sm font-black text-fern"
+            className="mt-2 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-base font-black text-fern shadow-press"
             onClick={() => navigateTo('training-records')}
             type="button"
           >
+            <span className="grid h-7 w-7 place-items-center rounded-md border-2 border-fern text-sm">▤</span>
             我的训练记录
           </button>
         </div>

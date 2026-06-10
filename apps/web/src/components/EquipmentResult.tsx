@@ -19,18 +19,23 @@ function ConfidenceBadge({ confidence }: { confidence?: number }) {
     return <span className="pill bg-moss text-fern">手动查看</span>;
   }
 
+  const percent = Math.round(confidence * 100);
+
   return (
     <span className="pill bg-moss text-fern">
-      置信度 {Math.round(confidence * 100)}%
+      {percent}% 置信度
     </span>
   );
 }
 
 function TeachingCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="surface-card mt-4">
-      <h2 className="text-lg font-black tracking-[-0.03em] text-ink">{title}</h2>
-      <div className="mt-3">{children}</div>
+    <section className="teaching-panel mt-4">
+      <div className="teaching-panel-header">
+        <h2 className="text-base font-black tracking-[-0.03em] text-carbon">{title}</h2>
+        <span className="text-xl text-tertiary">⌄</span>
+      </div>
+      <div className="p-4">{children}</div>
     </section>
   );
 }
@@ -64,6 +69,7 @@ export function EquipmentResult({
   onWrongPrediction
 }: EquipmentResultProps) {
   const [selectedVariantId, setSelectedVariantId] = useState(getDefaultVariant(equipment)?.id);
+  const [correctionOpen, setCorrectionOpen] = useState(false);
   const selectedVariant = equipment.exerciseVariants?.find((variant) => variant.id === selectedVariantId) ?? getDefaultVariant(equipment);
   const teaching = getTeachingContent(equipment, selectedVariant);
 
@@ -71,94 +77,93 @@ export function EquipmentResult({
     setSelectedVariantId(getDefaultVariant(equipment)?.id);
   }, [equipment.id, equipment.exerciseVariants]);
 
+  function selectCorrection(equipmentCard: EquipmentCard) {
+    setCorrectionOpen(false);
+    onSelectCandidate(equipmentCard);
+  }
+
   return (
-    <main className="screen">
-      <button className="top-link" onClick={onRetake} type="button">
-        重新拍照
-      </button>
+    <main className="screen pb-0">
+      <div className="app-topbar">
+        <button className="icon-button" onClick={onRetake} type="button" aria-label="重新拍照">
+          ‹
+        </button>
+        <h1 className="app-topbar-title">识别结果</h1>
+        <button className="icon-button" onClick={() => setCorrectionOpen(true)} type="button" aria-label="识别纠错">
+          ?
+        </button>
+      </div>
 
-      <section className="hero-card">
-        <div className="flex items-start justify-between gap-3">
-          <div className="relative min-w-0">
-            <p className="eyebrow">识别结果</p>
-            <h1 className="mt-2 text-[2.05rem] font-black leading-tight tracking-[-0.055em] text-ink">{teaching.zhName}</h1>
-            <p className="mt-1 break-words text-base font-black text-slate">{teaching.enName}</p>
+      <section className="result-top-card">
+        <div className="flex items-center gap-4">
+          <div className="equipment-photo">{equipment.zhName.slice(0, 1)}</div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <h1 className="truncate text-2xl font-black tracking-[-0.045em] text-carbon">{equipment.zhName}</h1>
+                <p className="mt-0.5 truncate text-base font-medium text-slate">{equipment.enName}</p>
+              </div>
+              <ConfidenceBadge confidence={confidence} />
+            </div>
+            <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <span className="sr-only">这台器械想练哪里？</span>
+              {(equipment.exerciseVariants && equipment.exerciseVariants.length > 0 ? equipment.exerciseVariants : undefined)?.map((variant) => {
+                const selected = variant.id === selectedVariant?.id;
+                return (
+                  <button
+                    className={`action-chip shrink-0 ${selected ? 'action-chip-selected' : ''}`}
+                    data-exercise-variant-id={variant.id}
+                    key={variant.id}
+                    onClick={() => setSelectedVariantId(variant.id)}
+                    type="button"
+                  >
+                    {variant.targetLabel}
+                  </button>
+                );
+              }) ?? teaching.primaryMuscles.slice(0, 2).map((muscle) => (
+                <span className="action-chip action-chip-selected" key={muscle}>{muscle}</span>
+              ))}
+            </div>
+            <p className="mt-1 text-xs font-medium text-slate">{teaching.enName}</p>
           </div>
-          <ConfidenceBadge confidence={confidence} />
         </div>
-        <p className="relative mt-4 text-base leading-7 text-slate">{teaching.summary}</p>
-        <div className="result-summary relative mt-4">
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-fern">Quick Check</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {teaching.primaryMuscles.slice(0, 3).map((muscle) => (
-              <span className="pill bg-moss text-fern" key={muscle}>{muscle}</span>
-            ))}
-          </div>
-        </div>
-        {selectedVariant ? (
-          <p className="trust-strip relative mt-4">
-            先确认器械和练法，再用下方搜索词去找对应教程。
-          </p>
-        ) : null}
       </section>
-
-      {equipment.exerciseVariants && equipment.exerciseVariants.length > 1 ? (
-        <section className="surface-card-muted mt-4 p-4">
-          <p className="eyebrow">Action Choice</p>
-          <h2 className="mt-1 text-xl font-black tracking-[-0.03em] text-ink">这台器械想练哪里？</h2>
-          <div className="mt-3 grid gap-2">
-            {equipment.exerciseVariants.map((variant) => {
-              const selected = variant.id === selectedVariant?.id;
-
-              return (
-                <button
-                  className={`min-h-[4.25rem] rounded-[1.15rem] border px-4 py-2.5 text-left transition active:scale-[0.99] ${
-                    selected
-                      ? 'border-fern bg-fern text-white shadow-press'
-                      : 'border-line/60 bg-white text-ink shadow-press'
-                  }`}
-                  data-exercise-variant-id={variant.id}
-                  key={variant.id}
-                  onClick={() => setSelectedVariantId(variant.id)}
-                  type="button"
-                >
-                  <span className="block text-xs font-black">{variant.targetLabel}</span>
-                  <span className="mt-0.5 block text-base font-black">{variant.zhName}</span>
-                  <span className={`mt-0.5 block text-xs font-bold ${selected ? 'text-white/78' : 'text-slate'}`}>
-                    {variant.primaryMuscles.join('、')}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      ) : null}
 
       <div className="mt-4">
         <PlatformSearchPanel equipment={equipment} variant={selectedVariant} />
       </div>
 
-      <section className="surface-card-muted mt-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-black text-ink">练完了吗？</h2>
-            <p className="mt-2 text-sm leading-6 text-slate">顺手记一下组数、次数和重量，之后能看到自己的进步曲线。</p>
+      <section className="surface-card mt-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h2 className="text-2xl font-black tracking-[-0.04em] text-carbon">快速上手</h2>
+            <p className="mt-1 text-sm font-medium text-slate">
+              {teaching.primaryMuscles.slice(0, 2).join('、')} · 调整座椅 · 3 个关键步骤
+            </p>
           </div>
-          <span className="pill bg-white text-clay">可选</span>
+          <span className="text-3xl text-carbon">›</span>
         </div>
-        <button
-          className="btn-secondary mt-4"
-          onClick={() => onOpenTrainingForm(equipment, teaching.zhName)}
-          type="button"
-        >
-          记录本次训练
-        </button>
+        <div className="mt-4 grid grid-cols-[7rem_1fr] gap-4">
+          <div className="grid min-h-28 place-items-center rounded-[1rem] bg-oat">
+            <div className="relative h-20 w-16 rounded-full border-2 border-line">
+              <span className="absolute left-2 right-2 top-6 h-7 rounded-full bg-clay/70" />
+            </div>
+          </div>
+          <ul className="space-y-2 text-base font-medium leading-7 text-carbon">
+            {teaching.steps.slice(0, 3).map((step) => (
+              <li className="flex gap-2" key={step}>
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tertiary" />
+                <span>{step}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <TeachingCard title="主要训练肌群">
         <div className="flex flex-wrap gap-2">
           {[...teaching.primaryMuscles, ...teaching.secondaryMuscles].map((muscle) => (
-            <span className="pill bg-moss text-fern" key={muscle}>{muscle}</span>
+            <span className="pill bg-acid text-carbon" key={muscle}>{muscle}</span>
           ))}
         </div>
       </TeachingCard>
@@ -171,7 +176,7 @@ export function EquipmentResult({
         <ol className="space-y-3">
           {teaching.steps.map((step, index) => (
             <li className="flex gap-3 text-base leading-7 text-slate" key={step}>
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-moss text-sm font-black text-fern">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-acid text-sm font-black text-carbon">
                 {index + 1}
               </span>
               <span>{step}</span>
@@ -183,7 +188,7 @@ export function EquipmentResult({
       <TeachingCard title="安全注意">
         <ul className="space-y-2">
           {teaching.safety.map((item) => (
-            <li className="rounded-[1.05rem] border border-fern/10 bg-moss/70 px-4 py-3 text-sm font-bold leading-6 text-ink shadow-press" key={item}>
+            <li className="rounded-xl border border-line bg-oat px-4 py-3 text-sm font-bold leading-6 text-carbon" key={item}>
               {item}
             </li>
           ))}
@@ -193,22 +198,75 @@ export function EquipmentResult({
       <TeachingCard title="常见错误">
         <ul className="space-y-2">
           {teaching.commonErrors.map((item) => (
-            <li className="rounded-[1.05rem] border border-clay/10 bg-clay/10 px-4 py-3 text-sm font-bold leading-6 text-ink shadow-press" key={item}>
+            <li className="rounded-xl border border-clay/20 bg-clay/10 px-4 py-3 text-sm font-bold leading-6 text-carbon" key={item}>
               {item}
             </li>
           ))}
         </ul>
       </TeachingCard>
 
-      <section className="surface-card-muted mt-4">
-        <button className="min-h-11 rounded-full bg-clay/12 px-4 text-sm font-black text-clay" onClick={onWrongPrediction} type="button">
-          识别错了？
-        </button>
-        <p className="mt-2 text-sm leading-6 text-slate">从下面候选器械里选择正确结果，我们会先记录在本机。</p>
-        <div className="mt-4">
-          <CandidateList candidates={candidates} onSelect={onSelectCandidate} />
+      <section className="teaching-panel mt-4">
+        <div className="teaching-panel-header">
+          <span className="text-sm font-black text-clay">识别反馈</span>
+          <button className="text-sm font-black text-carbon" onClick={() => setCorrectionOpen(true)} type="button">
+            识别错了？纠错 →
+          </button>
         </div>
+        <button className="flex min-h-14 w-full items-center justify-between px-4 text-left text-sm font-black text-carbon" onClick={() => setCorrectionOpen(true)} type="button">
+          <span>常见错误</span>
+          <span className="text-xl text-tertiary">⌄</span>
+        </button>
       </section>
+
+      <div className="bottom-cta-shell">
+        <button
+          className="btn-acid"
+          onClick={() => onOpenTrainingForm(equipment, teaching.zhName)}
+          type="button"
+        >
+          记录本次训练
+        </button>
+      </div>
+
+      {correctionOpen ? (
+        <div className="correction-overlay" role="dialog" aria-modal="true" aria-label="识别纠错">
+          <section className="correction-sheet">
+            <div className="sheet-drag" />
+            <div className="flex items-start justify-between gap-4 px-5 pt-4">
+              <div>
+                <h2 className="text-3xl font-black tracking-[-0.05em] text-fern">识别错了？</h2>
+                <p className="mt-1 text-base leading-7 text-slate">选择正确器械后，会重新生成说明和搜索词</p>
+              </div>
+              <button className="icon-button text-carbon" onClick={() => setCorrectionOpen(false)} type="button" aria-label="关闭纠错">
+                ×
+              </button>
+            </div>
+            <div className="px-5 py-4">
+              <input className="input-soft" placeholder="搜索器械..." readOnly value="" />
+            </div>
+            <div className="max-h-[23rem] overflow-y-auto border-y border-line bg-oat/50 px-5 py-3">
+              {candidates.length > 0 ? (
+                <CandidateList candidates={candidates} onSelect={selectCorrection} />
+              ) : (
+                <button className="btn-secondary" onClick={onWrongPrediction} type="button">
+                  去支持器械列表选择
+                </button>
+              )}
+            </div>
+            <div className="px-5 pb-5 pt-3">
+              <p className="text-sm font-black text-fern">已选择：{equipment.zhName}</p>
+              <div className="mt-3 grid grid-cols-[1fr_2fr] gap-3">
+                <button className="btn-secondary" onClick={() => setCorrectionOpen(false)} type="button">
+                  取消
+                </button>
+                <button className="btn-acid" onClick={() => setCorrectionOpen(false)} type="button">
+                  确认纠错
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </main>
   );
 }
